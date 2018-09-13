@@ -2,3 +2,7 @@ Build 0:
     Alpha 1.0: Add UI window
                Add Player management system
     Alpha 2.0: Add New Player interface
+    Alpha 2.1: Add tab management buttons
+    Alpha 3.0: Add Save option
+               Add Load option
+               Change JTextFields in JSpinners
