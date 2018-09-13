@@ -14,16 +14,16 @@ public class NewFile extends AbstractAction {
    @Override
    public void actionPerformed(ActionEvent e) {
       if (ui.hasBeenSaved()) {
-         ui.initialiseUI();
+         ui.initialise();
       } else {
-         Object selection = JOptionPane.showOptionDialog(ui, "Do you want to save changes?", "Save file?",
+         int selection = JOptionPane.showOptionDialog(ui, "Do you want to save changes?", "Save file?",
                  JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
                  choice, choice[0]);
 
-         if (selection == choice[0]) {
+         if (choice[selection] == choice[0]) {
 
-         } else if (selection == choice[1]) {
-
+         } else if (choice[selection] == choice[1]) {
+            ui.initialise();
          }
       }
    }
