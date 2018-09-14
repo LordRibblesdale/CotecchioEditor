@@ -1,8 +1,15 @@
 Build 0:
     Alpha 1.0: Add UI window
-               Add Player management system
-    Alpha 2.0: Add New Player interface
+               Add Data.Player management system
+    Alpha 2.0: Add New Data.Player interface
     Alpha 2.1: Add tab management buttons
     Alpha 3.0: Add Save option
                Add Load option
                Change JTextFields in JSpinners
+    Alpha 4.0: Add Search feature
+               Add JToolBar
+               Add Players list in new JFrame
+Build 1:
+    Alpha 1.0: Manage classes in packages
+               Add JFileChooser in SaveFile and in OpenFile
+               Add BinFilter for JFileChooser

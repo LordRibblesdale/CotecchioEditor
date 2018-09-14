@@ -1,3 +1,7 @@
+package Interface;
+
+import Data.Player;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -11,7 +15,7 @@ public class PlayerUI extends JPanel {
    private ArrayList<JSpinner> insert = new ArrayList<>(5);
    private JTextField name;
 
-   private static String[] editable = {
+   private static final String[] editable = {
            "Nome: ",
            "Punteggio: ",
            "Pelliccioni: ",
@@ -21,7 +25,7 @@ public class PlayerUI extends JPanel {
    };
 
    PlayerUI(Player player, UserInterface ui) {
-      String[] labelStrings = {
+      final String[] labelStrings = {
               "Nome: ",
               "Punteggio: ",
               "Pelliccioni: ",
@@ -33,7 +37,7 @@ public class PlayerUI extends JPanel {
               "Media Cappotti: "
       };
 
-      String[] playerStrings = {
+      final String[] playerStrings = {
               player.getName(),
               String.valueOf(player.getScore()),
               String.valueOf(player.getPelliccions()),
@@ -143,7 +147,7 @@ public class PlayerUI extends JPanel {
       editList.add(tmp);
 
       for (int i = 0; i < 5; i++) {
-         tmp = new JPanel();
+         tmp = new JPanel(new GridLayout(1, 2));
          tmp.add(new JLabel(editable[i+1]));
          tmp.add(insert.get(i));
 

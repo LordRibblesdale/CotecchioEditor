@@ -1,3 +1,7 @@
+package File;
+
+import Interface.UserInterface;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
@@ -5,7 +9,7 @@ public class NewFile extends AbstractAction {
    private UserInterface ui;
    private Object[] choice = {"Save", "Discard", "Go Back"};
 
-   NewFile(UserInterface ui) {
+   public NewFile(UserInterface ui) {
       this.ui = ui;
 
       putValue(Action.NAME, "New");

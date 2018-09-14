@@ -1,3 +1,7 @@
+package File;
+
+import Interface.UserInterface;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
@@ -5,7 +9,7 @@ public class About extends AbstractAction {
    private UserInterface ui;
    private static String info = "Creatore di elenco per Cotecchio\nLordRibblesdale";
 
-   About(UserInterface ui) {
+   public About(UserInterface ui) {
       this.ui = ui;
 
       putValue(Action.NAME, "About...");

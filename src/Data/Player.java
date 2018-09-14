@@ -1,6 +1,10 @@
+package Data;
+
 import java.io.Serializable;
 
 public class Player implements Serializable {
+   private static final long serialVersionUID = 110L;
+
    private String name;
    private int score;
    private int pelliccions;
@@ -8,7 +12,7 @@ public class Player implements Serializable {
    private int totalPlays;
    private int totalWins;
 
-   Player(String name, int score, int pelliccions, int cappottens, int totalPlays, int totalWins) {
+   public Player(String name, int score, int pelliccions, int cappottens, int totalPlays, int totalWins) {
       this.name = name;
       this.score = score;
       this.pelliccions = pelliccions;

@@ -1,29 +1,40 @@
+package Interface;
+
+import Data.Player;
+import Edit.Search;
+import File.About;
+import File.NewFile;
+import File.OpenFile;
+import File.SaveFile;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 public class UserInterface extends JFrame {
-   static private String programName = "Cotecchio Editor - ";
-   static private String version = "Build 0 Alpha 3.0";
+   private static final String programName = "Cotecchio Editor - ";
+   private static final String version = "Build 1 Alpha 1.0";
    private GridLayout mainLayout;
    private JPanel mainPanel;
    private JPanel buttonPanel;
    private JMenuBar menu;
-   private JMenu file, about;
+   private JMenu file, edit, about;
    private JButton addTab, removeTab;
+   private JCheckBoxMenuItem showList;
 
    private boolean hasBeenSaved = true;
    private SaveFile saveButton;
+   private Search search;
 
-   private JTabbedPane tabs;
+   private JTabbedPane tabs = null;
    private ArrayList<Player> players = null;
    private ArrayList<PlayerUI> pUI;
 
-   UserInterface() {
+   private JToolBar toolBar;
+   private PanelList listPlayers = null;
+
+   public UserInterface() {
       super(programName + version);
 
       mainPanel = new JPanel(mainLayout = new GridLayout(0, 10));
@@ -32,8 +43,35 @@ public class UserInterface extends JFrame {
       menu.add(file = new JMenu("File"));
       file.add(new NewFile(UserInterface.this));
       file.add(new OpenFile(UserInterface.this));
-      file.add(saveButton = new SaveFile(UserInterface.this, players));
+      file.add(saveButton = new SaveFile(UserInterface.this));
       saveButton.setEnabled(false);
+
+      toolBar = new JToolBar(SwingConstants.VERTICAL);
+      toolBar.add(search = new Search(UserInterface.this));
+      search.setEnabled(false);
+      add(toolBar, BorderLayout.LINE_END);
+
+      menu.add(edit = new JMenu("Edit"));
+      edit.add(search);
+      edit.add(showList = new JCheckBoxMenuItem("Show players list"));
+      showList.addItemListener(new ItemListener() {
+         @Override
+         public void itemStateChanged(ItemEvent e) {
+            if (listPlayers != null) {
+               if (((JCheckBoxMenuItem) e.getSource()).getState()) {
+                  listPlayers.setVisible(true);
+               } else {
+                  listPlayers.setVisible(false);
+               }
+            } else {
+               listPlayers = new PanelList(UserInterface.this);
+               listPlayers.updateList();
+               listPlayers.setVisible(true);
+            }
+
+            validate(); //??
+         }
+      });
 
       menu.add(about = new JMenu("About"));
       about.add(new About(UserInterface.this));
@@ -55,6 +93,8 @@ public class UserInterface extends JFrame {
                removeTab.setEnabled(true);
             }
 
+            //listPlayers.updateList();   //TODO Fix here
+
             validate();
          }
       });
@@ -69,7 +109,7 @@ public class UserInterface extends JFrame {
                        choice, choice[0]);
 
                if (choice[sel] == choice[0]) {
-                  //TODO saving file...
+
                } else if (choice[sel] == choice[1]) {
                   tabs.remove(tabs.getSelectedIndex());
 
@@ -147,6 +187,7 @@ public class UserInterface extends JFrame {
       tabs.addTab("New Player", pUI.get(pUI.size()-1).generatePanel());
 
       addTab.setEnabled(true);
+      search.setEnabled(true);
 
       validate();
    }
@@ -193,5 +234,9 @@ public class UserInterface extends JFrame {
       }
 
       return players;
+   }
+
+   public JCheckBoxMenuItem getShowList() {
+      return showList;
    }
 }
