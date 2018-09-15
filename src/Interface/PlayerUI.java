@@ -11,7 +11,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class PlayerUI extends JPanel {
-   private ArrayList<JLabel> labels = new ArrayList<>(9);
+   private ArrayList<JLabel> labels = new ArrayList<>(10);
    private ArrayList<JSpinner> insert = new ArrayList<>(5);
    private JTextField name;
 
@@ -34,7 +34,8 @@ public class PlayerUI extends JPanel {
               "Partite vinte: ",
               "Partite perse: ",
               "Media Pelliccioni: ",
-              "Media Cappotti: "
+              "Media Cappotti: ",
+              "Media: "
       };
 
       final String[] playerStrings = {
@@ -45,8 +46,9 @@ public class PlayerUI extends JPanel {
               String.valueOf(player.getTotalPlays()),
               String.valueOf(player.getTotalWins()),
               String.valueOf((player.getTotalPlays() - player.getTotalWins())),
-              String.valueOf((player.getPelliccions() / (float) player.getTotalPlays()) %.2f),
-              String.valueOf((player.getCappottens() / (float) player.getTotalPlays()) %.2f)
+              String.valueOf((player.getPelliccions() / (float) player.getTotalPlays())),
+              String.valueOf((player.getCappottens() / (float) player.getTotalPlays())),
+              String.valueOf((player.getScore() / (float) player.getTotalPlays()))
       };
 
       name = new JTextField(playerStrings[0]);
@@ -110,6 +112,7 @@ public class PlayerUI extends JPanel {
                      labels.get(6).setText(labelStrings[6] + ((Integer) insert.get(3).getValue() - (Integer) insert.get(4).getValue()));
                      labels.get(7).setText(labelStrings[7] + ((Integer) insert.get(1).getValue() / (float) ((Integer) insert.get(3).getValue())));
                      labels.get(8).setText(labelStrings[8] + ((Integer) insert.get(2).getValue() / (float) ((Integer) insert.get(3).getValue())));
+                     labels.get(9).setText(labelStrings[9] + ((Integer) insert.get(0).getValue() / (float) ((Integer) insert.get(3).getValue())));
 
                      SpinnerNumberModel snm = new SpinnerNumberModel();
                      snm.setValue(insert.get(4).getValue());

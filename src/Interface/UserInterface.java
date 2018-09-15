@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class UserInterface extends JFrame {
    private static final String programName = "Cotecchio Editor - ";
-   private static final String version = "Build 1 Alpha 2.0";
+   private static final String version = "Build 1 Alpha 2.1";
    private GridLayout mainLayout;
    private JPanel mainPanel;
    private JPanel buttonPanel;

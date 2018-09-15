@@ -16,3 +16,4 @@ Build 1:
     Alpha 2.0: Add XLS export file
                Add printing feature
                Fix save feature
+    Alpha 2.1: Add Average value in Player statistics
