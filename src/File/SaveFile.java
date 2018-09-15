@@ -51,6 +51,10 @@ public class SaveFile extends AbstractAction implements Path {
             }
          }
       }
+
+      if (e == null) {
+         ui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      }
    }
 
    private void saveThread(String path) {

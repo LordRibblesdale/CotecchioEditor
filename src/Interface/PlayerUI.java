@@ -45,8 +45,8 @@ public class PlayerUI extends JPanel {
               String.valueOf(player.getTotalPlays()),
               String.valueOf(player.getTotalWins()),
               String.valueOf((player.getTotalPlays() - player.getTotalWins())),
-              String.valueOf((player.getPelliccions() / (float) player.getTotalPlays())),
-              String.valueOf((player.getCappottens() / (float) player.getTotalPlays()))
+              String.valueOf((player.getPelliccions() / (float) player.getTotalPlays()) %.2f),
+              String.valueOf((player.getCappottens() / (float) player.getTotalPlays()) %.2f)
       };
 
       name = new JTextField(playerStrings[0]);

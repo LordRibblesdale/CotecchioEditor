@@ -42,8 +42,6 @@ public class OpenFile extends AbstractAction implements Path {
 
                ui.initialise(players);
             }
-         } else {
-            throw new IOException();
          }
       } catch (FileNotFoundException e3) {
          JOptionPane.showMessageDialog(ui, "Error inserting name file", "Error I/O", JOptionPane.ERROR_MESSAGE);

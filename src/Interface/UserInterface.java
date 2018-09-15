@@ -2,6 +2,8 @@ package Interface;
 
 import Data.Player;
 import Edit.Search;
+import Export.ExportXls;
+import Export.PrintThread;
 import File.About;
 import File.NewFile;
 import File.OpenFile;
@@ -14,18 +16,19 @@ import java.util.ArrayList;
 
 public class UserInterface extends JFrame {
    private static final String programName = "Cotecchio Editor - ";
-   private static final String version = "Build 1 Alpha 1.0";
+   private static final String version = "Build 1 Alpha 2.0";
    private GridLayout mainLayout;
    private JPanel mainPanel;
    private JPanel buttonPanel;
    private JMenuBar menu;
-   private JMenu file, edit, about;
+   private JMenu file, edit, about, export;
    private JButton addTab, removeTab;
    private JCheckBoxMenuItem showList;
 
    private boolean hasBeenSaved = true;
    private SaveFile saveButton;
    private Search search;
+   private PrintThread print;
 
    private JTabbedPane tabs = null;
    private ArrayList<Player> players = null;
@@ -44,6 +47,13 @@ public class UserInterface extends JFrame {
       file.add(new NewFile(UserInterface.this));
       file.add(new OpenFile(UserInterface.this));
       file.add(saveButton = new SaveFile(UserInterface.this));
+      file.add(new JSeparator());
+      file.add(export = new JMenu("Export..."));
+      file.add(print = new PrintThread(UserInterface.this));
+      export.add(new ExportXls(UserInterface.this));
+
+      export.setEnabled(false);
+      print.setEnabled(false);
       saveButton.setEnabled(false);
 
       toolBar = new JToolBar(SwingConstants.VERTICAL);
@@ -109,7 +119,7 @@ public class UserInterface extends JFrame {
                        choice, choice[0]);
 
                if (choice[sel] == choice[0]) {
-
+                  new SaveFile(UserInterface.this).actionPerformed(null);
                } else if (choice[sel] == choice[1]) {
                   tabs.remove(tabs.getSelectedIndex());
 
@@ -138,12 +148,18 @@ public class UserInterface extends JFrame {
       addWindowListener(new WindowAdapter() {
          @Override
          public void windowClosing(WindowEvent e) {
-            super.windowClosing(e);
-            /*
             if (!hasBeenSaved()) {
-
+               int result = JOptionPane.showConfirmDialog(UserInterface.this,
+                       "Do you want to save before closing?", "Exit Confirmation",
+                       JOptionPane.YES_NO_CANCEL_OPTION);
+               if (result == JOptionPane.YES_OPTION) {
+                  new SaveFile(UserInterface.this).actionPerformed(null);
+               } else if (result == JOptionPane.CANCEL_OPTION) {
+                  UserInterface.this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+               } else {
+                  UserInterface.this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+               }
             }
-            */
          }
       });
 
@@ -188,6 +204,8 @@ public class UserInterface extends JFrame {
 
       addTab.setEnabled(true);
       search.setEnabled(true);
+      export.setEnabled(true);
+      print.setEnabled(true);
 
       validate();
    }
@@ -211,6 +229,9 @@ public class UserInterface extends JFrame {
       }
 
       addTab.setEnabled(true);
+      search.setEnabled(true);
+      export.setEnabled(true);
+      print.setEnabled(true);
 
       if (tabs.getTabCount() > 1) {
          removeTab.setEnabled(true);

@@ -1,9 +1,9 @@
-package File;
+package Export;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
 
-public class BinFilter extends FileFilter {
+public class XlsFilter extends FileFilter {
 
    @Override
    public boolean accept(File f) {
@@ -14,7 +14,7 @@ public class BinFilter extends FileFilter {
       if (i != -1) {
          String e = s.substring(i+1);
 
-         return e.equalsIgnoreCase("bin");
+         return e.equalsIgnoreCase("xls");
       }
 
       return f.isDirectory();
@@ -22,6 +22,6 @@ public class BinFilter extends FileFilter {
 
    @Override
    public String getDescription() {
-      return "*.bin";
+      return "*.xls";
    }
 }

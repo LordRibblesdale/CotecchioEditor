@@ -13,3 +13,6 @@ Build 1:
     Alpha 1.0: Manage classes in packages
                Add JFileChooser in SaveFile and in OpenFile
                Add BinFilter for JFileChooser
+    Alpha 2.0: Add XLS export file
+               Add printing feature
+               Fix save feature
