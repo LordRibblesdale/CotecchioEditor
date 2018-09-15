@@ -20,6 +20,19 @@ public class ExportXls extends AbstractAction {
 
    @Override
    public void actionPerformed(ActionEvent e) {
+      if (!ui.hasBeenSaved()) {
+         int choice = JOptionPane.showConfirmDialog(ui, "Do you want to save before exporting?", "Save?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+
+         if (choice == JOptionPane.OK_OPTION) {
+            ui.askForSaving(e);
+            export();
+         } else if (choice == JOptionPane.NO_OPTION) {
+            export();
+         }
+      }
+   }
+
+   private void export() {
       ArrayList<Player> players = ui.getPlayers();
       String paper = getPaper(players);
 

@@ -8,12 +8,16 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class PlayerUI extends JPanel {
    private ArrayList<JLabel> labels = new ArrayList<>(10);
    private ArrayList<JSpinner> insert = new ArrayList<>(5);
    private JTextField name;
+
+   private DecimalFormat df = new DecimalFormat("##.##");
 
    private static final String[] editable = {
            "Nome: ",
@@ -46,10 +50,12 @@ public class PlayerUI extends JPanel {
               String.valueOf(player.getTotalPlays()),
               String.valueOf(player.getTotalWins()),
               String.valueOf((player.getTotalPlays() - player.getTotalWins())),
-              String.valueOf((player.getPelliccions() / (float) player.getTotalPlays())),
-              String.valueOf((player.getCappottens() / (float) player.getTotalPlays())),
-              String.valueOf((player.getScore() / (float) player.getTotalPlays()))
+              df.format((player.getPelliccions() / (float) player.getTotalPlays())),
+              df.format((player.getCappottens() / (float) player.getTotalPlays())),
+              df.format((player.getScore() / (float) player.getTotalPlays()))
       };
+
+      df.setRoundingMode(RoundingMode.DOWN);
 
       name = new JTextField(playerStrings[0]);
       name.getDocument().addDocumentListener(new DocumentListener() {
@@ -110,9 +116,9 @@ public class PlayerUI extends JPanel {
                   if (e.getSource() == insert.get(i)) {
                      labels.get(i+1).setText(editable[i+1] + insert.get(i).getValue());
                      labels.get(6).setText(labelStrings[6] + ((Integer) insert.get(3).getValue() - (Integer) insert.get(4).getValue()));
-                     labels.get(7).setText(labelStrings[7] + ((Integer) insert.get(1).getValue() / (float) ((Integer) insert.get(3).getValue())));
-                     labels.get(8).setText(labelStrings[8] + ((Integer) insert.get(2).getValue() / (float) ((Integer) insert.get(3).getValue())));
-                     labels.get(9).setText(labelStrings[9] + ((Integer) insert.get(0).getValue() / (float) ((Integer) insert.get(3).getValue())));
+                     labels.get(7).setText(labelStrings[7] + df.format((Integer) insert.get(1).getValue() / (float) ((Integer) insert.get(3).getValue())));
+                     labels.get(8).setText(labelStrings[8] + df.format((Integer) insert.get(2).getValue() / (float) ((Integer) insert.get(3).getValue())));
+                     labels.get(9).setText(labelStrings[9] + df.format((Integer) insert.get(0).getValue() / (float) ((Integer) insert.get(3).getValue())));
 
                      SpinnerNumberModel snm = new SpinnerNumberModel();
                      snm.setValue(insert.get(4).getValue());

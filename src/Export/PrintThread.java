@@ -7,10 +7,15 @@ import java.awt.*;
 import java.awt.print.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 class Page implements Printable {
-   private String data;
+   private ArrayList<String> data;
+   private int x = 50, y = 50, i = 0;
+
 
    Page(ArrayList<Player> players) {
       data = getPaper(players);
@@ -25,33 +30,64 @@ class Page implements Printable {
       Graphics2D g2 = (Graphics2D) graphics;
       g2.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
 
-      g2.drawString(data, 100, 100);
+      for (String s : data) {
+         g2.drawString(s, x, y);
+
+         if (x < pageFormat.getWidth() - 50) {
+            x += 2*s.length() +10;
+         } else {
+            x = 50;
+         }
+
+         if (i++ == 8) {
+            i = 0;
+            y += 8;
+         }
+      }
 
       return PAGE_EXISTS;
    }
 
-   private String getPaper(ArrayList<Player> players) {
-      StringBuilder paper = new StringBuilder();
+   private ArrayList<String> getPaper(ArrayList<Player> players) {
+      DecimalFormat df = new DecimalFormat("##.##");
+      df.setRoundingMode(RoundingMode.DOWN);
 
-      paper.append("Graduatoria Cotecchio\n\n");
-      paper.append("Nome Cognome\tPunteggio\tPartite\tW-L\tMedia\tPelliccioni\tMedia P.\tCappotti\tMedia C.\n");
+      final String[] labelStrings = {
+              "Nome",
+              "Punteggio",
+              "Partite",
+              "Media",
+              "W-L",
+              "Pelliccioni",
+              "Media P.",
+              "Cappotti",
+              "Media C."
+      };
 
-      for (Player p : players) {
-         paper.append(p.getName()).append("\t")
-                 .append(p.getScore()).append("\t")
-                 .append(p.getTotalPlays()).append("\t")
-                 .append(p.getTotalWins()).append("w-").append(p.getTotalPlays() - p.getTotalWins()).append("l\t")
-                 .append(p.getScore() / (float) p.getTotalPlays() %.2f).append("\t")
-                 .append(p.getPelliccions()).append("\t")
-                 .append(p.getPelliccions() / (float) p.getTotalPlays() %.2f).append("\t")
-                 .append(p.getCappottens()).append("\t")
-                 .append(p.getCappottens() / (float) p.getTotalPlays() %.2f);
-         paper.append("\n");
+      ArrayList<String> data = new ArrayList<>();
+
+      //TODO improve code here
+      data.add("Graduatoria Cotecchio");
+
+      data.addAll(Arrays.asList(labelStrings));
+
+      for (Player player : players) {
+         final String[] playerStrings = {
+                 player.getName(),
+                 String.valueOf(player.getScore()),
+                 String.valueOf(player.getTotalPlays()),
+                 df.format((player.getScore() / (float) player.getTotalPlays())),
+                 String.valueOf(player.getTotalWins() + (player.getTotalPlays() - player.getTotalWins())),
+                 String.valueOf(player.getPelliccions()),
+                 df.format((player.getPelliccions() / (float) player.getTotalPlays())),
+                 String.valueOf(player.getCappottens()),
+                 df.format((player.getCappottens() / (float) player.getTotalPlays()))
+         };
+
+         data.addAll(Arrays.asList(playerStrings));
       }
 
-      System.out.println(paper);
-
-      return paper.toString();
+      return data;
    }
 }
 
@@ -68,6 +104,20 @@ public class PrintThread extends AbstractAction {
    @Override
    public void actionPerformed(ActionEvent e) {
       JOptionPane.showMessageDialog(ui, "This is an experimental feature", "Feature under work", JOptionPane.INFORMATION_MESSAGE);
+
+      if (!ui.hasBeenSaved()) {
+         int choice = JOptionPane.showConfirmDialog(ui, "Do you want to save before printing?", "Save?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+
+         if (choice == JOptionPane.OK_OPTION) {
+            ui.askForSaving(e);
+            print();
+         } else if (choice == JOptionPane.NO_OPTION) {
+            print();
+         }
+      }
+   }
+
+   private void print() {
       PrinterJob job = PrinterJob.getPrinterJob();
 
       job.setPrintable(new Page(ui.getPlayers()));
@@ -80,5 +130,4 @@ public class PrintThread extends AbstractAction {
          }
       }
    }
-
 }

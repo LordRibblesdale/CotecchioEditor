@@ -20,7 +20,6 @@ public class SaveFile extends AbstractAction implements Path {
    @Override
    public void actionPerformed(ActionEvent e) {
       File file = new File(Path.path);
-      System.out.println(Path.path);
 
       if (!file.exists()) {
          try {

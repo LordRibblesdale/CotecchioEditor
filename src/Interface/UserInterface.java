@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class UserInterface extends JFrame {
    private static final String programName = "Cotecchio Editor - ";
-   private static final String version = "Build 1 Alpha 2.1";
+   private static final String version = "Build 1 Alpha 2.1.1";
    private GridLayout mainLayout;
    private JPanel mainPanel;
    private JPanel buttonPanel;
@@ -188,7 +188,6 @@ public class UserInterface extends JFrame {
    public void initialise() {
       if (tabs != null) {
          remove(tabs);
-         setHasBeenSaved(true);
       }
 
       tabs = new JTabbedPane();
@@ -207,13 +206,14 @@ public class UserInterface extends JFrame {
       export.setEnabled(true);
       print.setEnabled(true);
 
+      setHasBeenSaved(true);
+
       validate();
    }
 
    public void initialise(ArrayList<Player> players) {
       if (tabs != null) {
          remove(tabs);
-         setHasBeenSaved(true);
       }
 
       tabs = new JTabbedPane();
@@ -237,6 +237,8 @@ public class UserInterface extends JFrame {
          removeTab.setEnabled(true);
       }
 
+      setHasBeenSaved(true);
+
       validate();
    }
 
@@ -259,5 +261,9 @@ public class UserInterface extends JFrame {
 
    public JCheckBoxMenuItem getShowList() {
       return showList;
+   }
+
+   public void askForSaving(ActionEvent e) {
+      new SaveFile(UserInterface.this).actionPerformed(e);
    }
 }
