@@ -6,6 +6,8 @@ import Interface.UserInterface;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 
@@ -83,6 +85,8 @@ public class ExportXls extends AbstractAction {
 
    private String getPaper(ArrayList<Player> players) {
       StringBuilder paper = new StringBuilder();
+      DecimalFormat df = new DecimalFormat();
+      df.setRoundingMode(RoundingMode.DOWN);
 
       paper.append("Graduatoria Cotecchio\n\n");
       paper.append("Nome Cognome\tPunteggio\tPartite\tW-L\tMedia\tPelliccioni\tMedia P.\tCappotti\tMedia C.\n");
@@ -92,11 +96,11 @@ public class ExportXls extends AbstractAction {
                  .append(p.getScore()).append("\t")
                  .append(p.getTotalPlays()).append("\t")
                  .append(p.getTotalWins()).append("w-").append(p.getTotalPlays() - p.getTotalWins()).append("l\t")
-                 .append(p.getScore() / (float) p.getTotalPlays() %.2f).append("\t")
+                 .append(df.format(p.getScore() / (float) p.getTotalPlays())).append("\t")
                  .append(p.getPelliccions()).append("\t")
-                 .append(p.getPelliccions() / (float) p.getTotalPlays() %.2f).append("\t")
+                 .append(df.format(p.getPelliccions() / (float) p.getTotalPlays())).append("\t")
                  .append(p.getCappottens()).append("\t")
-                 .append(p.getCappottens() / (float) p.getTotalPlays() %.2f);
+                 .append(df.format(p.getCappottens() / (float) p.getTotalPlays()));
          paper.append("\n");
       }
 
