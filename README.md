@@ -20,7 +20,10 @@ I Runtime sono disponibili nei seguenti siti:
 - http://www.oracle.com/technetwork/java/javase/downloads/jre10-downloads-4417026.html per le versioni JRE 10 solamente a 64 bit
 - Eventuali JDK sono disponibili in https://www.oracle.com/technetwork/java/javase/downloads/index.html
 
-I requisiti di sistema sono quelli proposti da Oracle per la JVM, tuttavia saranno richiesti in memoria circa 100MB e su disco circa 30KB aggiuntivi per l'esecuzione del programma.
+I requisiti di sistema sono:
+- PC compatibile con JDK/JRE 8 (32/64bit) o JDK/JRE 10 (64bit only)
+- RAM minimo 100MB
+- 100kb minimo su disco
 
 # Release
 
