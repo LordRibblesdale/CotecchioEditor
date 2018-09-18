@@ -4,10 +4,10 @@ Questo programma ha il compito di gestire dati della graduatoria del Cotecchio.
 Le principali funzioni del programma sono:
 - Gestione dei punteggi, dati per la graduatoria
 - Salvataggio dati per modifiche o condivisioni
+- Gestione di una partita virtuale con inserimento dei risultati nella lista dei giocatori
 - Conversione lista in un file esportabile o stampabile
 
 Altre funzioni verranno aggiunte col tempo. Il programma è momentaneamente in via di sviluppo e potrebbero non essere disponibili le funzioni predefinite.
-Verranno pubblicate versioni alpha e beta a partire dalla prossima release Build 2. Tuttavia è possibile già accederne al codice e modificarlo.
 
 # Compatibilità
 
@@ -23,7 +23,7 @@ I Runtime sono disponibili nei seguenti siti:
 I requisiti di sistema sono:
 - PC compatibile con JDK/JRE 8 (32/64bit) o JDK/JRE 10 (64bit only)
 - RAM minimo 100MB
-- 100kb minimo su disco
+- 100KB minimo su disco
 
 # Release
 
