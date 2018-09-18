@@ -198,8 +198,6 @@ public class GameProgress extends JFrame implements Serializable, Points {
 
                      player.setTotalPlays(player.getTotalPlays()+1);
                      player.setTotalWins(pos++ == 1 ? player.getTotalWins()+1 : player.getTotalWins());
-                     player.setPelliccions(player.getPelliccions() + pl.getPelliccionsInGame());
-                     player.setCappottens(player.getCappottens() + pl.getCappottensInGame());
                   }
                }
             }
