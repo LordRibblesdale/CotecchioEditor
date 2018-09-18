@@ -4,24 +4,27 @@ import Data.Player;
 import Edit.Search;
 import Export.ExportXls;
 import Export.PrintThread;
-import File.About;
-import File.NewFile;
-import File.OpenFile;
-import File.SaveFile;
+import FileManager.About;
+import FileManager.NewFile;
+import FileManager.OpenFile;
+import FileManager.SaveFile;
+import Game.GameProgress;
+import Game.GameStarter;
+import Game.OpenGameFile;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-public class UserInterface extends JFrame {
+public class UserController extends JFrame {
    private static final String programName = "Cotecchio Editor - ";
-   private static final String version = "Build 1 Alpha 2.1.2";
+   private static final String version = "Build 2 Alpha 1.0";
    private GridLayout mainLayout;
    private JPanel mainPanel;
    private JPanel buttonPanel;
    private JMenuBar menu;
-   private JMenu file, edit, about, export;
+   private JMenu file, edit, about, export, game;
    private JButton addTab, removeTab;
    private JCheckBoxMenuItem showList;
 
@@ -29,6 +32,8 @@ public class UserInterface extends JFrame {
    private SaveFile saveButton;
    private Search search;
    private PrintThread print;
+   private GameStarter start;
+   private OpenGameFile openGame;
 
    private JTabbedPane tabs = null;
    private ArrayList<Player> players = null;
@@ -37,27 +42,27 @@ public class UserInterface extends JFrame {
    private JToolBar toolBar;
    private PanelList listPlayers = null;
 
-   public UserInterface() {
+   public UserController() {
       super(programName + version);
 
       mainPanel = new JPanel(mainLayout = new GridLayout(0, 10));
 
       menu = new JMenuBar();
       menu.add(file = new JMenu("File"));
-      file.add(new NewFile(UserInterface.this));
-      file.add(new OpenFile(UserInterface.this));
-      file.add(saveButton = new SaveFile(UserInterface.this));
+      file.add(new NewFile(UserController.this));
+      file.add(new OpenFile(UserController.this));
+      file.add(saveButton = new SaveFile(UserController.this));
       file.add(new JSeparator());
       file.add(export = new JMenu("Export..."));
-      file.add(print = new PrintThread(UserInterface.this));
-      export.add(new ExportXls(UserInterface.this));
+      file.add(print = new PrintThread(UserController.this));
+      export.add(new ExportXls(UserController.this));
 
       export.setEnabled(false);
       print.setEnabled(false);
       saveButton.setEnabled(false);
 
       toolBar = new JToolBar(SwingConstants.VERTICAL);
-      toolBar.add(search = new Search(UserInterface.this));
+      toolBar.add(search = new Search(UserController.this));
       search.setEnabled(false);
       add(toolBar, BorderLayout.LINE_END);
 
@@ -68,13 +73,14 @@ public class UserInterface extends JFrame {
          @Override
          public void itemStateChanged(ItemEvent e) {
             if (listPlayers != null) {
+               listPlayers.updateList();
                if (((JCheckBoxMenuItem) e.getSource()).getState()) {
                   listPlayers.setVisible(true);
                } else {
                   listPlayers.setVisible(false);
                }
             } else {
-               listPlayers = new PanelList(UserInterface.this);
+               listPlayers = new PanelList(UserController.this);
                listPlayers.updateList();
                listPlayers.setVisible(true);
             }
@@ -83,8 +89,14 @@ public class UserInterface extends JFrame {
          }
       });
 
+      menu.add(game = new JMenu("Game"));
+      game.add(start = new GameStarter(UserController.this));
+      game.add(openGame = new OpenGameFile(UserController.this));
+      openGame.setEnabled(false);
+      start.setEnabled(false);
+
       menu.add(about = new JMenu("About"));
-      about.add(new About(UserInterface.this));
+      about.add(new About(UserController.this));
 
       setJMenuBar(menu);
 
@@ -95,15 +107,19 @@ public class UserInterface extends JFrame {
       addTab.addActionListener(new ActionListener() {
          @Override
          public void actionPerformed(ActionEvent e) {
-            players.add(new Player("New Player", 0, 0, 0, 0, 0));
-            pUI.add(new PlayerUI(players.get(players.size()-1), UserInterface.this));
+            players.add(new Player("New Player", "newPlayer", 0, 0, 0, 0, 0));
+            pUI.add(new PlayerUI(players.get(players.size()-1), UserController.this));
             tabs.addTab("New Player", pUI.get(pUI.size()-1).generatePanel());
 
             if (tabs.getTabCount() > 1) {
                removeTab.setEnabled(true);
             }
 
-            //listPlayers.updateList();   //TODO Fix here
+            if (listPlayers == null) {
+               listPlayers = new PanelList(UserController.this);
+            }
+
+            listPlayers.updateList();
 
             validate();
          }
@@ -114,12 +130,12 @@ public class UserInterface extends JFrame {
          public void actionPerformed(ActionEvent e) {
             if (!hasBeenSaved()) {
                Object[] choice = {"Yes", "No", "Go back"};
-               int sel = JOptionPane.showOptionDialog(UserInterface.this, "This tab has not been saved.\nDo you want to save?",
+               int sel = JOptionPane.showOptionDialog(UserController.this, "This tab has not been saved.\nDo you want to save?",
                        "Save file?", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
                        choice, choice[0]);
 
                if (choice[sel] == choice[0]) {
-                  new SaveFile(UserInterface.this).actionPerformed(null);
+                  new SaveFile(UserController.this).actionPerformed(null);
                } else if (choice[sel] == choice[1]) {
                   tabs.remove(tabs.getSelectedIndex());
 
@@ -149,15 +165,15 @@ public class UserInterface extends JFrame {
          @Override
          public void windowClosing(WindowEvent e) {
             if (!hasBeenSaved()) {
-               int result = JOptionPane.showConfirmDialog(UserInterface.this,
+               int result = JOptionPane.showConfirmDialog(UserController.this,
                        "Do you want to save before closing?", "Exit Confirmation",
                        JOptionPane.YES_NO_CANCEL_OPTION);
                if (result == JOptionPane.YES_OPTION) {
-                  new SaveFile(UserInterface.this).actionPerformed(null);
+                  new SaveFile(UserController.this).actionPerformed(null);
                } else if (result == JOptionPane.CANCEL_OPTION) {
-                  UserInterface.this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                  UserController.this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
                } else {
-                  UserInterface.this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                  UserController.this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                }
             }
          }
@@ -197,14 +213,22 @@ public class UserInterface extends JFrame {
       players = new ArrayList<>();
       pUI = new ArrayList<>();
 
-      players.add(new Player("New Player", 0, 0, 0, 0, 0));
-      pUI.add(new PlayerUI(players.get(players.size()-1), UserInterface.this));
+      players.add(new Player("New Player", "newPlayer", 0, 0, 0, 0, 0));
+      pUI.add(new PlayerUI(players.get(players.size()-1), UserController.this));
       tabs.addTab("New Player", pUI.get(pUI.size()-1).generatePanel());
 
       addTab.setEnabled(true);
       search.setEnabled(true);
       export.setEnabled(true);
       print.setEnabled(true);
+      start.setEnabled(true);
+      openGame.setEnabled(true);
+
+      if (listPlayers == null) {
+         listPlayers = new PanelList(UserController.this);
+      }
+
+      listPlayers.updateList();
 
       setHasBeenSaved(true);
 
@@ -224,7 +248,7 @@ public class UserInterface extends JFrame {
       pUI = new ArrayList<>();
 
       for (Player p : players) {
-         pUI.add(new PlayerUI(p, UserInterface.this));
+         pUI.add(new PlayerUI(p, UserController.this));
          tabs.addTab(pUI.get(pUI.size()-1).getJTextName().getText(), pUI.get(pUI.size()-1).generatePanel());
       }
 
@@ -232,11 +256,18 @@ public class UserInterface extends JFrame {
       search.setEnabled(true);
       export.setEnabled(true);
       print.setEnabled(true);
+      start.setEnabled(true);
+      openGame.setEnabled(true);
 
       if (tabs.getTabCount() > 1) {
          removeTab.setEnabled(true);
       }
 
+      if (listPlayers == null) {
+         listPlayers = new PanelList(UserController.this);
+      }
+
+      listPlayers.updateList();
       setHasBeenSaved(true);
 
       validate();
@@ -249,6 +280,7 @@ public class UserInterface extends JFrame {
    public ArrayList<Player> getPlayers() {
       for (int i = 0; i < players.size(); i++) {
          players.set(i, new Player(pUI.get(i).getJTextName().getText(),
+                 pUI.get(i).getUsername().getText(),
                  (Integer) (pUI.get(i).getInsert().get(0).getValue()),
                  (Integer) (pUI.get(i).getInsert().get(1).getValue()),
                  (Integer) (pUI.get(i).getInsert().get(2).getValue()),
@@ -259,11 +291,29 @@ public class UserInterface extends JFrame {
       return players;
    }
 
-   public JCheckBoxMenuItem getShowList() {
+   public void setPlayers(ArrayList<Player> players) {
+      this.players = players;
+   }
+
+   public ArrayList<Object> getUsernames() {
+      ArrayList<Object> usernames = new ArrayList<>();
+
+      for (Player p : players) {
+         usernames.add(p.getUsername());
+      }
+
+      return usernames;
+   }
+
+   JCheckBoxMenuItem getShowList() {
       return showList;
    }
 
+   PanelList getListPlayers() {
+      return listPlayers;
+   }
+
    public void askForSaving(ActionEvent e) {
-      new SaveFile(UserInterface.this).actionPerformed(e);
+      new SaveFile(UserController.this).actionPerformed(e);
    }
 }

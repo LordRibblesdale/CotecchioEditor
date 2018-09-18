@@ -1,101 +1,20 @@
 package Export;
 
 import Data.Player;
-import Interface.UserInterface;
+import Interface.UserController;
 
-import java.awt.*;
-import java.awt.print.*;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.*;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-
-class Page implements Printable {
-   private ArrayList<String> data;
-   private int x = 50, y = 50, i = 0;
-
-
-   Page(ArrayList<Player> players) {
-      data = getPaper(players);
-   }
-
-   @Override
-   public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-      if (pageIndex > 0) {
-         return NO_SUCH_PAGE;
-      }
-
-      Graphics2D g2 = (Graphics2D) graphics;
-      g2.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
-
-      for (String s : data) {
-         g2.drawString(s, x, y);
-
-         if (x < pageFormat.getWidth() - 50) {
-            x += 2*s.length() +10;
-         } else {
-            x = 50;
-         }
-
-         if (i++ == 8) {
-            i = 0;
-            y += 8;
-         }
-      }
-
-      return PAGE_EXISTS;
-   }
-
-   private ArrayList<String> getPaper(ArrayList<Player> players) {
-      DecimalFormat df = new DecimalFormat("##.##");
-      df.setRoundingMode(RoundingMode.DOWN);
-
-      final String[] labelStrings = {
-              "Nome",
-              "Punteggio",
-              "Partite",
-              "Media",
-              "W-L",
-              "Pelliccioni",
-              "Media P.",
-              "Cappotti",
-              "Media C."
-      };
-
-      ArrayList<String> data = new ArrayList<>();
-
-      //TODO improve code here
-      data.add("Graduatoria Cotecchio");
-
-      data.addAll(Arrays.asList(labelStrings));
-
-      for (Player player : players) {
-         final String[] playerStrings = {
-                 player.getName(),
-                 String.valueOf(player.getScore()),
-                 String.valueOf(player.getTotalPlays()),
-                 df.format((player.getScore() / (float) player.getTotalPlays())),
-                 String.valueOf(player.getTotalWins() + (player.getTotalPlays() - player.getTotalWins())),
-                 String.valueOf(player.getPelliccions()),
-                 df.format((player.getPelliccions() / (float) player.getTotalPlays())),
-                 String.valueOf(player.getCappottens()),
-                 df.format((player.getCappottens() / (float) player.getTotalPlays()))
-         };
-
-         data.addAll(Arrays.asList(playerStrings));
-      }
-
-      return data;
-   }
-}
-
 
 public class PrintThread extends AbstractAction {
-   private UserInterface ui;
+   private UserController ui;
 
-   public PrintThread(UserInterface ui) {
+   public PrintThread(UserController ui) {
       this.ui = ui;
 
       putValue(Action.NAME, "Print...");
@@ -114,20 +33,54 @@ public class PrintThread extends AbstractAction {
          } else if (choice == JOptionPane.NO_OPTION) {
             print();
          }
+      } else  {
+         print();
       }
    }
 
    private void print() {
-      PrinterJob job = PrinterJob.getPrinterJob();
+      ArrayList<Player> players = ui.getPlayers();
+      String paper = getPaper(players);
 
-      job.setPrintable(new Page(ui.getPlayers()));
+      String path = System.getProperty("java.io.tmpdir") + "/Cotecchio.xls";
+      System.out.println(path);
 
-      if (job.printDialog()) {
-         try {
-            job.print();
-         } catch (PrinterException e1) {
-            JOptionPane.showMessageDialog(ui, "Error printing page", "Error printer", JOptionPane.ERROR_MESSAGE);
-         }
+      try {
+         write(path, paper);
+         Desktop.getDesktop().print(new File(path));
+      } catch (IOException e1) {
+         JOptionPane.showMessageDialog(ui, "Error writing file", "Error I/O", JOptionPane.ERROR_MESSAGE);
+         e1.printStackTrace();
       }
+   }
+
+   private String getPaper(ArrayList<Player> players) {
+      StringBuilder paper = new StringBuilder();
+      DecimalFormat df = new DecimalFormat();
+      df.setRoundingMode(RoundingMode.DOWN);
+
+      paper.append("Graduatoria Cotecchio\n\n");
+      paper.append("Nome Cognome\tPunteggio\tPartite\tW-L\tMedia\tPelliccioni\tMedia P.\tCappotti\tMedia C.\n");
+
+      for (Player p : players) {
+         paper.append(p.getName()).append("\t")
+                 .append(p.getScore()).append("\t")
+                 .append(p.getTotalPlays()).append("\t")
+                 .append(p.getTotalWins()).append("w-").append(p.getTotalPlays() - p.getTotalWins()).append("l\t")
+                 .append(df.format(p.getScore() / (float) p.getTotalPlays())).append("\t")
+                 .append(p.getPelliccions()).append("\t")
+                 .append(df.format(p.getPelliccions() / (float) p.getTotalPlays())).append("\t")
+                 .append(p.getCappottens()).append("\t")
+                 .append(df.format(p.getCappottens() / (float) p.getTotalPlays()));
+         paper.append("\n");
+      }
+
+      return paper.toString();
+   }
+
+   private void write(String path, String paper) throws IOException{
+      PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(path)));
+      out.write(paper);
+      out.close();
    }
 }

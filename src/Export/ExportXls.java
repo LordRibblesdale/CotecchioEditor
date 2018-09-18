@@ -1,7 +1,7 @@
 package Export;
 
 import Data.Player;
-import Interface.UserInterface;
+import Interface.UserController;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -12,9 +12,9 @@ import java.util.ArrayList;
 
 
 public class ExportXls extends AbstractAction {
-   private UserInterface ui;
+   private UserController ui;
 
-   public ExportXls(UserInterface ui) {
+   public ExportXls(UserController ui) {
       this.ui = ui;
 
       putValue(Action.NAME, "Export as MSExcel");
@@ -31,6 +31,8 @@ public class ExportXls extends AbstractAction {
          } else if (choice == JOptionPane.NO_OPTION) {
             export();
          }
+      } else {
+         export();
       }
    }
 

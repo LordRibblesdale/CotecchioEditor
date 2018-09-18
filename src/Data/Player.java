@@ -3,17 +3,19 @@ package Data;
 import java.io.Serializable;
 
 public class Player implements Serializable {
-   private static final long serialVersionUID = 110L;
+   private static final long serialVersionUID = 210L;
 
    private String name;
+   private String username;
    private int score;
    private int pelliccions;
    private int cappottens;
    private int totalPlays;
    private int totalWins;
 
-   public Player(String name, int score, int pelliccions, int cappottens, int totalPlays, int totalWins) {
+   public Player(String name, String username, int score, int pelliccions, int cappottens, int totalPlays, int totalWins) {
       this.name = name;
+      this.username = username;
       this.score = score;
       this.pelliccions = pelliccions;
       this.cappottens = cappottens;
@@ -43,6 +45,14 @@ public class Player implements Serializable {
 
    public String getName() {
       return name;
+   }
+
+   public String getUsername() {
+      return username;
+   }
+
+   public static long getSerialVersionUID() {
+      return serialVersionUID;
    }
 
    public void setCappottens(int cappottens) {

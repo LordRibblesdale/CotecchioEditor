@@ -21,3 +21,10 @@ Build 1:
                  Fix save feature
     Alpha 2.1.2: Add initial log feature
                  Fix XLS export
+Build 2:
+    Alpha 1.0: Add Game simulation
+               Fix printing process
+               Fix export and printing access
+               Fix player list panel
+               Fix Player UI totalWins and totalPlays values bug
+               Remove exception handling from CotecchioEditor

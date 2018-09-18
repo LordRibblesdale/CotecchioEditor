@@ -1,7 +1,7 @@
-package File;
+package FileManager;
 
 import Data.Player;
-import Interface.UserInterface;
+import Interface.UserController;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -9,11 +9,11 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class OpenFile extends AbstractAction implements Path {
-   private UserInterface ui;
+   private UserController ui;
    private ArrayList<Player> players;
    private ObjectInputStream input;
 
-   public OpenFile(UserInterface ui) {
+   public OpenFile(UserController ui) {
       this.ui = ui;
 
       putValue(Action.NAME, "Load...");
@@ -46,7 +46,7 @@ public class OpenFile extends AbstractAction implements Path {
       } catch (FileNotFoundException e3) {
          JOptionPane.showMessageDialog(ui, "Error inserting name file", "Error I/O", JOptionPane.ERROR_MESSAGE);
       } catch (IOException | ClassNotFoundException e1) {
-         JOptionPane.showMessageDialog(ui, "Error loading file", "Error I/O", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(ui, e1.getMessage(), "Error I/O", JOptionPane.ERROR_MESSAGE);
       } catch (ClassCastException e2) {
          JOptionPane.showMessageDialog(ui, "Error reading file", "Error I/O", JOptionPane.ERROR_MESSAGE);
       }
@@ -61,7 +61,7 @@ public class OpenFile extends AbstractAction implements Path {
 
       if (res == JFileChooser.APPROVE_OPTION) {
          return fileChooser.getSelectedFile().getPath();
-      } else {
+      } else if (res != JFileChooser.CANCEL_OPTION) {
          JOptionPane.showMessageDialog(ui, "Error loading file", "Error I/O", JOptionPane.ERROR_MESSAGE);
       }
 

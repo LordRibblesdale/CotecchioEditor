@@ -1,17 +1,17 @@
 package Edit;
 
-import Interface.UserInterface;
+import Interface.UserController;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class Search extends AbstractAction {
    private JTabbedPane tab;
-   private UserInterface ui;
+   private UserController ui;
    private static int i = 0;
    private String previousRes = "";
 
-   public Search(UserInterface ui) {
+   public Search(UserController ui) {
       this.ui = ui;
 
       putValue(Action.NAME, "Search");

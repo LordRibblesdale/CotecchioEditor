@@ -12,15 +12,61 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class PlayerUI extends JPanel {
-   private ArrayList<JLabel> labels = new ArrayList<>(10);
-   private ArrayList<JSpinner> insert = new ArrayList<>(5);
-   private JTextField name;
+class PlayerUI extends JPanel {
+   private static int LENGTH_LABELS = 11;
+   private static int LENGTH_INSERT = 5;
+   private ArrayList<JLabel> labels = new ArrayList<>(LENGTH_LABELS);
+   private ArrayList<JSpinner> insert = new ArrayList<>(LENGTH_INSERT);
+   private JTextField name, username;
+   private UserController ui;
+   private DocumentListener dl = new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e) {
+         change(e);
+      }
 
-   private DecimalFormat df = new DecimalFormat("##.##");
+      @Override
+      public void removeUpdate(DocumentEvent e) {
+         change(e);
+      }
 
-   private static final String[] editable = {
+      @Override
+      public void changedUpdate(DocumentEvent e) {
+         change(e);
+      }
+
+      private void change(DocumentEvent e) {
+         ui.getTabs().setTitleAt(ui.getTabs().getSelectedIndex(), name.getText());
+
+         if (e.getDocument() == name.getDocument()) {
+            labels.get(0).setText(LABEL_STRINGS[0] + name.getText());
+         } else {
+            labels.get(1).setText(LABEL_STRINGS[1] + username.getText());
+         }
+
+         ui.setHasBeenSaved(false);
+         ui.getListPlayers().updateList();
+         validate();
+      }
+   };
+
+   private static final String[] LABEL_STRINGS = {
            "Nome: ",
+           "Username: ",
+           "Punteggio: ",
+           "Pelliccioni: ",
+           "Cappotti: ",
+           "Partite giocate: ",
+           "Partite vinte: ",
+           "Partite perse: ",
+           "Media Pelliccioni: ",
+           "Media Cappotti: ",
+           "Media: "
+   };
+
+   private static final String[] EDITABLE = {
+           "Nome: ",
+           "Username: ",
            "Punteggio: ",
            "Pelliccioni: ",
            "Cappotti: ",
@@ -28,22 +74,14 @@ public class PlayerUI extends JPanel {
            "Partite vinte: "
    };
 
-   PlayerUI(Player player, UserInterface ui) {
-      final String[] labelStrings = {
-              "Nome: ",
-              "Punteggio: ",
-              "Pelliccioni: ",
-              "Cappotti: ",
-              "Partite giocate: ",
-              "Partite vinte: ",
-              "Partite perse: ",
-              "Media Pelliccioni: ",
-              "Media Cappotti: ",
-              "Media: "
-      };
+   private DecimalFormat df = new DecimalFormat("##.##");
 
-      final String[] playerStrings = {
+   PlayerUI(Player player, UserController ui) {
+      this.ui = ui;
+
+      final String[] PLAYER_STRINGS = {
               player.getName(),
+              player.getUsername(),
               String.valueOf(player.getScore()),
               String.valueOf(player.getPelliccions()),
               String.valueOf(player.getCappottens()),
@@ -57,36 +95,17 @@ public class PlayerUI extends JPanel {
 
       df.setRoundingMode(RoundingMode.DOWN);
 
-      name = new JTextField(playerStrings[0]);
-      name.getDocument().addDocumentListener(new DocumentListener() {
-         @Override
-         public void insertUpdate(DocumentEvent e) {
-            change(e);
-         }
+      name = new JTextField(PLAYER_STRINGS[0]);
+      name.getDocument().addDocumentListener(dl);
 
-         @Override
-         public void removeUpdate(DocumentEvent e) {
-            change(e);
-         }
+      username = new JTextField(PLAYER_STRINGS[1]);
+      username.getDocument().addDocumentListener(dl);
 
-         @Override
-         public void changedUpdate(DocumentEvent e) {
-            change(e);
-         }
-
-         private void change(DocumentEvent e) {
-            ui.getTabs().setTitleAt(ui.getTabs().getSelectedIndex(), name.getText());
-            labels.get(0).setText(labelStrings[0] + name.getText());
-            ui.setHasBeenSaved(false);
-            validate();
-         }
-      });
-
-      for (int i = 0; i < labelStrings.length; i++) {
-         labels.add(new JLabel(labelStrings[i] + playerStrings[i]));
+      for (int i = 0; i < LABEL_STRINGS.length; i++) {
+         labels.add(new JLabel(LABEL_STRINGS[i] + PLAYER_STRINGS[i]));
       }
 
-      for (int i = 0; i < 5; i++) {
+      for (int i = 0; i < LENGTH_INSERT; i++) {
          SpinnerNumberModel snm = new SpinnerNumberModel();
          snm.setMinimum(0);
 
@@ -105,26 +124,34 @@ public class PlayerUI extends JPanel {
                break;
             case 4:
                snm.setValue(player.getTotalWins());
+               snm.setMaximum((Integer) insert.get(i-1).getValue());
                break;
          }
 
          insert.add(new JSpinner(snm));
-         insert.get(insert.size()-1).addChangeListener(new ChangeListener() {
+         insert.get(insert.size()-1).addChangeListener(new ChangeListener() { //TODO Optimise code here
             @Override
             public void stateChanged(ChangeEvent e) {
-               for (int i = 0; i < 5; i++) {
+               for (int i = 0; i < LENGTH_INSERT; i++) {
                   if (e.getSource() == insert.get(i)) {
-                     labels.get(i+1).setText(editable[i+1] + insert.get(i).getValue());
-                     labels.get(6).setText(labelStrings[6] + ((Integer) insert.get(3).getValue() - (Integer) insert.get(4).getValue()));
-                     labels.get(7).setText(labelStrings[7] + df.format((Integer) insert.get(1).getValue() / (float) ((Integer) insert.get(3).getValue())));
-                     labels.get(8).setText(labelStrings[8] + df.format((Integer) insert.get(2).getValue() / (float) ((Integer) insert.get(3).getValue())));
-                     labels.get(9).setText(labelStrings[9] + df.format((Integer) insert.get(0).getValue() / (float) ((Integer) insert.get(3).getValue())));
-
                      SpinnerNumberModel snm = new SpinnerNumberModel();
-                     snm.setValue(insert.get(4).getValue());
+
+                     if ((Integer) insert.get(3).getValue() < (Integer) insert.get(4).getValue()) {
+                        snm.setValue(insert.get(3).getValue());
+                     } else {
+                        snm.setValue(insert.get(4).getValue());
+                     }
+
                      snm.setMinimum(0);
                      snm.setMaximum((Integer) insert.get(3).getValue());
                      insert.get(4).setModel(snm);
+
+                     labels.get(i+2).setText(EDITABLE[i+2] + insert.get(i).getValue());
+                     labels.get(6).setText(LABEL_STRINGS[6] + (Integer) insert.get(4).getValue());
+                     labels.get(7).setText(LABEL_STRINGS[7] + ((Integer) insert.get(3).getValue() - (Integer) insert.get(4).getValue()));
+                     labels.get(8).setText(LABEL_STRINGS[8] + df.format((Integer) insert.get(1).getValue() / (float) ((Integer) insert.get(3).getValue())));
+                     labels.get(9).setText(LABEL_STRINGS[9] + df.format((Integer) insert.get(2).getValue() / (float) ((Integer) insert.get(3).getValue())));
+                     labels.get(10).setText(LABEL_STRINGS[10] + df.format((Integer) insert.get(0).getValue() / (float) ((Integer) insert.get(3).getValue())));
                   }
                }
 
@@ -133,16 +160,12 @@ public class PlayerUI extends JPanel {
                ui.setHasBeenSaved(false);
             }
          });
-
-         if (i == 4) {
-            snm.setMaximum((Integer) insert.get(i-1).getValue());
-            insert.get(i).setModel(snm);
-         }
       }
    }
 
-   public JPanel generatePanel() {
+   JPanel generatePanel() {
       JPanel ui = new JPanel();
+      JPanel tmp;
       JPanel labelList = new JPanel(new GridLayout(0, 1));
       JPanel editList = new JPanel(new GridLayout(0, 1));
 
@@ -150,14 +173,25 @@ public class PlayerUI extends JPanel {
          labelList.add(data);
       }
 
-      JPanel tmp = new JPanel();
-      tmp.add(new JLabel(editable[0]));
-      tmp.add(name);
-      editList.add(tmp);
+      for (int i = 0; i < 2; i++) {
+         tmp = new JPanel();
+         tmp.add(new JLabel(EDITABLE[i]));
+
+         switch (i) {
+            case 0:
+               tmp.add(name);
+               break;
+            case 1:
+               tmp.add(username);
+               break;
+         }
+
+         editList.add(tmp);
+      }
 
       for (int i = 0; i < 5; i++) {
          tmp = new JPanel(new GridLayout(1, 2));
-         tmp.add(new JLabel(editable[i+1]));
+         tmp.add(new JLabel(EDITABLE[i+2]));
          tmp.add(insert.get(i));
 
          editList.add(tmp);
@@ -169,11 +203,15 @@ public class PlayerUI extends JPanel {
       return ui;
    }
 
-   public JTextField getJTextName() {
+   JTextField getJTextName() {
       return name;
    }
 
-   public ArrayList<JSpinner> getInsert() {
+   JTextField getUsername() {
+      return username;
+   }
+
+   ArrayList<JSpinner> getInsert() {
       return insert;
    }
 }

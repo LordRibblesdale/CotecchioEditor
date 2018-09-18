@@ -1,7 +1,7 @@
-package File;
+package FileManager;
 
 import Data.Player;
-import Interface.UserInterface;
+import Interface.UserController;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -9,9 +9,9 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class SaveFile extends AbstractAction implements Path {
-   private UserInterface ui;
+   private UserController ui;
 
-   public SaveFile(UserInterface ui) {
+   public SaveFile(UserController ui) {
       this.ui = ui;
 
       putValue(Action.NAME, "Save...");
@@ -25,6 +25,7 @@ public class SaveFile extends AbstractAction implements Path {
          try {
             if (file.createNewFile()) {
                saveThread(Path.path);
+               JOptionPane.showMessageDialog(ui, "Players list is saved in " + Path.path);
             } else {
                JOptionPane.showMessageDialog(ui, "Error creating file", "Error I/O", JOptionPane.ERROR_MESSAGE);
             }
@@ -66,5 +67,7 @@ public class SaveFile extends AbstractAction implements Path {
       } catch (IOException e1) {
          e1.printStackTrace();
       }
+
+      ui.setHasBeenSaved(true);
    }
 }

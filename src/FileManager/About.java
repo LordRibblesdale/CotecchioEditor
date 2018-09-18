@@ -1,15 +1,15 @@
-package File;
+package FileManager;
 
-import Interface.UserInterface;
+import Interface.UserController;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class About extends AbstractAction {
-   private UserInterface ui;
+   private UserController ui;
    private static String info = "Creatore di elenco per Cotecchio\nLordRibblesdale";
 
-   public About(UserInterface ui) {
+   public About(UserController ui) {
       this.ui = ui;
 
       putValue(Action.NAME, "About...");

@@ -1,15 +1,15 @@
-package File;
+package FileManager;
 
-import Interface.UserInterface;
+import Interface.UserController;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class NewFile extends AbstractAction {
-   private UserInterface ui;
+   private UserController ui;
    private Object[] choice = {"Save", "Discard", "Go Back"};
 
-   public NewFile(UserInterface ui) {
+   public NewFile(UserController ui) {
       this.ui = ui;
 
       putValue(Action.NAME, "New");
@@ -25,7 +25,7 @@ public class NewFile extends AbstractAction {
                  choice, choice[0]);
 
          if (choice[selection] == choice[0]) {
-
+            ui.askForSaving(e);
          } else if (choice[selection] == choice[1]) {
             ui.initialise();
          }

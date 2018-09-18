@@ -1,4 +1,4 @@
-package File;
+package FileManager;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.File;

@@ -1,43 +1,39 @@
 package Interface;
 
-import Interface.UserInterface;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 public class PanelList extends JFrame {
-   private UserInterface ui;
+   private UserController ui;
    private JTabbedPane tab;
    private JScrollPane scrollPane;
    private JList<String> list;
-
-   PanelList(UserInterface ui) {
-      super("Interface.PanelList");
-
-      list = new JList<>();
-      updateList();
-
-      list.addListSelectionListener(new ListSelectionListener() {
-         @Override
-         public void valueChanged(ListSelectionEvent e) {
+   private ListSelectionListener l = new ListSelectionListener() {
+      @Override
+      public void valueChanged(ListSelectionEvent e) {
+         if (tab != null) {
             tab.setSelectedIndex(((JList<String>) e.getSource()).getSelectedIndex());
             validate();
          }
-      });
+      }
+   };
 
-      scrollPane = new JScrollPane(list);
-      add(scrollPane);
+   PanelList(UserController ui) {
+      super("PanelList");
+
+      this.ui = ui;
+      updateList();
+
       add(new JLabel("This is an experimental feature"), BorderLayout.PAGE_END);
 
       addWindowListener(new WindowAdapter() {
          @Override
          public void windowClosing(WindowEvent e) {
-            super.windowClosing(e);
-
             ui.getShowList().setState(false);
          }
       });
@@ -48,19 +44,37 @@ public class PanelList extends JFrame {
       setVisible(false);
    }
 
-   public void updateList() {
-      if (tab != null) {
+   void updateList() {
+      if (tab == null) {
          tab = ui.getTabs();
       }
 
-      list.removeAll();
-
       if (tab != null) {
-         for (int i = 0; i < tab.getTabCount(); i++) {
-            list.add(new JLabel(tab.getTitleAt(i)));
+         if (scrollPane != null) {
+            remove(scrollPane);
          }
-      }
 
-      repaint();
+         ArrayList<String> strings = new ArrayList<>();
+
+         for (int i = 0; i < tab.getTabCount(); i++) {
+            strings.add(tab.getTitleAt(i));
+         }
+
+         String[] strings1 = new String[strings.size()];
+
+         for (int i = 0; i < strings1.length; i++) {
+            strings1[i] = strings.get(i);
+         }
+
+         list = new JList<>(strings1);
+         list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+         list.addListSelectionListener(l);
+         scrollPane = new JScrollPane(list);
+         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+         add(scrollPane);
+
+         validate();
+      }
    }
 }
