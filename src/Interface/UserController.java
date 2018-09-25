@@ -8,7 +8,6 @@ import FileManager.About;
 import FileManager.NewFile;
 import FileManager.OpenFile;
 import FileManager.SaveFile;
-import Game.GameProgress;
 import Game.GameStarter;
 import Game.OpenGameFile;
 
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 
 public class UserController extends JFrame {
    private static final String programName = "Cotecchio Editor - ";
-   private static final String version = "Build 2 Alpha 1.0";
+   private static final String version = "Build 2 Alpha 1.1";
    private GridLayout mainLayout;
    private JPanel mainPanel;
    private JPanel buttonPanel;

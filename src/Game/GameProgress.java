@@ -1,7 +1,6 @@
 package Game;
 
 import Data.Player;
-import FileManager.OpenFile;
 import FileManager.SaveFile;
 import Interface.UserController;
 
@@ -12,9 +11,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static Game.Points.*;
-
-public class GameProgress extends JFrame implements Serializable, Points {
+class GameProgress extends JFrame implements Serializable, Points {
    private static final long serialVersionUID = 210L;
 
    class PlayerPanel extends JPanel implements Comparable<PlayerPanel> {
@@ -130,6 +127,7 @@ public class GameProgress extends JFrame implements Serializable, Points {
    private JScrollPane scrollPane;
    private JButton next, reset;
    private JPanel bottom, btn;
+   private ButtonGroup bg;
    private transient UserController ui;
 
    private transient ActionListener nextL = new ActionListener() {
@@ -168,36 +166,38 @@ public class GameProgress extends JFrame implements Serializable, Points {
             pl.getBg().clearSelection();
          }
 
+         bg.clearSelection();
+
          if (isGameOver) { //TODO improve code here
-            int pos = 1;
+            int pos = 0;
             ui.setPlayers(playerArrayList);
 
             Collections.sort(players);
 
             for (PlayerPanel pl : players) {
                for (Player player : playerArrayList) {
+                  //TODO fix here
                   if (pl.getUsername().getText().equals(player.getUsername())) {
-
                      switch (players.size()) {
                         case 3:
-                           player.setScore(player.getScore() + THREE[pos-1]);
+                           player.setScore(player.getScore() + THREE[pos]);
                            break;
                         case 4:
-                           player.setScore(player.getScore() + FOUR[pos-1]);
+                           player.setScore(player.getScore() + FOUR[pos]);
                            break;
                         case 5:
-                           player.setScore(player.getScore() + FIVE[pos-1]);
+                           player.setScore(player.getScore() + FIVE[pos]);
                            break;
                         case 6:
-                           player.setScore(player.getScore() + SIX[pos-1]);
+                           player.setScore(player.getScore() + SIX[pos]);
                            break;
                         default:
-                           JOptionPane.showMessageDialog(GameProgress.this, "Add manually additional score to players [SOON]");
+                           JOptionPane.showMessageDialog(GameProgress.this, "Add manually additional score to players!");
                            //TODO: add here additional code
                      }
 
                      player.setTotalPlays(player.getTotalPlays()+1);
-                     player.setTotalWins(pos++ == 1 ? player.getTotalWins()+1 : player.getTotalWins());
+                     player.setTotalWins(pos++ == 0 ? player.getTotalWins()+1 : player.getTotalWins());
                   }
                }
             }
@@ -250,7 +250,7 @@ public class GameProgress extends JFrame implements Serializable, Points {
 
    private boolean isGameOver = false;
 
-   GameProgress(UserController ui, ArrayList<Player> playerArrayList) throws Exception {
+   GameProgress(UserController ui, ArrayList<Player> playerArrayList) {
       super("Game Point Simulator");
       this.ui = ui;
 
@@ -288,10 +288,10 @@ public class GameProgress extends JFrame implements Serializable, Points {
             usernames.remove(user);
          }
 
-
+         fixButtons(bg = new ButtonGroup(), players);
 
          btn = new JPanel(new GridLayout(0, 1));
-         btn.add(reset = new JButton("Reset points"));
+         btn.add(reset = new JButton("Reset Points"));
          btn.add(next = new JButton("Next match"));
 
          next.addActionListener(nextL);
@@ -310,7 +310,7 @@ public class GameProgress extends JFrame implements Serializable, Points {
    }
 
    GameProgress(UserController ui, ArrayList<Player> playerArrayList, ArrayList<PlayerPanel> players,
-                JTextArea log, ArrayList<Object> usernames) throws Exception {
+                JTextArea log, ArrayList<Object> usernames) {
       super("Game Point Simulator");
       this.ui = ui;
 
@@ -345,8 +345,10 @@ public class GameProgress extends JFrame implements Serializable, Points {
          bottom.add(new JSeparator(SwingConstants.VERTICAL));
       }
 
+      fixButtons(bg = new ButtonGroup(), this.players);
+
       btn = new JPanel(new GridLayout(0, 1));
-      btn.add(reset = new JButton("Reset points"));
+      btn.add(reset = new JButton("Reset Points"));
       btn.add(next = new JButton("Next match"));
 
       next.addActionListener(nextL);
@@ -384,6 +386,12 @@ public class GameProgress extends JFrame implements Serializable, Points {
       validate();
    }
 
+   private void fixButtons(ButtonGroup bg, ArrayList<PlayerPanel> players) {
+      for (PlayerPanel p : players) {
+         bg.add(p.getCappott());
+         bg.add(p.getPelliccion());
+      }
+   }
 
    JTextArea getLog() {
       return log;

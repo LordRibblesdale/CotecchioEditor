@@ -28,3 +28,5 @@ Build 2:
                Fix player list panel
                Fix Player UI totalWins and totalPlays values bug
                Remove exception handling from CotecchioEditor
+    Alpha 1.1: Fix saving results in Players file
+               Fix button selection during game simulation

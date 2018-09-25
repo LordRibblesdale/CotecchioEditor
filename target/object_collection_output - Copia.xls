@@ -1,0 +1,9 @@
+Graduatoria Cotecchio										
+										
+Nome Cognome	Punteggio	Partite	W - L	Media	Pelliccioni	Media P.	Cappotti	Media C.		
+${player.name}	${player.score}	${player.totalPlays}	${player.totalWins}							
+										
+										
+										
+										
+										
