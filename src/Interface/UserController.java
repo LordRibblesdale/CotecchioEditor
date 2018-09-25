@@ -1,25 +1,29 @@
 package Interface;
 
 import Data.Player;
+import Data.Settings;
 import Edit.Search;
 import Export.ExportLeaderboard;
 import Export.ExportXls;
 import Export.PrintThread;
-import FileManager.About;
-import FileManager.NewFile;
-import FileManager.OpenFile;
-import FileManager.SaveFile;
+import FileManager.*;
 import Game.GameStarter;
 import Game.OpenGameFile;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+
+import static FileManager.Path.logPath;
 
 public class UserController extends JFrame {
    private static final String programName = "Cotecchio Editor - ";
-   private static final String version = "Build 3 Beta 1.0";
+   private static final String version = "Build 4 Beta 1.0";
    private GridLayout mainLayout;
    private JPanel mainPanel;
    private JPanel buttonPanel;
@@ -42,8 +46,14 @@ public class UserController extends JFrame {
    private JToolBar toolBar;
    private PanelList listPlayers = null;
 
+   private Settings settings;
+   private SettingsFrame settingsFrame;
+
    public UserController() {
       super(programName + version);
+
+      settings = new Settings();
+      settingsFrame = new SettingsFrame(UserController.this);
 
       mainPanel = new JPanel(mainLayout = new GridLayout(0, 10));
 
@@ -70,6 +80,8 @@ public class UserController extends JFrame {
       menu.add(edit = new JMenu("Edit"));
       edit.add(search);
       edit.add(showList = new JCheckBoxMenuItem("Show players list"));
+      edit.add(new JSeparator());
+      edit.add(new SettingsButton(UserController.this));
       showList.addItemListener(new ItemListener() {
          @Override
          public void itemStateChanged(ItemEvent e) {
@@ -86,7 +98,7 @@ public class UserController extends JFrame {
                listPlayers.setVisible(true);
             }
 
-            validate(); //??
+            validate();
          }
       });
 
@@ -195,8 +207,12 @@ public class UserController extends JFrame {
 
       if (hasBeenSaved) {
          saveButton.setEnabled(false);
+
+         settingsFrame.startTimer();
       } else {
          saveButton.setEnabled(true);
+
+         settingsFrame.stopTimer();
       }
 
       validate();
@@ -312,6 +328,26 @@ public class UserController extends JFrame {
 
    PanelList getListPlayers() {
       return listPlayers;
+   }
+
+   public SettingsFrame getSettingsFrame() {
+      return settingsFrame;
+   }
+
+   public Settings getSettings() {
+      return settings;
+   }
+
+   public void setSettings(Settings settings) {
+      this.settings = settings;
+
+      try {
+         ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(logPath)));
+         out.writeObject(settings);
+         out.close();
+      } catch (IOException e) {
+         JOptionPane.showMessageDialog(UserController.this, e.getMessage(), "Exception", JOptionPane.ERROR_MESSAGE);
+      }
    }
 
    public void askForSaving(ActionEvent e) {

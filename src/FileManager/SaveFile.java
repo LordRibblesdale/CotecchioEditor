@@ -46,7 +46,7 @@ public class SaveFile extends AbstractAction implements Path {
 
             if (res == JFileChooser.APPROVE_OPTION) {
                saveThread(fileChooser.getSelectedFile().getPath());
-            } else {
+            } else if (res != JFileChooser.CANCEL_OPTION) {
                JOptionPane.showMessageDialog(ui, "Error saving file", "Error I/O", JOptionPane.ERROR_MESSAGE);
             }
          }
@@ -65,6 +65,7 @@ public class SaveFile extends AbstractAction implements Path {
          output.writeObject(playerList);
          output.close();
       } catch (IOException e1) {
+         JOptionPane.showMessageDialog(ui, e1.getMessage(), "Exception", JOptionPane.ERROR_MESSAGE);
          e1.printStackTrace();
       }
 
