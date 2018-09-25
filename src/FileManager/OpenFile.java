@@ -20,7 +20,7 @@ public class OpenFile extends AbstractAction implements Path {
          super(in);
       }
 
-      //
+      // from StackOverFlow
       protected ObjectStreamClass readClassDescriptor() throws IOException, ClassNotFoundException {
          ObjectStreamClass resultClassDescriptor = super.readClassDescriptor(); // initially streams descriptor
          Class localClass = Class.forName(resultClassDescriptor.getName()); // the class in the local JVM that this descriptor represents.
@@ -55,7 +55,24 @@ public class OpenFile extends AbstractAction implements Path {
    public void actionPerformed(ActionEvent e) {
       ArrayList<?> tmp2;
       try {
-         this.path = getFile();
+         if (ui.getSettings().getOpenedFile().equals("")) {
+            this.path = getFile();
+         } else {
+            int choice = JOptionPane.showConfirmDialog(ui, "Do you want to open last file?", "Open Recent?", JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            switch (choice) {
+               case JOptionPane.YES_OPTION:
+                  this.path = ui.getSettings().getOpenedFile();
+                  break;
+               case JOptionPane.NO_OPTION:
+                  this.path = getFile();
+                  break;
+               case JOptionPane.CANCEL_OPTION:
+                  this.path = null;
+                  break;
+            }
+         }
 
          if (this.path != null) {
             input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(this.path)));
@@ -74,6 +91,7 @@ public class OpenFile extends AbstractAction implements Path {
                   }
                }
 
+               ui.saveRecentFile(path);
                ui.initialise(players);
             }
          }
@@ -99,6 +117,7 @@ public class OpenFile extends AbstractAction implements Path {
                   }
                }
 
+               ui.saveRecentFile(this.path);
                ui.initialise(players);
                JOptionPane.showMessageDialog(ui, "The file loaded has been converted from an older version. The list will be now saved...",
                        "Conversion completed", JOptionPane.WARNING_MESSAGE);

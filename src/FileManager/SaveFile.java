@@ -19,13 +19,22 @@ public class SaveFile extends AbstractAction implements Path {
 
    @Override
    public void actionPerformed(ActionEvent e) {
-      File file = new File(Path.path);
+      File file;
+      String dir;
+
+      if (ui.getSettings().getOpenedFile().equals("")) {
+         dir = Path.path;
+      } else {
+         dir = ui.getSettings().getOpenedFile();
+      }
+
+      file = new File(dir);
 
       if (!file.exists()) {
          try {
             if (file.createNewFile()) {
-               saveThread(Path.path);
-               JOptionPane.showMessageDialog(ui, "Players list is saved in " + Path.path);
+               saveThread(dir);
+               JOptionPane.showMessageDialog(ui, "Players list is saved in " + dir);
             } else {
                JOptionPane.showMessageDialog(ui, "Error creating file", "Error I/O", JOptionPane.ERROR_MESSAGE);
             }
@@ -36,7 +45,7 @@ public class SaveFile extends AbstractAction implements Path {
          int sel = JOptionPane.showConfirmDialog(ui, "Do you want to overwrite?", "Overwrite?", JOptionPane.YES_NO_OPTION);
 
          if (sel == JOptionPane.YES_OPTION) {
-            saveThread(Path.path);
+            saveThread(dir);
          } else {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setAcceptAllFileFilterUsed(false);
@@ -69,6 +78,7 @@ public class SaveFile extends AbstractAction implements Path {
          e1.printStackTrace();
       }
 
+      ui.saveRecentFile(path);
       ui.setHasBeenSaved(true);
    }
 }

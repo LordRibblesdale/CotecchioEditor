@@ -37,4 +37,6 @@ Build 3:
 Build 4:
     Beta 1.0: Add Settings panel
               Add AutoSave feature
+              Add Recent File feature from Settings
+              Improve user interface
               Fix saving feature

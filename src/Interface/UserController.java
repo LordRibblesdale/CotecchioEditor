@@ -17,9 +17,11 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
-import static FileManager.Path.logPath;
+import static FileManager.Path.setPath;
 
 public class UserController extends JFrame {
    private static final String programName = "Cotecchio Editor - ";
@@ -31,6 +33,7 @@ public class UserController extends JFrame {
    private JMenu file, edit, about, export, game;
    private JButton addTab, removeTab;
    private JCheckBoxMenuItem showList;
+   private JLabel saveStatus;
 
    private boolean hasBeenSaved = true;
    private SaveFile saveButton;
@@ -114,6 +117,7 @@ public class UserController extends JFrame {
       setJMenuBar(menu);
 
       buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+      buttonPanel.add(saveStatus = new JLabel());
       buttonPanel.add(addTab = new JButton("Add Tab"));
       buttonPanel.add(removeTab = new JButton("Remove this Tab"));
 
@@ -207,12 +211,12 @@ public class UserController extends JFrame {
 
       if (hasBeenSaved) {
          saveButton.setEnabled(false);
-
-         settingsFrame.startTimer();
+         setTitle(programName + version);
+         settingsFrame.stopTimer();
       } else {
          saveButton.setEnabled(true);
-
-         settingsFrame.stopTimer();
+         setTitle(programName + version + " - *Changes not saved");
+         settingsFrame.startTimer();
       }
 
       validate();
@@ -338,16 +342,24 @@ public class UserController extends JFrame {
       return settings;
    }
 
-   public void setSettings(Settings settings) {
+   void setSettings(Settings settings) {
       this.settings = settings;
+      saveStatus.setText("Saved @ " + new SimpleDateFormat("HH.mm.ss").format(new Date()));
+      validate();
 
       try {
-         ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(logPath)));
+         ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(setPath)));
          out.writeObject(settings);
          out.close();
       } catch (IOException e) {
          JOptionPane.showMessageDialog(UserController.this, e.getMessage(), "Exception", JOptionPane.ERROR_MESSAGE);
       }
+   }
+
+   public void saveRecentFile(String dir) {
+      settings.setOpenedFile(dir);
+
+      setSettings(settings);
    }
 
    public void askForSaving(ActionEvent e) {

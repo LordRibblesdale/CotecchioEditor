@@ -9,5 +9,5 @@ public interface Path {
    String defaultGameName = base + (new SimpleDateFormat("yyyy-MM-dd HH.mm")).format(new Date()) + ".bin";
    String path = base + defaultName;
    String logPath = base + "log.txt";
-   String setPath = base + "settings.bin";
+   String setPath = base + "settings.set";
 }

@@ -2,6 +2,7 @@ package Data;
 
 import FileManager.Path;
 
+import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -10,31 +11,34 @@ public class Settings implements Serializable, Path {
 
     private int refreshSaveRate;
     private String openedFile;
-    private ArrayList<String> lastOpenedFiles;
 
     public Settings() {
         Settings tmp;
         try {
-            ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(logPath)));
+            ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(setPath)));
             Object object = in.readObject();
+            in.close();
+
             if (object instanceof Settings) {
                 tmp = (Settings) object;
 
                 refreshSaveRate = tmp.getRefreshSaveRate();
                 openedFile = tmp.getOpenedFile();
-                lastOpenedFiles = tmp.getLastOpenedFiles();
             }
         } catch (IOException e) {
             refreshSaveRate = 60000;
-            lastOpenedFiles = new ArrayList<>();
             openedFile = "";
+
+            try {
+                ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(setPath)));
+                out.writeObject(Settings.this);
+                out.close();
+            } catch (IOException e1) {
+                JOptionPane.showMessageDialog(null, "Error saving settings file", "Error I/O", JOptionPane.ERROR_MESSAGE);
+            }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-    }
-
-    public ArrayList<String> getLastOpenedFiles() {
-        return lastOpenedFiles;
     }
 
     public int getRefreshSaveRate() {
@@ -43,10 +47,6 @@ public class Settings implements Serializable, Path {
 
     public String getOpenedFile() {
         return openedFile;
-    }
-
-    public void setLastOpenedFiles(ArrayList<String> lastOpenedFiles) {
-        this.lastOpenedFiles = lastOpenedFiles;
     }
 
     public void setRefreshSaveRate(int refreshSaveRate) {
