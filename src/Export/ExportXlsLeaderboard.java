@@ -4,41 +4,23 @@ import Data.Player;
 import Interface.UserController;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.io.*;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 
-public class ExportXls extends AbstractAction {
+class ExportXlsLeaderboard {
    private UserController ui;
 
-   public ExportXls(UserController ui) {
+   ExportXlsLeaderboard(UserController ui, ArrayList<Player> topPlayers) {
       this.ui = ui;
 
-      putValue(Action.NAME, "Export as MSExcel");
+      export(topPlayers);
    }
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      if (!ui.hasBeenSaved()) {
-         int choice = JOptionPane.showConfirmDialog(ui, "Do you want to save before exporting?", "Save?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-
-         if (choice == JOptionPane.OK_OPTION) {
-            ui.askForSaving(e);
-            export();
-         } else if (choice == JOptionPane.NO_OPTION) {
-            export();
-         }
-      } else {
-         export();
-      }
-   }
-
-   private void export() {
-      ArrayList<Player> players = ui.getPlayers();
-      String paper = getPaper(players);
+   private void export(ArrayList<Player> topPlayers) {
+      String paper = getPaper(topPlayers);
 
       String path = getFile();
 
@@ -90,7 +72,7 @@ public class ExportXls extends AbstractAction {
       DecimalFormat df = new DecimalFormat();
       df.setRoundingMode(RoundingMode.DOWN);
 
-      paper.append("Lista Giocatori Cotecchio\n\n");
+      paper.append("Graduatoria Cotecchio\n\n");
       paper.append("Nome Cognome\tPunteggio\tPartite\tW-L\tMedia\tPelliccioni\tMedia P.\tCappotti\tMedia C.\n");
 
       for (Player p : players) {

@@ -2,6 +2,7 @@ package Interface;
 
 import Data.Player;
 import Edit.Search;
+import Export.ExportLeaderboard;
 import Export.ExportXls;
 import Export.PrintThread;
 import FileManager.About;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 
 public class UserController extends JFrame {
    private static final String programName = "Cotecchio Editor - ";
-   private static final String version = "Build 2 Alpha 1.1";
+   private static final String version = "Build 3 Beta 1.0";
    private GridLayout mainLayout;
    private JPanel mainPanel;
    private JPanel buttonPanel;
@@ -55,6 +56,7 @@ public class UserController extends JFrame {
       file.add(export = new JMenu("Export..."));
       file.add(print = new PrintThread(UserController.this));
       export.add(new ExportXls(UserController.this));
+      export.add(new ExportLeaderboard(UserController.this));
 
       export.setEnabled(false);
       print.setEnabled(false);

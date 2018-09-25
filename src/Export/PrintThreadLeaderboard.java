@@ -11,38 +11,19 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class PrintThread extends AbstractAction {
+class PrintThreadLeaderboard {
    private UserController ui;
 
-   public PrintThread(UserController ui) {
+   PrintThreadLeaderboard(UserController ui, ArrayList<Player> topPlayers) {
       this.ui = ui;
 
-      putValue(Action.NAME, "Print...");
+      print(topPlayers);
    }
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      JOptionPane.showMessageDialog(ui, "This is an experimental feature", "Feature under work", JOptionPane.INFORMATION_MESSAGE);
+   private void print(ArrayList<Player> topPlayers) {
+      String paper = getPaper(topPlayers);
 
-      if (!ui.hasBeenSaved()) {
-         int choice = JOptionPane.showConfirmDialog(ui, "Do you want to save before printing?", "Save?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-
-         if (choice == JOptionPane.OK_OPTION) {
-            ui.askForSaving(e);
-            print();
-         } else if (choice == JOptionPane.NO_OPTION) {
-            print();
-         }
-      } else  {
-         print();
-      }
-   }
-
-   private void print() {
-      ArrayList<Player> players = ui.getPlayers();
-      String paper = getPaper(players);
-
-      String path = System.getProperty("java.io.tmpdir") + "/Cotecchio.xls";
+      String path = System.getProperty("java.io.tmpdir") + "/CotecchioTop.xls";
       System.out.println(path);
 
       try {
@@ -59,7 +40,7 @@ public class PrintThread extends AbstractAction {
       DecimalFormat df = new DecimalFormat();
       df.setRoundingMode(RoundingMode.DOWN);
 
-      paper.append("Lista Giocatori Cotecchio\n\n");
+      paper.append("Graduatoria Cotecchio\n\n");
       paper.append("Nome Cognome\tPunteggio\tPartite\tW-L\tMedia\tPelliccioni\tMedia P.\tCappotti\tMedia C.\n");
 
       for (Player p : players) {

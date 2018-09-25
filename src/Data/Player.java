@@ -2,8 +2,8 @@ package Data;
 
 import java.io.Serializable;
 
-public class Player implements Serializable {
-   private static final long serialVersionUID = 210L;
+public class Player implements Serializable, Comparable<Player> {
+   private static final long serialVersionUID = 310L;
 
    private String name;
    private String username;
@@ -77,5 +77,15 @@ public class Player implements Serializable {
 
    public void setTotalWins(int totalWins) {
       this.totalWins = totalWins;
+   }
+
+   @Override
+   public int compareTo(Player o) {
+      return Float.compare(o.getScore() / (float) o.getTotalPlays(), this.getScore() / (float) this.getTotalPlays());
+   }
+
+   @Override
+   public String toString() {
+      return this.getName() + " Media: " + (this.getScore() / (float) this.getTotalPlays());
    }
 }

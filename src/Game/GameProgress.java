@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 class GameProgress extends JFrame implements Serializable, Points {
-   private static final long serialVersionUID = 210L;
+   private static final long serialVersionUID = 310L;
 
    class PlayerPanel extends JPanel implements Comparable<PlayerPanel> {
       private JLabel username;
@@ -178,22 +178,36 @@ class GameProgress extends JFrame implements Serializable, Points {
                for (Player player : playerArrayList) {
                   //TODO fix here
                   if (pl.getUsername().getText().equals(player.getUsername())) {
-                     switch (players.size()) {
-                        case 3:
-                           player.setScore(player.getScore() + THREE[pos]);
-                           break;
-                        case 4:
-                           player.setScore(player.getScore() + FOUR[pos]);
-                           break;
-                        case 5:
-                           player.setScore(player.getScore() + FIVE[pos]);
-                           break;
-                        case 6:
-                           player.setScore(player.getScore() + SIX[pos]);
-                           break;
-                        default:
-                           JOptionPane.showMessageDialog(GameProgress.this, "Add manually additional score to players!");
-                           //TODO: add here additional code
+                     if (pos > 0 && pl.getPointsInGame() == players.get(pos-1).getPointsInGame()) {
+                        switch (players.size()) {
+                           case 3:
+                              player.setScore(player.getScore() + THREE[pos-1]);
+                              break;
+                           case 4:
+                              player.setScore(player.getScore() + FOUR[pos-1]);
+                              break;
+                           case 5:
+                              player.setScore(player.getScore() + FIVE[pos-1]);
+                              break;
+                           case 6:
+                              player.setScore(player.getScore() + SIX[pos-1]);
+                              break;
+                        }
+                     } else {
+                        switch (players.size()) {
+                           case 3:
+                              player.setScore(player.getScore() + THREE[pos]);
+                              break;
+                           case 4:
+                              player.setScore(player.getScore() + FOUR[pos]);
+                              break;
+                           case 5:
+                              player.setScore(player.getScore() + FIVE[pos]);
+                              break;
+                           case 6:
+                              player.setScore(player.getScore() + SIX[pos]);
+                              break;
+                        }
                      }
 
                      player.setTotalPlays(player.getTotalPlays()+1);

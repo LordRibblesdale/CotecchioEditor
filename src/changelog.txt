@@ -30,3 +30,7 @@ Build 2:
                Remove exception handling from CotecchioEditor
     Alpha 1.1: Fix saving results in Players file
                Fix button selection during game simulation
+Build 3:
+    Beta 1.0: Add Top Players Leaderboard feature
+              Add new recovery system for older versions
+              Fix setting statistics values in GameProgress
