@@ -20,12 +20,13 @@ import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 import static FileManager.Path.setPath;
 
 public class UserController extends JFrame {
    private static final String programName = "Cotecchio Editor - ";
-   private static final String version = "Build 4 Beta 1.0";
+   private static final String version = "Build 4 Beta 1.1";
    private GridLayout mainLayout;
    private JPanel mainPanel;
    private JPanel buttonPanel;
@@ -54,6 +55,7 @@ public class UserController extends JFrame {
 
    public UserController() {
       super(programName + version);
+      setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("Data/cotecchio.png"))).getImage());
 
       settings = new Settings();
       settingsFrame = new SettingsFrame(UserController.this);

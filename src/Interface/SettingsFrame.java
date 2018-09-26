@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Objects;
 
 public class SettingsFrame extends JFrame {
     private final String text = "Set autosave timer: ";
@@ -23,6 +24,7 @@ public class SettingsFrame extends JFrame {
 
     public SettingsFrame(UserController ui) {
         super("Settings");
+        setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("Data/cotecchio.png"))).getImage());
         this.ui = ui;
         this.settings = ui.getSettings();
 

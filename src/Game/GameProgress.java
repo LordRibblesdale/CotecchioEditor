@@ -10,6 +10,7 @@ import java.awt.event.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 
 class GameProgress extends JFrame implements Serializable, Points {
    private static final long serialVersionUID = 310L;
@@ -266,6 +267,7 @@ class GameProgress extends JFrame implements Serializable, Points {
 
    GameProgress(UserController ui, ArrayList<Player> playerArrayList) {
       super("Game Point Simulator");
+      setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("Data/cotecchio.png"))).getImage());
       this.ui = ui;
 
       log = new JTextArea();

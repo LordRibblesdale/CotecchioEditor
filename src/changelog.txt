@@ -40,3 +40,4 @@ Build 4:
               Add Recent File feature from Settings
               Improve user interface
               Fix saving feature
+    Beta 1.1: Add icon

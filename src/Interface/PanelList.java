@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class PanelList extends JFrame {
    private UserController ui;
@@ -25,6 +26,7 @@ public class PanelList extends JFrame {
 
    PanelList(UserController ui) {
       super("PanelList");
+      setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("Data/cotecchio.png"))).getImage());
 
       this.ui = ui;
       updateList();
