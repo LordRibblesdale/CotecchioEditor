@@ -11,7 +11,7 @@ public class GameStarter extends AbstractAction {
    public GameStarter(UserController ui) {
       this.ui = ui;
 
-      putValue(Action.NAME, "Start lobby");
+      putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("startLobby"));
    }
 
    @Override
@@ -19,7 +19,7 @@ public class GameStarter extends AbstractAction {
       try {
          new GameProgress(ui, ui.getPlayers());
       } catch (Exception e1) {
-         JOptionPane.showMessageDialog(ui, "Process closed. Contact developer!");
+         JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("processClosed"));
          e1.printStackTrace();
       }
    }

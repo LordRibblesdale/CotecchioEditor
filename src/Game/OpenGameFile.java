@@ -16,7 +16,7 @@ public class OpenGameFile extends AbstractAction implements Path {
    public OpenGameFile(UserController ui) {
       this.ui = ui;
 
-      putValue(Action.NAME, "Load lobby...");
+      putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("loadLobby"));
    }
 
    @Override
@@ -35,13 +35,13 @@ public class OpenGameFile extends AbstractAction implements Path {
             }
          }
       } catch (FileNotFoundException e3) {
-         JOptionPane.showMessageDialog(ui, "Error inserting name file", "Error I/O", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorInsertingNameFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
       } catch (IOException | ClassNotFoundException e1) {
          JOptionPane.showMessageDialog(ui, e1.getMessage(), "Error I/O", JOptionPane.ERROR_MESSAGE);
       } catch (ClassCastException e2) {
-         JOptionPane.showMessageDialog(ui, "Error reading file", "Error I/O", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorReadingFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
       } catch (Exception e1) {
-         JOptionPane.showMessageDialog(ui, "Process closed. Contact developer");
+         JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("processClosed"));
          e1.printStackTrace();
       }
    }
@@ -56,7 +56,7 @@ public class OpenGameFile extends AbstractAction implements Path {
       if (res == JFileChooser.APPROVE_OPTION) {
          return fileChooser.getSelectedFile().getPath();
       } else if (res != JFileChooser.CANCEL_OPTION) {
-         JOptionPane.showMessageDialog(ui, "Error loading file", "Error I/O", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorLoadingFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
       }
 
       return null;

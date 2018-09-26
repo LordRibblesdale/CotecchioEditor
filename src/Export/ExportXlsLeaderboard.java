@@ -28,7 +28,8 @@ class ExportXlsLeaderboard {
          try {
             write(path, paper);
          } catch (FileNotFoundException e3) {
-            int choice = JOptionPane.showConfirmDialog(ui, "Do you want to overwrite the file?", "Overwrite?", JOptionPane.DEFAULT_OPTION);
+            int choice = JOptionPane.showConfirmDialog(ui, ui.getSettings().getResourceBundle().getString("askOverwrite"),
+                    ui.getSettings().getResourceBundle().getString("overwrite"), JOptionPane.DEFAULT_OPTION);
 
             if (choice == JOptionPane.OK_OPTION) {
                try {
@@ -38,14 +39,14 @@ class ExportXlsLeaderboard {
                }
             }
          } catch (IOException e1) {
-            JOptionPane.showMessageDialog(ui, "Error writing file", "Error I/O", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorWritingFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
             e1.printStackTrace();
          }
       } else {
          try {
             throw new IOException();
          } catch (IOException e1) {
-            JOptionPane.showMessageDialog(ui, "Error buffering file", "Error I/O", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorBufferingFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
             e1.printStackTrace();
          }
       }
@@ -61,7 +62,7 @@ class ExportXlsLeaderboard {
       if (res == JFileChooser.APPROVE_OPTION) {
          return fileChooser.getSelectedFile().getPath() + ".xls";
       } else {
-         JOptionPane.showMessageDialog(ui, "Error loading file", "Error I/O", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorLoadingFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
       }
 
       return null;

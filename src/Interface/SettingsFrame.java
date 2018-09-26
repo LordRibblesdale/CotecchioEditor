@@ -1,6 +1,5 @@
 package Interface;
 
-import Data.Settings;
 import FileManager.AutoSaveFile;
 
 import javax.swing.*;
@@ -11,29 +10,33 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 public class SettingsFrame extends JFrame {
-    private final String text = "Set autosave timer: ";
+    private final String text;
+    private final String[] locale = {"English", "Italiano"};
     private Timer autoSave;
     private JLabel timerInfo;
     private JSlider delay;
-    //private JCheckBox disableTimer;
-    private Settings settings;
+    private JComboBox languages;
     private UserController ui;
 
     public SettingsFrame(UserController ui) {
-        super("Settings");
+        super(ui.getSettings().getResourceBundle().getString("settings"));
+        text = ui.getSettings().getResourceBundle().getString("autoSaveText");
         setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("Data/cotecchio.png"))).getImage());
         this.ui = ui;
-        this.settings = ui.getSettings();
 
         setLayout(new GridBagLayout());
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
         constraints.gridy = 0;
-        add(timerInfo = new JLabel(text + settings.getRefreshSaveRate()/1000 + " seconds"), constraints);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.gridwidth = 2;
+        add(timerInfo = new JLabel(text + " " + ui.getSettings().getRefreshSaveRate()/1000 + " " + ui.getSettings().getResourceBundle().getString("seconds")), constraints);
 
         constraints = new GridBagConstraints();
         constraints.gridx = 0;
@@ -43,33 +46,60 @@ public class SettingsFrame extends JFrame {
         add(delay = new JSlider(JSlider.HORIZONTAL), constraints);
         delay.setMinimum(30000);
         delay.setMaximum(300000);
-        delay.setValue(settings.getRefreshSaveRate());
+        delay.setValue(ui.getSettings().getRefreshSaveRate());
         delay.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                //if (!disableTimer.isSelected()) {
-                    int range = delay.getMaximum() - delay.getMinimum();
-                    double valueAt = e.getPoint().x / (double) delay.getWidth();
-                    delay.setValue((int) (delay.getMinimum() + valueAt*range));
-                    settings.setRefreshSaveRate(delay.getValue());
+                int range = delay.getMaximum() - delay.getMinimum();
+                double valueAt = e.getPoint().x / (double) delay.getWidth();
+                delay.setValue((int) (delay.getMinimum() + valueAt*range));
+                ui.getSettings().setRefreshSaveRate(delay.getValue());
 
-                    validate();
-                    saveSettings();
-                //}
+                validate();
+                saveSettings();
             }
         });
 
-        /*
+        constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        add(new JSeparator(), constraints);
+
+        constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        add(new JLabel(ui.getSettings().getResourceBundle().getString("selectLanguage")), constraints);
+
         constraints = new GridBagConstraints();
         constraints.gridx = 1;
-        constraints.gridy = 0;
-        add(disableTimer = new JCheckBox("Disable?"));
-        */
+        constraints.gridy = 3;
+        add(languages = new JComboBox(locale), constraints);
 
-        autoSave = new Timer(settings.getRefreshSaveRate(), new ActionListener() {
+       languages.addActionListener(new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+              JComboBox tmp = (JComboBox) e.getSource();
+
+              switch ((String) Objects.requireNonNull(tmp.getSelectedItem())) {
+                 case "English":
+                    ui.getSettings().setLanguage("en");
+                    ui.getSettings().setCountry("UK");
+                    break;
+                 case "Italiano":
+                    ui.getSettings().setLanguage("it");
+                    ui.getSettings().setCountry("IT");
+                    break;
+              }
+
+              ui.setSettings(ui.getSettings());
+              JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("restartToApply"));
+           }
+        });
+
+        autoSave = new Timer(ui.getSettings().getRefreshSaveRate(), new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                new AutoSaveFile(settings.getOpenedFile(), ui.getPlayers());
+                new AutoSaveFile(ui.getSettings().getOpenedFile(), ui.getPlayers());
             }
         });
 
@@ -80,38 +110,13 @@ public class SettingsFrame extends JFrame {
                 if (!ui.hasBeenSaved()) {
                     autoSave.start();
                 }
-                settings.setRefreshSaveRate(((JSlider) changeEvent.getSource()).getValue());
-                timerInfo.setText(text + delay.getValue()/1000 + " seconds");
+                ui.getSettings().setRefreshSaveRate(((JSlider) changeEvent.getSource()).getValue());
+                timerInfo.setText(text + delay.getValue()/1000 + " " + ui.getSettings().getResourceBundle().getString("seconds"));
 
                 saveSettings();
                 validate();
             }
         });
-
-        /*
-        disableTimer.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent changeEvent) {
-                if (((JCheckBox) changeEvent.getSource()).isSelected()) {
-                    autoSave.stop();
-                    delay.setEnabled(false);
-                    settings.setRefreshSaveRate(300000);
-                } else {
-                    settings.setRefreshSaveRate(delay.getValue());
-                    autoSave.setDelay(delay.getValue());
-                    delay.setEnabled(true);
-                }
-
-                saveSettings();
-                validate();
-            }
-        });
-
-        if (settings.getRefreshSaveRate() == 300000) {
-            disableTimer.setSelected(true);
-            delay.setEnabled(false);
-        }
-        */
 
         setMinimumSize(new Dimension(300, 100));
         setLocationRelativeTo(ui);
@@ -119,16 +124,14 @@ public class SettingsFrame extends JFrame {
         setVisible(false);
     }
 
-    public void startTimer() {
-        //if (settings.getRefreshSaveRate() != 300000) {
-            autoSave.start();
-        //}
+    void startTimer() {
+       autoSave.start();
     }
-    public void stopTimer() {
+    void stopTimer() {
         autoSave.stop();
     }
 
     private void saveSettings() {
-        ui.setSettings(settings);
+        ui.setSettings(ui.getSettings());
     }
 }

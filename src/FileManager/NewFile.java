@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 
 public class NewFile extends AbstractAction {
    private UserController ui;
-   private Object[] choice = {"Save", "Discard", "Go Back"};
 
    public NewFile(UserController ui) {
       this.ui = ui;
@@ -17,10 +16,15 @@ public class NewFile extends AbstractAction {
 
    @Override
    public void actionPerformed(ActionEvent e) {
+      Object[] choice = {ui.getSettings().getResourceBundle().getString("save"),
+              ui.getSettings().getResourceBundle().getString("discard"),
+              ui.getSettings().getResourceBundle().getString("goBack")};
+
       if (ui.hasBeenSaved()) {
          ui.initialise();
       } else {
-         int selection = JOptionPane.showOptionDialog(ui, "Do you want to save changes?", "Save file?",
+         int selection = JOptionPane.showOptionDialog(ui, ui.getSettings().getResourceBundle().getString("askSaveChanges"),
+                 ui.getSettings().getResourceBundle().getString("saveFile"),
                  JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
                  choice, choice[0]);
 

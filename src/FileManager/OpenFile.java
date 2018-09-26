@@ -48,7 +48,7 @@ public class OpenFile extends AbstractAction implements Path {
    public OpenFile(UserController ui) {
       this.ui = ui;
 
-      putValue(Action.NAME, "Load...");
+      putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("load"));
    }
 
    @Override
@@ -58,7 +58,8 @@ public class OpenFile extends AbstractAction implements Path {
          if (ui.getSettings().getOpenedFile().equals("")) {
             this.path = getFile();
          } else {
-            int choice = JOptionPane.showConfirmDialog(ui, "Do you want to open last file?", "Open Recent?", JOptionPane.YES_NO_CANCEL_OPTION,
+            int choice = JOptionPane.showConfirmDialog(ui, ui.getSettings().getResourceBundle().getString("openLastFile"),
+                    ui.getSettings().getResourceBundle().getString("openRecent"), JOptionPane.YES_NO_CANCEL_OPTION,
                     JOptionPane.INFORMATION_MESSAGE);
 
             switch (choice) {
@@ -96,7 +97,7 @@ public class OpenFile extends AbstractAction implements Path {
             }
          }
       } catch (FileNotFoundException e3) {
-         JOptionPane.showMessageDialog(ui, "Error inserting name file", "Error I/O", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorInsertingNameFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
       } catch (IOException | ClassNotFoundException e1) {
          try {
             input.close();
@@ -119,15 +120,15 @@ public class OpenFile extends AbstractAction implements Path {
 
                ui.saveRecentFile(this.path);
                ui.initialise(players);
-               JOptionPane.showMessageDialog(ui, "The file loaded has been converted from an older version. The list will be now saved...",
-                       "Conversion completed", JOptionPane.WARNING_MESSAGE);
+               JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("conversionMessage"),
+                       ui.getSettings().getResourceBundle().getString("conversionCompleted"), JOptionPane.WARNING_MESSAGE);
                new SaveFile(ui).actionPerformed(e);
             }
          } catch (IOException | ClassNotFoundException e2) {
             e2.printStackTrace();
          }
       } catch (Exception e2) {
-         JOptionPane.showMessageDialog(ui, "Error reading file", "Error I/O", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorReadingFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
       }
    }
 
@@ -141,7 +142,7 @@ public class OpenFile extends AbstractAction implements Path {
       if (res == JFileChooser.APPROVE_OPTION) {
          return fileChooser.getSelectedFile().getPath();
       } else if (res != JFileChooser.CANCEL_OPTION) {
-         JOptionPane.showMessageDialog(ui, "Error loading file", "Error I/O", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorLoadingFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
       }
 
       return null;

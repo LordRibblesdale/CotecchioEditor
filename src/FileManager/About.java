@@ -7,16 +7,16 @@ import java.awt.event.ActionEvent;
 
 public class About extends AbstractAction {
    private UserController ui;
-   private static String info = "Creatore di elenco per Cotecchio\nLordRibblesdale";
 
    public About(UserController ui) {
       this.ui = ui;
 
-      putValue(Action.NAME, "About...");
+      putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("about"));
    }
 
    @Override
    public void actionPerformed(ActionEvent e) {
-      JOptionPane.showMessageDialog(ui, info, "About", JOptionPane.INFORMATION_MESSAGE);
+      String info = "Creatore di elenco giocatori per Cotecchio\nLordRibblesdale";
+      JOptionPane.showMessageDialog(ui, info, ui.getSettings().getResourceBundle().getString("about"), JOptionPane.INFORMATION_MESSAGE);
    }
 }

@@ -25,13 +25,11 @@ public class PanelList extends JFrame {
    };
 
    PanelList(UserController ui) {
-      super("PanelList");
+      super(ui.getSettings().getResourceBundle().getString("panelList"));
       setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("Data/cotecchio.png"))).getImage());
 
       this.ui = ui;
       updateList();
-
-      add(new JLabel("This is an experimental feature"), BorderLayout.PAGE_END);
 
       addWindowListener(new WindowAdapter() {
          @Override

@@ -17,15 +17,17 @@ public class PrintThread extends AbstractAction {
    public PrintThread(UserController ui) {
       this.ui = ui;
 
-      putValue(Action.NAME, "Print...");
+      putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("print"));
    }
 
    @Override
    public void actionPerformed(ActionEvent e) {
-      JOptionPane.showMessageDialog(ui, "This is an experimental feature", "Feature under work", JOptionPane.INFORMATION_MESSAGE);
+      JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("experimentalFeature"),
+              ui.getSettings().getResourceBundle().getString("featureUnderWork"), JOptionPane.INFORMATION_MESSAGE);
 
       if (!ui.hasBeenSaved()) {
-         int choice = JOptionPane.showConfirmDialog(ui, "Do you want to save before printing?", "Save?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+         int choice = JOptionPane.showConfirmDialog(ui, ui.getSettings().getResourceBundle().getString("saveBeforePrinting"),
+                 ui.getSettings().getResourceBundle().getString("askSave"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
          if (choice == JOptionPane.OK_OPTION) {
             ui.askForSaving(e);
@@ -49,7 +51,7 @@ public class PrintThread extends AbstractAction {
          write(path, paper);
          Desktop.getDesktop().print(new File(path));
       } catch (IOException e1) {
-         JOptionPane.showMessageDialog(ui, "Error writing file", "Error I/O", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorWritingFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
          e1.printStackTrace();
       }
    }

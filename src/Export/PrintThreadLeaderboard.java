@@ -30,7 +30,7 @@ class PrintThreadLeaderboard {
          write(path, paper);
          Desktop.getDesktop().print(new File(path));
       } catch (IOException e1) {
-         JOptionPane.showMessageDialog(ui, "Error writing file", "Error I/O", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorWritingFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
          e1.printStackTrace();
       }
    }

@@ -26,7 +26,7 @@ import static FileManager.Path.setPath;
 
 public class UserController extends JFrame {
    private static final String programName = "Cotecchio Editor - ";
-   private static final String version = "Build 4 Beta 1.1";
+   private static final String version = "Build 5 Beta 1.0";
    private GridLayout mainLayout;
    private JPanel mainPanel;
    private JPanel buttonPanel;
@@ -68,7 +68,7 @@ public class UserController extends JFrame {
       file.add(new OpenFile(UserController.this));
       file.add(saveButton = new SaveFile(UserController.this));
       file.add(new JSeparator());
-      file.add(export = new JMenu("Export..."));
+      file.add(export = new JMenu(getSettings().getResourceBundle().getString("export")));
       file.add(print = new PrintThread(UserController.this));
       export.add(new ExportXls(UserController.this));
       export.add(new ExportLeaderboard(UserController.this));
@@ -82,9 +82,9 @@ public class UserController extends JFrame {
       search.setEnabled(false);
       add(toolBar, BorderLayout.LINE_END);
 
-      menu.add(edit = new JMenu("Edit"));
+      menu.add(edit = new JMenu(getSettings().getResourceBundle().getString("edit")));
       edit.add(search);
-      edit.add(showList = new JCheckBoxMenuItem("Show players list"));
+      edit.add(showList = new JCheckBoxMenuItem(getSettings().getResourceBundle().getString("showPlayersList")));
       edit.add(new JSeparator());
       edit.add(new SettingsButton(UserController.this));
       showList.addItemListener(new ItemListener() {
@@ -107,28 +107,29 @@ public class UserController extends JFrame {
          }
       });
 
-      menu.add(game = new JMenu("Game"));
+      menu.add(game = new JMenu(getSettings().getResourceBundle().getString("game")));
       game.add(start = new GameStarter(UserController.this));
       game.add(openGame = new OpenGameFile(UserController.this));
       openGame.setEnabled(false);
       start.setEnabled(false);
 
-      menu.add(about = new JMenu("About"));
+      menu.add(about = new JMenu(getSettings().getResourceBundle().getString("about")));
       about.add(new About(UserController.this));
 
       setJMenuBar(menu);
 
       buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
       buttonPanel.add(saveStatus = new JLabel());
-      buttonPanel.add(addTab = new JButton("Add Tab"));
-      buttonPanel.add(removeTab = new JButton("Remove this Tab"));
+      buttonPanel.add(addTab = new JButton(getSettings().getResourceBundle().getString("addTab")));
+      buttonPanel.add(removeTab = new JButton(getSettings().getResourceBundle().getString("removeTab")));
 
       addTab.addActionListener(new ActionListener() {
          @Override
          public void actionPerformed(ActionEvent e) {
-            players.add(new Player("New Player", "newPlayer", 0, 0, 0, 0, 0));
+            players.add(new Player(getSettings().getResourceBundle().getString("newPlayer0"),
+                    getSettings().getResourceBundle().getString("newPlayer1"), 0, 0, 0, 0, 0));
             pUI.add(new PlayerUI(players.get(players.size()-1), UserController.this));
-            tabs.addTab("New Player", pUI.get(pUI.size()-1).generatePanel());
+            tabs.addTab(getSettings().getResourceBundle().getString("newPlayer0"), pUI.get(pUI.size()-1).generatePanel());
 
             if (tabs.getTabCount() > 1) {
                removeTab.setEnabled(true);
@@ -148,9 +149,13 @@ public class UserController extends JFrame {
          @Override
          public void actionPerformed(ActionEvent e) {
             if (!hasBeenSaved()) {
-               Object[] choice = {"Yes", "No", "Go back"};
-               int sel = JOptionPane.showOptionDialog(UserController.this, "This tab has not been saved.\nDo you want to save?",
-                       "Save file?", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
+               Object[] choice = {getSettings().getResourceBundle().getString("yes"),
+                       getSettings().getResourceBundle().getString("no"),
+                       getSettings().getResourceBundle().getString("goBack")};
+               int sel = JOptionPane.showOptionDialog(UserController.this,
+                       getSettings().getResourceBundle().getString("notSavedTab"),
+                       getSettings().getResourceBundle().getString("saveFile"),
+                       JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
                        choice, choice[0]);
 
                if (choice[sel] == choice[0]) {
@@ -185,7 +190,8 @@ public class UserController extends JFrame {
          public void windowClosing(WindowEvent e) {
             if (!hasBeenSaved()) {
                int result = JOptionPane.showConfirmDialog(UserController.this,
-                       "Do you want to save before closing?", "Exit Confirmation",
+                       getSettings().getResourceBundle().getString("saveBeforeClosing"),
+                       getSettings().getResourceBundle().getString("exitConfirmation"),
                        JOptionPane.YES_NO_CANCEL_OPTION);
                if (result == JOptionPane.YES_OPTION) {
                   new SaveFile(UserController.this).actionPerformed(null);
@@ -217,7 +223,7 @@ public class UserController extends JFrame {
          settingsFrame.stopTimer();
       } else {
          saveButton.setEnabled(true);
-         setTitle(programName + version + " - *Changes not saved");
+         setTitle(programName + version + " - *" + getSettings().getResourceBundle().getString("changesNotSaved"));
          settingsFrame.startTimer();
       }
 
@@ -236,9 +242,11 @@ public class UserController extends JFrame {
       players = new ArrayList<>();
       pUI = new ArrayList<>();
 
-      players.add(new Player("New Player", "newPlayer", 0, 0, 0, 0, 0));
+      players.add(new Player(getSettings().getResourceBundle().getString("newPlayer0"),
+              getSettings().getResourceBundle().getString("newPlayer1"),
+              0, 0, 0, 0, 0));
       pUI.add(new PlayerUI(players.get(players.size()-1), UserController.this));
-      tabs.addTab("New Player", pUI.get(pUI.size()-1).generatePanel());
+      tabs.addTab(getSettings().getResourceBundle().getString("newPlayer0"), pUI.get(pUI.size()-1).generatePanel());
 
       addTab.setEnabled(true);
       search.setEnabled(true);
@@ -354,6 +362,7 @@ public class UserController extends JFrame {
          out.writeObject(settings);
          out.close();
       } catch (IOException e) {
+         e.printStackTrace();
          JOptionPane.showMessageDialog(UserController.this, e.getMessage(), "Exception", JOptionPane.ERROR_MESSAGE);
       }
    }

@@ -41,3 +41,5 @@ Build 4:
               Improve user interface
               Fix saving feature
     Beta 1.1: Add icon
+Build 5:
+    Beta 1.0: Add multilanguage support

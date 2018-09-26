@@ -1,6 +1,5 @@
 package FileManager;
 
-import Data.Settings;
 import Interface.UserController;
 
 import javax.swing.*;
@@ -12,7 +11,7 @@ public class SettingsButton extends AbstractAction {
     public SettingsButton(UserController ui) {
         this.ui = ui;
 
-        putValue(Action.NAME, "Settings");
+        putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("settings"));
     }
 
     @Override

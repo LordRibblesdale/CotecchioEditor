@@ -14,7 +14,7 @@ public class SaveFile extends AbstractAction implements Path {
    public SaveFile(UserController ui) {
       this.ui = ui;
 
-      putValue(Action.NAME, "Save...");
+      putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("save"));
    }
 
    @Override
@@ -34,15 +34,16 @@ public class SaveFile extends AbstractAction implements Path {
          try {
             if (file.createNewFile()) {
                saveThread(dir);
-               JOptionPane.showMessageDialog(ui, "Players list is saved in " + dir);
+               JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("playerListSaved") + " " + dir);
             } else {
-               JOptionPane.showMessageDialog(ui, "Error creating file", "Error I/O", JOptionPane.ERROR_MESSAGE);
+               JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorCreatingFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
             }
          } catch (IOException e1) {
             e1.printStackTrace();
          }
       } else {
-         int sel = JOptionPane.showConfirmDialog(ui, "Do you want to overwrite?", "Overwrite?", JOptionPane.YES_NO_OPTION);
+         int sel = JOptionPane.showConfirmDialog(ui, ui.getSettings().getResourceBundle().getString("askOverwrite"),
+                 ui.getSettings().getResourceBundle().getString("overwrite"), JOptionPane.YES_NO_OPTION);
 
          if (sel == JOptionPane.YES_OPTION) {
             saveThread(dir);
@@ -56,7 +57,7 @@ public class SaveFile extends AbstractAction implements Path {
             if (res == JFileChooser.APPROVE_OPTION) {
                saveThread(fileChooser.getSelectedFile().getPath());
             } else if (res != JFileChooser.CANCEL_OPTION) {
-               JOptionPane.showMessageDialog(ui, "Error saving file", "Error I/O", JOptionPane.ERROR_MESSAGE);
+               JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorSavingFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
             }
          }
       }

@@ -14,7 +14,7 @@ public class ExportLeaderboard extends AbstractAction {
    public ExportLeaderboard(UserController ui) {
       this.ui = ui;
 
-      putValue(Action.NAME, "Export Top Players");
+      putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("exportTopPlayers"));
    }
 
    @Override
@@ -30,9 +30,12 @@ public class ExportLeaderboard extends AbstractAction {
 
       Collections.sort(topPlayers);
 
-      Object[] choices = {"Export in XLS", "Print leaderboard", "Do nothing"};
+      Object[] choices = {ui.getSettings().getResourceBundle().getString("exportXLS"),
+              ui.getSettings().getResourceBundle().getString("printLeaderboard"),
+              ui.getSettings().getResourceBundle().getString("doNothing")};
       String list = generateList(topPlayers);
-      int choice = JOptionPane.showOptionDialog(ui, "Classifica generale in anteprima: \n" + list, "Export?",
+      int choice = JOptionPane.showOptionDialog(ui,  ui.getSettings().getResourceBundle().getString("leaderboardPreview")+ " \n" + list,
+              "Export?",
               JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, choices, choices[0]);
       System.out.println(choice);
 

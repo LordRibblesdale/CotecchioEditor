@@ -12,7 +12,7 @@ public class SaveGameFile extends AbstractAction implements FileManager.Path {
    public SaveGameFile(GameProgress ui) {
       this.ui = ui;
 
-      putValue(Action.NAME, "Save...");
+      putValue(Action.NAME, ui.getUI().getSettings().getResourceBundle().getString("save"));
    }
 
    @Override
@@ -23,15 +23,16 @@ public class SaveGameFile extends AbstractAction implements FileManager.Path {
          try {
             if (file.createNewFile()) {
                saveThread(FileManager.Path.defaultGameName);
-               JOptionPane.showMessageDialog(ui, "This game is saved in " + Path.defaultGameName);
+               JOptionPane.showMessageDialog(ui, ui.getUI().getSettings().getResourceBundle().getString("defaultSaveLocation") + " " + Path.defaultGameName);
             } else {
-               JOptionPane.showMessageDialog(ui, "Error creating file", "Error I/O", JOptionPane.ERROR_MESSAGE);
+               JOptionPane.showMessageDialog(ui, ui.getUI().getSettings().getResourceBundle().getString("errorCreatingFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
             }
          } catch (IOException e1) {
             e1.printStackTrace();
          }
       } else {
-         int sel = JOptionPane.showConfirmDialog(ui, "Do you want to overwrite?", "Overwrite?", JOptionPane.YES_NO_OPTION);
+         int sel = JOptionPane.showConfirmDialog(ui, ui.getUI().getSettings().getResourceBundle().getString("askOverwrite"),
+                 ui.getUI().getSettings().getResourceBundle().getString("overwrite"), JOptionPane.YES_NO_OPTION);
 
          if (sel == JOptionPane.YES_OPTION) {
             saveThread(FileManager.Path.defaultGameName);
@@ -45,7 +46,7 @@ public class SaveGameFile extends AbstractAction implements FileManager.Path {
             if (res == JFileChooser.APPROVE_OPTION) {
                saveThread(fileChooser.getSelectedFile().getPath());
             } else {
-               JOptionPane.showMessageDialog(ui, "Error saving file", "Error I/O", JOptionPane.ERROR_MESSAGE);
+               JOptionPane.showMessageDialog(ui, ui.getUI().getSettings().getResourceBundle().getString("errorSavingFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
             }
          }
       }

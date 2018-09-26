@@ -426,4 +426,8 @@ class GameProgress extends JFrame implements Serializable, Points {
    ArrayList<PlayerPanel> getPlayers() {
       return players;
    }
+
+   UserController getUI() {
+      return ui;
+   }
 }

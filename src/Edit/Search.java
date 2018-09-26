@@ -14,14 +14,14 @@ public class Search extends AbstractAction {
    public Search(UserController ui) {
       this.ui = ui;
 
-      putValue(Action.NAME, "Search");
+      putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("search"));
    }
 
    @Override
    public void actionPerformed(ActionEvent e) {
       tab = ui.getTabs();
 
-      String result = JOptionPane.showInputDialog(ui, "Insert name to search: ", previousRes);
+      String result = JOptionPane.showInputDialog(ui, ui.getSettings().getResourceBundle().getString("insertName"), previousRes);
 
       if (result != null) {
          if (!previousRes.equals(result)) {
