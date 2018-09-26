@@ -9,6 +9,8 @@ Le principali funzioni del programma sono:
 
 Altre funzioni verranno aggiunte col tempo. Il programma è momentaneamente in via di sviluppo e potrebbero non essere disponibili le funzioni predefinite.
 
+Maggiori informazioni sono disponibili nel settore Wiki (https://github.com/LordRibblesdale/CotecchioEditor/wiki)
+
 # Compatibilità
 
 Il programma è compatibile con la maggior parte delle piattaforme che permettono l'esecuzione di JDK/JRE 8 o superiore.
