@@ -9,6 +9,7 @@ import Export.PrintThread;
 import FileManager.*;
 import Game.GameStarter;
 import Game.OpenGameFile;
+import Update.UpdateRepo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,8 +26,9 @@ import java.util.Objects;
 import static FileManager.Path.setPath;
 
 public class UserController extends JFrame {
-   private static final String programName = "Cotecchio Editor - ";
-   private static final String version = "Build 5 Beta 1.0";
+   private static final String PROGRAM_NAME = "Cotecchio Editor - ";
+   private static final String VERSION = "Build 5 Beta 2.0";
+   private static final int RELEASE = 520;
    private GridLayout mainLayout;
    private JPanel mainPanel;
    private JPanel buttonPanel;
@@ -54,7 +56,7 @@ public class UserController extends JFrame {
    private SettingsFrame settingsFrame;
 
    public UserController() {
-      super(programName + version);
+      super(PROGRAM_NAME + VERSION);
       setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("Data/cotecchio.png"))).getImage());
 
       settings = new Settings();
@@ -208,6 +210,8 @@ public class UserController extends JFrame {
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
       setLocationRelativeTo(null);
       setVisible(true);
+
+      new UpdateRepo(UserController.this, RELEASE);
    }
 
    public boolean hasBeenSaved() {
@@ -219,11 +223,11 @@ public class UserController extends JFrame {
 
       if (hasBeenSaved) {
          saveButton.setEnabled(false);
-         setTitle(programName + version);
+         setTitle(PROGRAM_NAME + VERSION);
          settingsFrame.stopTimer();
       } else {
          saveButton.setEnabled(true);
-         setTitle(programName + version + " - *" + getSettings().getResourceBundle().getString("changesNotSaved"));
+         setTitle(PROGRAM_NAME + VERSION + " - *" + getSettings().getResourceBundle().getString("changesNotSaved"));
          settingsFrame.startTimer();
       }
 
