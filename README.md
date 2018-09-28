@@ -25,7 +25,7 @@ I Runtime sono disponibili nei seguenti siti:
 I requisiti di sistema sono:
 - PC compatibile con JDK/JRE 8 (32/64bit) o JDK/JRE 10 (64bit only)
 - 100MB di memoria RAM
-- 600KB di spazio minimo aggiuntivo su disco
+- 4MB di spazio minimo aggiuntivo su disco
 
 # Release
 
