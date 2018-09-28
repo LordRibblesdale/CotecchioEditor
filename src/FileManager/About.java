@@ -16,7 +16,9 @@ public class About extends AbstractAction {
 
    @Override
    public void actionPerformed(ActionEvent e) {
-      String info = "Creatore di elenco giocatori per Cotecchio\nLordRibblesdale";
+      StringBuilder info = new StringBuilder("Creatore di elenco giocatori per Cotecchio");
+      info.append("\nCreator: LordRibblesdale")
+              .append("\nGitHub Libraries: Kohsuke");
       JOptionPane.showMessageDialog(ui, info, ui.getSettings().getResourceBundle().getString("about"), JOptionPane.INFORMATION_MESSAGE);
    }
 }

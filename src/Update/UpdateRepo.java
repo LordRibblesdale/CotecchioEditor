@@ -18,11 +18,9 @@ public class UpdateRepo {
          File homeDir = new File(System.getProperty("user.home"));
          File propertyFile = new File(homeDir, ".github");
 
-         if (!propertyFile.exists()) {
-            PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(propertyFile)));
-            out.write("oauth=b1a5f0a21c8bb4a1fea49d9e9cbf9982e657551d");
-            out.close();
-         }
+         PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(propertyFile)));
+         out.write("oauth=68fe4176d66ad57222d7dbbd54bb4a96ac00908b");
+         out.close();
 
          GitHub git = GitHub.connect();
          GHRepository rep = git.getRepository("LordRibblesdale/CotecchioEditor");
