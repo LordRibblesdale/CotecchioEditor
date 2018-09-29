@@ -4,6 +4,7 @@ import Interface.UserController;
 import org.kohsuke.github.GHRelease;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
+import org.kohsuke.github.HttpException;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -21,7 +22,7 @@ public class UpdateRepo {
          File propertyFile = new File(homeDir, ".github");
 
          PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(propertyFile)));
-         String token = "7e6e31cef0b8f4c167a9df14b56e3ae0121d7e78";
+         String token = "2be635158aeb16302660bb0d9a14000679cde711";
          out.write("oauth=" + token);
          out.close();
 
@@ -72,6 +73,10 @@ public class UpdateRepo {
             }
          } catch (UnknownHostException ex) {
             ui.getStatus().setText(ui.getSettings().getResourceBundle().getString("noConnectionAvailable"));
+         } catch (HttpException ex) {
+            if (ex.getResponseCode() == 401) {
+               JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorNotAuthorised"));
+            }
          }
       } catch (IOException e) {
          e.printStackTrace();
