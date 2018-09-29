@@ -27,8 +27,8 @@ import static FileManager.Path.setPath;
 
 public class UserController extends JFrame {
    private static final String PROGRAM_NAME = "Cotecchio Editor - ";
-   private static final String VERSION = "Build 5 Beta 2.0";
-   private static final int RELEASE = 520;
+   private static final String VERSION = "Build 5 Beta 2.1";
+   private static final int RELEASE = 521;
    private GridLayout mainLayout;
    private JPanel mainPanel;
    private JPanel buttonPanel;
@@ -225,6 +225,7 @@ public class UserController extends JFrame {
          saveButton.setEnabled(false);
          setTitle(PROGRAM_NAME + VERSION);
          settingsFrame.stopTimer();
+         saveStatus.setText("Saved @ " + new SimpleDateFormat("HH.mm.ss").format(new Date()));
       } else {
          saveButton.setEnabled(true);
          setTitle(PROGRAM_NAME + VERSION + " - *" + getSettings().getResourceBundle().getString("changesNotSaved"));
@@ -346,6 +347,10 @@ public class UserController extends JFrame {
 
    PanelList getListPlayers() {
       return listPlayers;
+   }
+
+   public JLabel getStatus() {
+      return saveStatus;
    }
 
    public SettingsFrame getSettingsFrame() {

@@ -9,18 +9,13 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class AutoSaveFile {
-    public AutoSaveFile(String dir, ArrayList<Player> players) {
+    public AutoSaveFile(String dir, ArrayList<Player> players) throws IOException {
         save(dir, players);
     }
 
-    private void save(String dir, ArrayList<Player> players) {
-        try {
-            ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(dir)));
-            output.writeObject(players);
-            output.close();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-
+    private void save(String dir, ArrayList<Player> players) throws IOException {
+        ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(dir)));
+        output.writeObject(players);
+        output.close();
     }
 }

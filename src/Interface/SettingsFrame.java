@@ -3,16 +3,11 @@ package Interface;
 import FileManager.AutoSaveFile;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Locale;
+import java.io.IOException;
 import java.util.Objects;
-import java.util.ResourceBundle;
 
 public class SettingsFrame extends JFrame {
     private final String text;
@@ -75,47 +70,45 @@ public class SettingsFrame extends JFrame {
         constraints.gridy = 3;
         add(languages = new JComboBox(locale), constraints);
 
-       languages.addActionListener(new ActionListener() {
-           @Override
-           public void actionPerformed(ActionEvent e) {
-              JComboBox tmp = (JComboBox) e.getSource();
+       languages.addActionListener(e -> {
+          JComboBox tmp = (JComboBox) e.getSource();
 
-              switch ((String) Objects.requireNonNull(tmp.getSelectedItem())) {
-                 case "English":
-                    ui.getSettings().setLanguage("en");
-                    ui.getSettings().setCountry("UK");
-                    break;
-                 case "Italiano":
-                    ui.getSettings().setLanguage("it");
-                    ui.getSettings().setCountry("IT");
-                    break;
-              }
+          switch ((String) Objects.requireNonNull(tmp.getSelectedItem())) {
+             case "English":
+                ui.getSettings().setLanguage("en");
+                ui.getSettings().setCountry("UK");
+                break;
+             case "Italiano":
+                ui.getSettings().setLanguage("it");
+                ui.getSettings().setCountry("IT");
+                break;
+          }
 
-              ui.setSettings(ui.getSettings());
-              JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("restartToApply"));
+          ui.setSettings(ui.getSettings());
+          JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("restartToApply"));
+       });
+
+        autoSave = new Timer(ui.getSettings().getRefreshSaveRate(), actionEvent -> {
+           try {
+              new AutoSaveFile(ui.getSettings().getOpenedFile(), ui.getPlayers());
+              ui.setHasBeenSaved(true);
+           } catch (IOException e) {
+              ui.getStatus().setText(ui.getSettings().getResourceBundle().getString("errorAutoSaving")
+                      + autoSave.getDelay()/1000
+                      + " " + ui.getSettings().getResourceBundle().getString("seconds"));
            }
         });
 
-        autoSave = new Timer(ui.getSettings().getRefreshSaveRate(), new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                new AutoSaveFile(ui.getSettings().getOpenedFile(), ui.getPlayers());
+        delay.addChangeListener(changeEvent -> {
+            autoSave.setDelay(((JSlider) changeEvent.getSource()).getValue());
+            if (!ui.hasBeenSaved()) {
+                autoSave.start();
             }
-        });
+            ui.getSettings().setRefreshSaveRate(((JSlider) changeEvent.getSource()).getValue());
+            timerInfo.setText(text + delay.getValue()/1000 + " " + ui.getSettings().getResourceBundle().getString("seconds"));
 
-        delay.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent changeEvent) {
-                autoSave.setDelay(((JSlider) changeEvent.getSource()).getValue());
-                if (!ui.hasBeenSaved()) {
-                    autoSave.start();
-                }
-                ui.getSettings().setRefreshSaveRate(((JSlider) changeEvent.getSource()).getValue());
-                timerInfo.setText(text + delay.getValue()/1000 + " " + ui.getSettings().getResourceBundle().getString("seconds"));
-
-                saveSettings();
-                validate();
-            }
+            saveSettings();
+            validate();
         });
 
         setMinimumSize(new Dimension(300, 100));
@@ -128,7 +121,7 @@ public class SettingsFrame extends JFrame {
        autoSave.start();
     }
     void stopTimer() {
-        autoSave.stop();
+       autoSave.stop();
     }
 
     private void saveSettings() {

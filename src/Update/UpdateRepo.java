@@ -11,58 +11,67 @@ import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 
 public class UpdateRepo {
+
    public UpdateRepo(UserController ui, int current) {
       try {
          File homeDir = new File(System.getProperty("user.home"));
          File propertyFile = new File(homeDir, ".github");
 
          PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(propertyFile)));
-         out.write("oauth=68fe4176d66ad57222d7dbbd54bb4a96ac00908b");
+         String token = "7e6e31cef0b8f4c167a9df14b56e3ae0121d7e78";
+         out.write("oauth=" + token);
          out.close();
 
-         GitHub git = GitHub.connect();
-         GHRepository rep = git.getRepository("LordRibblesdale/CotecchioEditor");
-         GHRelease rel = rep.getLatestRelease();
-
          try {
-            if (Integer.valueOf(rel.getTagName()) > current) {
-               Font font = UIManager.getDefaults().getFont("Label.font");
+            GitHub git = GitHub.connect();
+            GHRepository rep = git.getRepository("LordRibblesdale/CotecchioEditor");
+            GHRelease rel = rep.getLatestRelease();
 
-               // from StackOverflow
-               StringBuilder style = new StringBuilder("font-family:" + font.getFamily() + ";");
-               style.append("font-weight:").append(font.isBold() ? "bold" : "normal").append(";");
-               style.append("font-size:").append(font.getSize()).append("pt;");
+            try {
+               if (Integer.valueOf(rel.getTagName()) > current) {
+                  Font font = UIManager.getDefaults().getFont("Label.font");
 
-               JEditorPane ep = new JEditorPane("text/html", "<html><body style=\"" + style + "\">"
-                       + ui.getSettings().getResourceBundle().getString("newUpdate")
-                       + "<p>" + ui.getSettings().getResourceBundle().getString("newVersion")
-                       + " " + rel.getTagName() + "\n" + rel.getBody() + "</p>"
-                       +"<a href=\"" + rel.getHtmlUrl() + "\">"
-                       + ui.getSettings().getResourceBundle().getString("clickUpdate") + "</a>"
-                       + "</body></html>");
+                  // from StackOverflow
+                  StringBuilder style = new StringBuilder("font-family:" + font.getFamily() + ";");
+                  style.append("font-weight:").append(font.isBold() ? "bold" : "normal").append(";");
+                  style.append("font-size:").append(font.getSize()).append("pt;");
 
-               ep.addHyperlinkListener(new HyperlinkListener() {
-                  @Override
-                  public void hyperlinkUpdate(HyperlinkEvent e)
-                  {
-                     if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
-                        try {
-                           Desktop.getDesktop().browse(e.getURL().toURI());
-                        } catch (IOException | URISyntaxException e1) {
-                           e1.printStackTrace();
+                  JEditorPane ep = new JEditorPane("text/html", "<html><body style=\"" + style + "\">"
+                          + ui.getSettings().getResourceBundle().getString("newUpdate")
+                          + "<p>" + ui.getSettings().getResourceBundle().getString("newVersion")
+                          + " " + rel.getTagName() + "\n" + rel.getBody() + "</p>"
+                          +"<a href=\"" + rel.getHtmlUrl() + "\">"
+                          + ui.getSettings().getResourceBundle().getString("clickUpdate") + "</a>"
+                          + "</body></html>");
+
+                  ep.addHyperlinkListener(new HyperlinkListener() {
+                     @Override
+                     public void hyperlinkUpdate(HyperlinkEvent e)
+                     {
+                        if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
+                           try {
+                              Desktop.getDesktop().browse(e.getURL().toURI());
+                           } catch (IOException | URISyntaxException e1) {
+                              e1.printStackTrace();
+                           }
                         }
                      }
-                  }
-               });
-               ep.setEditable(false);
-               ep.setBackground(ui.getBackground());
+                  });
+                  ep.setEditable(false);
+                  ep.setBackground(ui.getBackground());
 
-               JOptionPane.showMessageDialog(ui, ep);
+                  JOptionPane.showMessageDialog(ui, ep);
+               }
+
+               ui.getStatus().setText(ui.getSettings().getResourceBundle().getString("updateChecked"));
+            } catch (NumberFormatException ex) {
+               ui.getStatus().setText(ui.getSettings().getResourceBundle().getString("errorReadingUpdate"));
             }
-         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorReadingUpdate"));
+         } catch (UnknownHostException ex) {
+            ui.getStatus().setText(ui.getSettings().getResourceBundle().getString("noConnectionAvailable"));
          }
       } catch (IOException e) {
          e.printStackTrace();

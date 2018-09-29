@@ -13,10 +13,13 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 class PlayerUI extends JPanel {
-   private static int LENGTH_LABELS = 11;
-   private static int LENGTH_INSERT = 5;
-   private ArrayList<JLabel> labels = new ArrayList<>(LENGTH_LABELS);
-   private ArrayList<JSpinner> insert = new ArrayList<>(LENGTH_INSERT);
+   private static int LABELS_LENGTH = 11;
+   private static int INSERT_LABELS = 5;
+   private final String[] LABEL_STRINGS;
+   private final String[] EDITABLE;
+
+   private ArrayList<JLabel> labels = new ArrayList<>(LABELS_LENGTH);
+   private ArrayList<JSpinner> insert = new ArrayList<>(INSERT_LABELS);
    private JTextField name, username;
    private UserController ui;
    private DocumentListener dl = new DocumentListener() {
@@ -50,36 +53,12 @@ class PlayerUI extends JPanel {
       }
    };
 
-   private static final String[] LABEL_STRINGS = {
-           "Nome: ",
-           "Username: ",
-           "Punteggio: ",
-           "Pelliccioni: ",
-           "Cappotti: ",
-           "Partite giocate: ",
-           "Partite vinte: ",
-           "Partite perse: ",
-           "Media Pelliccioni: ",
-           "Media Cappotti: ",
-           "Media: "
-   };
-
-   private static final String[] EDITABLE = {
-           "Nome: ",
-           "Username: ",
-           "Punteggio: ",
-           "Pelliccioni: ",
-           "Cappotti: ",
-           "Partite giocate: ",
-           "Partite vinte: "
-   };
-
    private DecimalFormat df = new DecimalFormat("##.##");
 
    PlayerUI(Player player, UserController ui) {
       this.ui = ui;
 
-      final String[] PLAYER_STRINGS = {
+      String[] PLAYER_STRINGS = new String[]{
               player.getName(),
               player.getUsername(),
               String.valueOf(player.getScore()),
@@ -93,6 +72,31 @@ class PlayerUI extends JPanel {
               df.format((player.getScore() / (float) player.getTotalPlays()))
       };
 
+      LABEL_STRINGS = new String[] {
+              ui.getSettings().getResourceBundle().getString("name"),
+              ui.getSettings().getResourceBundle().getString("username"),
+              ui.getSettings().getResourceBundle().getString("score"),
+              ui.getSettings().getResourceBundle().getString("pelliccions"),
+              ui.getSettings().getResourceBundle().getString("cappottens"),
+              ui.getSettings().getResourceBundle().getString("totalPlays"),
+              ui.getSettings().getResourceBundle().getString("totalWins"),
+              ui.getSettings().getResourceBundle().getString("totalLoss"),
+              ui.getSettings().getResourceBundle().getString("pellAverage"),
+              ui.getSettings().getResourceBundle().getString("cappAverage"),
+              ui.getSettings().getResourceBundle().getString("average")
+      };
+
+      EDITABLE = new String[] {
+              ui.getSettings().getResourceBundle().getString("name"),
+              ui.getSettings().getResourceBundle().getString("username"),
+              ui.getSettings().getResourceBundle().getString("score"),
+              ui.getSettings().getResourceBundle().getString("pelliccions"),
+              ui.getSettings().getResourceBundle().getString("cappottens"),
+              ui.getSettings().getResourceBundle().getString("totalPlays"),
+              ui.getSettings().getResourceBundle().getString("totalWins"),
+      };
+
+
       df.setRoundingMode(RoundingMode.DOWN);
 
       name = new JTextField(PLAYER_STRINGS[0]);
@@ -105,7 +109,7 @@ class PlayerUI extends JPanel {
          labels.add(new JLabel(LABEL_STRINGS[i] + PLAYER_STRINGS[i]));
       }
 
-      for (int i = 0; i < LENGTH_INSERT; i++) {
+      for (int i = 0; i < INSERT_LABELS; i++) {
          SpinnerNumberModel snm = new SpinnerNumberModel();
          snm.setMinimum(0);
 
@@ -132,7 +136,7 @@ class PlayerUI extends JPanel {
          insert.get(insert.size()-1).addChangeListener(new ChangeListener() { //TODO Optimise code here
             @Override
             public void stateChanged(ChangeEvent e) {
-               for (int i = 0; i < LENGTH_INSERT; i++) {
+               for (int i = 0; i < INSERT_LABELS; i++) {
                   if (e.getSource() == insert.get(i)) {
                      SpinnerNumberModel snm = new SpinnerNumberModel();
 
@@ -147,7 +151,7 @@ class PlayerUI extends JPanel {
                      insert.get(4).setModel(snm);
 
                      labels.get(i+2).setText(EDITABLE[i+2] + insert.get(i).getValue());
-                     labels.get(6).setText(LABEL_STRINGS[6] + (Integer) insert.get(4).getValue());
+                     labels.get(6).setText(LABEL_STRINGS[6] + insert.get(4).getValue());
                      labels.get(7).setText(LABEL_STRINGS[7] + ((Integer) insert.get(3).getValue() - (Integer) insert.get(4).getValue()));
                      labels.get(8).setText(LABEL_STRINGS[8] + df.format((Integer) insert.get(1).getValue() / (float) ((Integer) insert.get(3).getValue())));
                      labels.get(9).setText(LABEL_STRINGS[9] + df.format((Integer) insert.get(2).getValue() / (float) ((Integer) insert.get(3).getValue())));
