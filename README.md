@@ -13,17 +13,16 @@ Maggiori informazioni sono disponibili nel settore Wiki (https://github.com/Lord
 
 # Compatibilità
 
-Il programma è compatibile con la maggior parte delle piattaforme che permettono l'esecuzione di JDK/JRE 8 o superiore.
-Momentaneamente JDK 10 è la versione consigliata, per via di miglioramenti in scaling della finestra a risoluzioni superiori al FHD.
+Il programma è compatibile con la maggior parte delle piattaforme che permettono l'esecuzione di JDK/JRE 10 o superiore.
 
 I Runtime sono disponibili nei seguenti siti:
-
-- http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html per le versioni JRE 8 a 32 e 64 bit
 - http://www.oracle.com/technetwork/java/javase/downloads/jre10-downloads-4417026.html per le versioni JRE 10 solamente a 64 bit
 - Eventuali JDK sono disponibili in https://www.oracle.com/technetwork/java/javase/downloads/index.html
 
+La versione a 32bit basata su Java 8 non è più supportata attivamente.
+
 I requisiti di sistema sono:
-- PC compatibile con JDK/JRE 8 (32/64bit) o JDK/JRE 10 (64bit only)
+- PC compatibile JDK/JRE 10 (64bit only)
 - 100MB di memoria RAM
 - 4MB di spazio minimo aggiuntivo su disco
 
