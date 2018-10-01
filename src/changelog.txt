@@ -47,3 +47,4 @@ Build 5:
     Beta 2.1: Fix update status if no connection was available
               Fix saving status not showed while autosaving
               Fix translations in PlayerUI class
+    Beta 2.2: Fix update system
