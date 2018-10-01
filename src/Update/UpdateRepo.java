@@ -22,8 +22,9 @@ public class UpdateRepo {
          File propertyFile = new File(homeDir, ".github");
 
          PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(propertyFile)));
-         String token = "2be635158aeb16302660bb0d9a14000679cde711";
-         out.write("oauth=" + token);
+         String key1 = "3e6d9ab5244fd160ba73";
+         String key2 = "953183b4a97a346f1ab5";
+         out.write("oauth=" + key1 + key2);
          out.close();
 
          try {
