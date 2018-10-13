@@ -12,6 +12,8 @@ public class About extends AbstractAction {
       this.ui = ui;
 
       putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("about"));
+      putValue(Action.SMALL_ICON, new ImageIcon(About.class.getResource("Information16.gif")));
+      putValue(Action.LARGE_ICON_KEY, new ImageIcon(About.class.getResource("Information24.gif")));
    }
 
    @Override

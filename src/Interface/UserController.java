@@ -27,8 +27,8 @@ import static FileManager.Path.setPath;
 
 public class UserController extends JFrame {
    private static final String PROGRAM_NAME = "Cotecchio Editor - ";
-   private static final String VERSION = "Build 5 Beta 3.0";
-   private static final int RELEASE = 530;
+   private static final String VERSION = "Build 5 Beta 4.0";
+   private static final int RELEASE = 540;
    private GridLayout mainLayout;
    private JPanel mainPanel;
    private JPanel buttonPanel;
@@ -44,6 +44,9 @@ public class UserController extends JFrame {
    private PrintThread print;
    private GameStarter start;
    private OpenGameFile openGame;
+   private NewFile newFile;
+   private OpenFile openFile;
+   private ExportXls exportXls;
 
    private JTabbedPane tabs = null;
    private ArrayList<Player> players = null;
@@ -66,20 +69,26 @@ public class UserController extends JFrame {
 
       menu = new JMenuBar();
       menu.add(file = new JMenu("File"));
-      file.add(new NewFile(UserController.this));
-      file.add(new OpenFile(UserController.this));
+      file.add(newFile = new NewFile(UserController.this));
+      file.add(openFile = new OpenFile(UserController.this));
       file.add(saveButton = new SaveFile(UserController.this));
       file.add(new JSeparator());
       file.add(export = new JMenu(getSettings().getResourceBundle().getString("export")));
       file.add(print = new PrintThread(UserController.this));
-      export.add(new ExportXls(UserController.this));
+      export.add(exportXls = new ExportXls(UserController.this));
       export.add(new ExportLeaderboard(UserController.this));
 
       export.setEnabled(false);
       print.setEnabled(false);
       saveButton.setEnabled(false);
+      exportXls.setEnabled(false);
 
       toolBar = new JToolBar(SwingConstants.VERTICAL);
+      toolBar.add(newFile);
+      toolBar.add(openFile);
+      toolBar.add(saveButton);
+      toolBar.add(print);
+      toolBar.add(exportXls);
       toolBar.add(search = new Search(UserController.this));
       search.setEnabled(false);
       add(toolBar, BorderLayout.LINE_END);
@@ -259,6 +268,7 @@ public class UserController extends JFrame {
       print.setEnabled(true);
       start.setEnabled(true);
       openGame.setEnabled(true);
+      exportXls.setEnabled(true);
 
       if (listPlayers == null) {
          listPlayers = new PanelList(UserController.this);
@@ -294,6 +304,7 @@ public class UserController extends JFrame {
       print.setEnabled(true);
       start.setEnabled(true);
       openGame.setEnabled(true);
+      exportXls.setEnabled(true);
 
       if (tabs.getTabCount() > 1) {
          removeTab.setEnabled(true);

@@ -17,7 +17,12 @@ public class ExportXls extends AbstractAction {
    public ExportXls(UserController ui) {
       this.ui = ui;
 
-      putValue(Action.NAME, "Export as MSExcel");
+      putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("exportXLS"));
+      putValue(Action.SHORT_DESCRIPTION, ui.getSettings().getResourceBundle().getString("exportXLS"));
+      putValue(Action.LARGE_ICON_KEY, new ImageIcon(ExportXls.class.getResource("ColumnInsertBefore24.gif")));
+      putValue(Action.SMALL_ICON, new ImageIcon(ExportXls.class.getResource("ColumnInsertBefore16.gif")));
+
+
    }
 
    @Override

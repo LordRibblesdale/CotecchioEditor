@@ -11,14 +11,19 @@ public class NewFile extends AbstractAction {
    public NewFile(UserController ui) {
       this.ui = ui;
 
-      putValue(Action.NAME, "New");
+      putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("new"));
+      putValue(Action.LARGE_ICON_KEY, new ImageIcon(NewFile.class.getResource("New24.gif")));
+      putValue(Action.SMALL_ICON, new ImageIcon(NewFile.class.getResource("New16.gif")));
+      putValue(Action.SHORT_DESCRIPTION, ui.getSettings().getResourceBundle().getString("new"));
    }
 
    @Override
    public void actionPerformed(ActionEvent e) {
-      Object[] choice = {ui.getSettings().getResourceBundle().getString("save"),
+      Object[] choice = {
+              ui.getSettings().getResourceBundle().getString("save"),
               ui.getSettings().getResourceBundle().getString("discard"),
-              ui.getSettings().getResourceBundle().getString("goBack")};
+              ui.getSettings().getResourceBundle().getString("goBack")
+      };
 
       if (ui.hasBeenSaved()) {
          ui.initialise();

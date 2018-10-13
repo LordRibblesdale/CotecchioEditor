@@ -35,9 +35,10 @@ public class UpdateRepo {
          jsonVersion = jsonVersion.substring(0 , jsonVersion.indexOf("\",\""));
 
          jsonBody = json;
-         jsonBody = json.substring(jsonBody.indexOf("\"body\":\""));
+         jsonBody = json.substring(jsonBody.indexOf("\"body\":\"") + 8);
          jsonBody = jsonBody.substring(0, jsonBody.indexOf("\""));
-         System.out.println(jsonVersion);
+         jsonBody = jsonBody.replaceAll("\\r\\n", "<p></p>");
+         //TODO fix here
 
          try {
             if (Integer.valueOf(jsonVersion) > current) {
@@ -51,7 +52,7 @@ public class UpdateRepo {
                JEditorPane ep = new JEditorPane("text/html", "<html><body style=\"" + style + "\">"
                        + ui.getSettings().getResourceBundle().getString("newUpdate")
                        + "<p>" + ui.getSettings().getResourceBundle().getString("newVersion")
-                       + " " + jsonVersion + "\n" + jsonBody + "</p>"
+                       + " " + jsonVersion + "</p>" + "<p>" + jsonBody + "</p>"
                        +"<a href=\"" + downloadUrl + "\">"
                        + ui.getSettings().getResourceBundle().getString("clickUpdate") + "</a>"
                        + "</body></html>");

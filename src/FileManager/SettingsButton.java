@@ -12,6 +12,8 @@ public class SettingsButton extends AbstractAction {
         this.ui = ui;
 
         putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("settings"));
+        putValue(Action.LARGE_ICON_KEY, new ImageIcon(SettingsButton.class.getResource("Preferences24.gif")));
+        putValue(Action.SMALL_ICON, new ImageIcon(SettingsButton.class.getResource("Preferences16.gif")));
     }
 
     @Override

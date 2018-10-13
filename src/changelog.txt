@@ -49,3 +49,5 @@ Build 5:
               Fix translations in PlayerUI class
     Beta 2.2: Fix update system
     Beta 3.0: Refactor update system with a newer and efficient one
+    Beta 4.0: New layout based on OS style
+              Add icons to buttons

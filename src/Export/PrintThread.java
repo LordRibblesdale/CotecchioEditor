@@ -18,6 +18,9 @@ public class PrintThread extends AbstractAction {
       this.ui = ui;
 
       putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("print"));
+      putValue(Action.SHORT_DESCRIPTION, ui.getSettings().getResourceBundle().getString("print"));
+      putValue(Action.LARGE_ICON_KEY, new ImageIcon(PrintThread.class.getResource("Print24.gif")));
+      putValue(Action.SMALL_ICON, new ImageIcon(PrintThread.class.getResource("Print16.gif")));
    }
 
    @Override
