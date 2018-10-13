@@ -24,7 +24,7 @@ La versione a 32bit basata su Java 8 non è più supportata attivamente.
 I requisiti di sistema sono:
 - PC compatibile JDK/JRE 10 (64bit only)
 - 100MB di memoria RAM
-- 30MB di spazio minimo aggiuntivo su disco
+- 3MB di spazio minimo aggiuntivo su disco
 
 # Release
 
