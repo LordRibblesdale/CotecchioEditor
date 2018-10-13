@@ -48,3 +48,4 @@ Build 5:
               Fix saving status not showed while autosaving
               Fix translations in PlayerUI class
     Beta 2.2: Fix update system
+    Beta 3.0: Refactor update system with a newer and efficient one

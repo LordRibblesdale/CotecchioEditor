@@ -27,8 +27,8 @@ import static FileManager.Path.setPath;
 
 public class UserController extends JFrame {
    private static final String PROGRAM_NAME = "Cotecchio Editor - ";
-   private static final String VERSION = "Build 5 Beta 2.2";
-   private static final int RELEASE = 522;
+   private static final String VERSION = "Build 5 Beta 3.0";
+   private static final int RELEASE = 530;
    private GridLayout mainLayout;
    private JPanel mainPanel;
    private JPanel buttonPanel;
@@ -206,7 +206,7 @@ public class UserController extends JFrame {
          }
       });
 
-      setMinimumSize(new Dimension(500, 500));
+      setMinimumSize(new Dimension(650, 500));
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
       setLocationRelativeTo(null);
       setVisible(true);
