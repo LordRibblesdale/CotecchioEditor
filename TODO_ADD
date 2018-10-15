@@ -1,0 +1,3 @@
+Add Download manager (for Player.bin and newer updates)
+Add new push/pull for Player.bin using auth token or login -> new upload player system
+Add Update window to download jar updates
