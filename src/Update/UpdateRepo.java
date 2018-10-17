@@ -12,6 +12,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 
 public class UpdateRepo {
@@ -36,44 +37,40 @@ public class UpdateRepo {
 
          jsonBody = json;
          jsonBody = json.substring(jsonBody.indexOf("\"body\":\"") + 8);
-         jsonBody = jsonBody.substring(0, jsonBody.indexOf("\""));
-         jsonBody = jsonBody.replaceAll("\\r\\n", "<p></p>");
-         //TODO fix here
+         jsonBody = jsonBody.substring(0, jsonBody.indexOf("\"") -8);
 
          try {
             if (Integer.valueOf(jsonVersion) > current) {
-               Font font = UIManager.getDefaults().getFont("Label.font");
+               StringBuilder update = new StringBuilder()
+                       .append(ui.getSettings().getResourceBundle().getString("newUpdate"))
+                       .append("\n")
+                       .append(ui.getSettings().getResourceBundle().getString("newVersion"))
+                       .append(" ")
+                       .append(jsonVersion)
+                       .append("\n")
+                       .append(jsonBody)
+                       .append("\n")
+                       .append(ui.getSettings().getResourceBundle().getString("askDownloadUpdate"));
 
-               // from StackOverflow
-               StringBuilder style = new StringBuilder("font-family:" + font.getFamily() + ";");
-               style.append("font-weight:").append(font.isBold() ? "bold" : "normal").append(";");
-               style.append("font-size:").append(font.getSize()).append("pt;");
+               Object[] choice = {
+                       ui.getSettings().getResourceBundle().getString("downloadNow"),
+                       ui.getSettings().getResourceBundle().getString("openLink"),
+                       ui.getSettings().getResourceBundle().getString("doNothing")
+               };
 
-               JEditorPane ep = new JEditorPane("text/html", "<html><body style=\"" + style + "\">"
-                       + ui.getSettings().getResourceBundle().getString("newUpdate")
-                       + "<p>" + ui.getSettings().getResourceBundle().getString("newVersion")
-                       + " " + jsonVersion + "</p>" + "<p>" + jsonBody + "</p>"
-                       +"<a href=\"" + downloadUrl + "\">"
-                       + ui.getSettings().getResourceBundle().getString("clickUpdate") + "</a>"
-                       + "</body></html>");
+               int option = JOptionPane.showOptionDialog(ui, update.toString(),
+                       ui.getSettings().getResourceBundle().getString("availableUpdate"),
+                       JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, choice, choice[0]);
 
-               ep.addHyperlinkListener(new HyperlinkListener() {
-                  @Override
-                  public void hyperlinkUpdate(HyperlinkEvent e)
-                  {
-                     if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
-                        try {
-                           Desktop.getDesktop().browse(e.getURL().toURI());
-                        } catch (IOException | URISyntaxException e1) {
-                           e1.printStackTrace();
-                        }
-                     }
+               if (choice[option] == choice[0]) {
+                  downloadUpdate();
+               } else if (choice[option] == choice[1]) {
+                  try {
+                     Desktop.getDesktop().browse(new URI(downloadUrl));
+                  } catch (IOException | URISyntaxException e1) {
+                     e1.printStackTrace();
                   }
-               });
-               ep.setEditable(false);
-               ep.setBackground(ui.getBackground());
-
-               JOptionPane.showMessageDialog(ui, ep);
+               }
             }
 
             ui.getStatus().setText(ui.getSettings().getResourceBundle().getString("updateChecked"));
@@ -85,5 +82,11 @@ public class UpdateRepo {
 
          ui.getStatus().setText(ui.getSettings().getResourceBundle().getString("errorReadingUpdate"));
       }
+   }
+
+   private void downloadUpdate() {
+      JFrame status = new JFrame("Download");
+      ProgressRenderer bar = new ProgressRenderer();
+      //status.add
    }
 }
