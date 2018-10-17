@@ -10,12 +10,13 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class Settings implements Serializable, Path {
-    private static long serialVersionUID = 510L;
+    private static long serialVersionUID = 550L;
 
     private int refreshSaveRate;
     private String openedFile;
     private String language;
     private String country;
+    private boolean useLookAndFeel;
     private transient ResourceBundle resourceBundle;
 
     public Settings() {
@@ -29,16 +30,20 @@ public class Settings implements Serializable, Path {
 
              refreshSaveRate = tmp.getRefreshSaveRate();
              openedFile = tmp.getOpenedFile();
+             useLookAndFeel = tmp.isUsingLookAndFeel();
              language = tmp.getLanguage();
              country = tmp.getCountry();
              Locale locale = new Locale(language, country);
              resourceBundle = ResourceBundle.getBundle("MessagesBundle", locale);
           }
+       } catch (ClassNotFoundException e) {
+          e.printStackTrace();
        } catch (IOException e) {
           refreshSaveRate = 60000;
           openedFile = "";
           language = "it";
           country = "IT";
+          useLookAndFeel = true;
           Locale locale = new Locale(language, country);
           resourceBundle = ResourceBundle.getBundle("MessagesBundle", locale);
           try {
@@ -48,8 +53,6 @@ public class Settings implements Serializable, Path {
           } catch (IOException e1) {
              JOptionPane.showMessageDialog(null, "Error saving settings file", "Error I/O", JOptionPane.ERROR_MESSAGE);
           }
-       } catch (ClassNotFoundException e) {
-          e.printStackTrace();
        }
 
        System.out.println(language + country);
@@ -85,6 +88,14 @@ public class Settings implements Serializable, Path {
 
    public void setLanguage(String language) {
       this.language = language;
+   }
+
+   public boolean isUsingLookAndFeel() {
+      return useLookAndFeel;
+   }
+
+   public void setUseLookAndFeel(boolean useLookAndFeel) {
+      this.useLookAndFeel = useLookAndFeel;
    }
 
    public ResourceBundle getResourceBundle() {

@@ -16,7 +16,10 @@ public class SettingsFrame extends JFrame {
     private JLabel timerInfo;
     private JSlider delay;
     private JComboBox languages;
+    private JCheckBox useLookAndFeel;
     private UserController ui;
+
+    private static Insets insets = new Insets(5, 5, 5, 5);
 
     public SettingsFrame(UserController ui) {
         super(ui.getSettings().getResourceBundle().getString("settings"));
@@ -27,6 +30,7 @@ public class SettingsFrame extends JFrame {
         setLayout(new GridBagLayout());
 
         GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = insets;
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -34,6 +38,7 @@ public class SettingsFrame extends JFrame {
         add(timerInfo = new JLabel(text + " " + ui.getSettings().getRefreshSaveRate()/1000 + " " + ui.getSettings().getResourceBundle().getString("seconds")), constraints);
 
         constraints = new GridBagConstraints();
+        constraints.insets = insets;
         constraints.gridx = 0;
         constraints.gridy = 1;
         constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -56,19 +61,29 @@ public class SettingsFrame extends JFrame {
         });
 
         constraints = new GridBagConstraints();
+        constraints.insets = insets;
         constraints.gridx = 0;
         constraints.gridy = 2;
-        add(new JSeparator(), constraints);
-
-        constraints = new GridBagConstraints();
-        constraints.gridx = 0;
-        constraints.gridy = 3;
         add(new JLabel(ui.getSettings().getResourceBundle().getString("selectLanguage")), constraints);
 
         constraints = new GridBagConstraints();
+        constraints.insets = insets;
+        constraints.gridx = 1;
+        constraints.gridy = 2;
+        add(languages = new JComboBox(locale), constraints);
+
+        constraints = new GridBagConstraints();
+        constraints.insets = insets;
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        add(new JLabel(ui.getSettings().getResourceBundle().getString("useLookAndFeel")), constraints);
+
+        constraints = new GridBagConstraints();
+        constraints.insets = insets;
         constraints.gridx = 1;
         constraints.gridy = 3;
-        add(languages = new JComboBox(locale), constraints);
+        add(useLookAndFeel = new JCheckBox(), constraints);
+        useLookAndFeel.setSelected(ui.getSettings().isUsingLookAndFeel());
 
        languages.addActionListener(e -> {
           JComboBox tmp = (JComboBox) e.getSource();
@@ -111,7 +126,21 @@ public class SettingsFrame extends JFrame {
             validate();
         });
 
+        useLookAndFeel.addActionListener(e -> {
+            if (((JCheckBox) e.getSource()).isSelected()) {
+                ui.getSettings().setUseLookAndFeel(true);
+            } else {
+                ui.getSettings().setUseLookAndFeel(false);
+            }
+
+            saveSettings();
+            validate();
+        });
+
+        useLookAndFeel.setToolTipText(ui.getSettings().getResourceBundle().getString("warningPerformance"));
+
         setMinimumSize(new Dimension(300, 100));
+        pack();
         setLocationRelativeTo(ui);
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setVisible(false);

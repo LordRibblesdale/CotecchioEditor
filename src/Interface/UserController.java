@@ -27,8 +27,8 @@ import static FileManager.Path.setPath;
 
 public class UserController extends JFrame {
    private static final String PROGRAM_NAME = "Cotecchio Editor - ";
-   private static final String VERSION = "Build 5 Beta 4.0";
-   private static final int RELEASE = 539;
+   private static final String VERSION = "Build 5 Beta 5.0";
+   private static final int RELEASE = 550;
    private GridLayout mainLayout;
    private JPanel mainPanel;
    private JPanel buttonPanel;
@@ -63,6 +63,15 @@ public class UserController extends JFrame {
       setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("Data/cotecchio.png"))).getImage());
 
       settings = new Settings();
+
+      if (settings.isUsingLookAndFeel()) {
+         try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+         }
+      }
+
       settingsFrame = new SettingsFrame(UserController.this);
 
       mainPanel = new JPanel(mainLayout = new GridLayout(0, 10));
