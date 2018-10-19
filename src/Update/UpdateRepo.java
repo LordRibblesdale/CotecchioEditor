@@ -14,6 +14,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 
 public class UpdateRepo {
 
@@ -78,9 +79,11 @@ public class UpdateRepo {
             ui.getStatus().setText(ui.getSettings().getResourceBundle().getString("errorReadingUpdate"));
          }
       } catch (IOException e) {
-         e.printStackTrace();
-
          ui.getStatus().setText(ui.getSettings().getResourceBundle().getString("errorReadingUpdate"));
+
+         if (e instanceof UnknownHostException) {
+            ui.getStatus().setText(ui.getSettings().getResourceBundle().getString("checkConnection"));
+         }
       }
    }
 

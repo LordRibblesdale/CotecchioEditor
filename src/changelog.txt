@@ -51,3 +51,5 @@ Build 5:
     Beta 3.0: Refactor update system with a newer and efficient one
     Beta 4.0: New layout based on OS style
               Add icons to buttons
+    Beta 5.0: Add new Update System and Download Manager
+              Add layout choice in Settings
