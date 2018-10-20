@@ -7,17 +7,21 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Observable;
 
-public class Download extends Observable implements Runnable, Status {
-   //TODO Fix Observable usage
+public class Download implements Runnable, Status {
    private static final int MAX_BUFFER_SIZE = 4096;
 
    private URL url;
+   private String version;
+   private String name;
    private int size;
    private int downloaded;
    private int status;
 
-   public Download(URL url) {
+   public Download(URL url, String version) {
       this.url = url;
+      this.version = version;
+      name = null;
+
       size = -1;
       downloaded = 0;
       status = DOWNLOADING;
@@ -41,19 +45,31 @@ public class Download extends Observable implements Runnable, Status {
       return ((float) downloaded / size) * 100;
    }
 
+   public int getDownloaded() {
+      return downloaded;
+   }
+
    public void pause() {
       status = PAUSED;
-      stateChanged();
+   }
+
+   public void stop() {
+      status = CANCELLED;
+
+      Thread thread = new Thread(this);
+      thread.interrupt();
    }
 
    public void resume() {
       status = DOWNLOADING;
-      stateChanged();
+   }
+
+   public String getName() {
+      return name;
    }
 
    private void error() {
       status = ERROR;
-      stateChanged();
    }
 
    private void download() {
@@ -63,7 +79,10 @@ public class Download extends Observable implements Runnable, Status {
 
    private String getFileName(URL url) {
       String fileName = url.getFile();
-      return fileName.substring(fileName.lastIndexOf('/') + 1);
+      fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+      fileName += version + ".jar.tmp";
+      name = fileName;
+      return fileName;
    }
 
    @Override
@@ -86,7 +105,6 @@ public class Download extends Observable implements Runnable, Status {
 
          if (size == -1) {
             size = connection.getContentLength();
-            stateChanged();
          }
 
          file = new RandomAccessFile(getFileName(url), "rw");
@@ -110,12 +128,10 @@ public class Download extends Observable implements Runnable, Status {
 
             file.write(buffer, 0, read);
             downloaded += read;
-            stateChanged();
          }
 
          if (status == DOWNLOADING) {
             status = COMPLETED;
-            stateChanged();
          }
       } catch (IOException e) {
          e.printStackTrace();
@@ -137,10 +153,5 @@ public class Download extends Observable implements Runnable, Status {
             }
          }
       }
-   }
-
-   private void stateChanged() {
-      setChanged();
-      notifyObservers();
    }
 }
