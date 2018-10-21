@@ -9,6 +9,7 @@ import Export.PrintThread;
 import FileManager.*;
 import Game.GameStarter;
 import Game.OpenGameFile;
+import Update.UpdateButton;
 import Update.UpdateRepo;
 
 import javax.swing.*;
@@ -28,7 +29,7 @@ import static FileManager.Path.setPath;
 public class UserController extends JFrame {
    private static final String PROGRAM_NAME = "Cotecchio Editor - ";
    private static final String VERSION = "Build 5 Beta 5.0";
-   private static final int RELEASE = 539;
+   private static final int RELEASE = 550;
    private GridLayout mainLayout;
    private JPanel mainPanel;
    private JPanel buttonPanel;
@@ -134,6 +135,7 @@ public class UserController extends JFrame {
       start.setEnabled(false);
 
       menu.add(about = new JMenu(getSettings().getResourceBundle().getString("about")));
+      about.add(new UpdateButton(UserController.this, RELEASE));
       about.add(new About(UserController.this));
 
       setJMenuBar(menu);

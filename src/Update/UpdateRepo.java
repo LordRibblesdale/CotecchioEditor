@@ -20,11 +20,13 @@ import java.net.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 
+import static Update.Status.CANCELLED;
 import static Update.Status.COMPLETED;
 import static Update.Status.DOWNLOADING;
 
 public class UpdateRepo {
    private UserController ui;
+   private Timer t = null;
 
    public UpdateRepo(UserController ui, int current) {
       this.ui = ui;
@@ -114,10 +116,12 @@ public class UpdateRepo {
 
       final float[] oldDownload = {0};
       final float[] newDownload = {0};
+      final int[] num = {0};
 
-      Timer t = new Timer(500, new ActionListener() {
+      t = new Timer(500, new ActionListener() {
          @Override
          public void actionPerformed(ActionEvent e) {
+            System.out.println(num[0]++);
             String statusString;
 
             switch (update.getStatus()) {
@@ -144,22 +148,46 @@ public class UpdateRepo {
             status.validate();
 
             if (update.getStatus() == COMPLETED) {
+               status.dispose();
+               if (t != null) {
+                  t.stop();
+               }
+
                File downloaded = new File(update.getName());
                String newRename = downloaded.getName().substring(0, downloaded.getName().length()-4);
-               downloaded.renameTo(new File(newRename));
-               JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("updateRestart"),
-                       ui.getSettings().getResourceBundle().getString("updateDownloaded"),
-                       JOptionPane.INFORMATION_MESSAGE);
-               try {
-                  ArrayList<File> oldVersionFiles = new ArrayList<>(2);
-                  oldVersionFiles.add(new File("settings.set"));
+               downloaded.renameTo(new File(newRename)); //TODO Fix here
 
-                  for (File file : oldVersionFiles) {
+               ArrayList<File> oldVersionFiles = new ArrayList<>(2);
+               oldVersionFiles.add(new File("settings.set"));
+
+               for (File file : oldVersionFiles) {
+                  try {
                      Files.copy(file.toPath(), new FileOutputStream(file.getName() + ".old." + jsonVersion));
+                  } catch (IOException e1) {
+                     e1.printStackTrace();
                   }
+               }
 
-                  Runtime.getRuntime().exec("java -jar " + newRename);
-                  System.exit(0);
+               int c = JOptionPane.showConfirmDialog(ui, ui.getSettings().getResourceBundle().getString("updateRestart"),
+                       ui.getSettings().getResourceBundle().getString("updateDownloaded"),
+                       JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+
+               if (c == JOptionPane.OK_OPTION) {
+                  try {
+                     Runtime.getRuntime().exec("java -jar " + newRename);
+                     System.exit(0);
+                  } catch (IOException e1) {
+                     e1.printStackTrace();
+                  }
+               }
+            } else if (update.getStatus() == CANCELLED) {
+               if (t != null) {
+                  t.stop();
+               }
+
+               try {
+                  System.out.println(update.getName());
+                  Files.delete((new File(update.getName())).toPath());
                } catch (IOException e1) {
                   e1.printStackTrace();
                }
@@ -176,7 +204,8 @@ public class UpdateRepo {
       status.addWindowListener(new WindowAdapter() {
          @Override
          public void windowClosing(WindowEvent e) {
-            update.pause();
+            status.dispose();
+            update.stop();
          }
       });
 
