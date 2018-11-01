@@ -1,5 +1,6 @@
 Add Download manager (for Player.bin and newer updates)
 Add new push/pull for Player.bin using auth token or login -> new upload player system
 Add Update window to download jar updates
-Add selective plays (standalone plays with date and registered boolean)
+Add standalone plays (standalone plays with date and registered boolean)
+Add results and all plays history
 Update UI for Game Simulation
