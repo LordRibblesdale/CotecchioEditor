@@ -53,3 +53,7 @@ Build 5:
               Add icons to buttons
     Beta 5.0: Add new Update System and Download Manager
               Add layout choice in Settings
+Build 6:
+    Beta 1.0: Redesign point management through games played
+              Add new date-based games saved in an external array-based database
+              Add leaderboard in main page

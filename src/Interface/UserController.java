@@ -28,8 +28,8 @@ import static FileManager.Path.setPath;
 
 public class UserController extends JFrame {
    private static final String PROGRAM_NAME = "Cotecchio Editor - ";
-   private static final String VERSION = "Build 5 Beta 5.0";
-   private static final int RELEASE = 550;
+   private static final String VERSION = "Build 6 Beta 1.0";
+   private static final int RELEASE = 610;
    private GridLayout mainLayout;
    private JPanel mainPanel;
    private JPanel buttonPanel;
