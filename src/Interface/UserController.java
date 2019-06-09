@@ -2,14 +2,7 @@ package Interface;
 
 import Data.Player;
 import Data.Settings;
-import Edit.Search;
-import Export.ExportLeaderboard;
-import Export.ExportXls;
-import Export.PrintThread;
 import FileManager.*;
-import Game.GameStarter;
-import Game.OpenGameFile;
-import Update.UpdateButton;
 import Update.UpdateRepo;
 
 import javax.swing.*;
@@ -28,32 +21,22 @@ import static FileManager.Path.setPath;
 
 public class UserController extends JFrame {
    private static final String PROGRAM_NAME = "Cotecchio Editor - ";
-   private static final String VERSION = "Build 5 Beta 5.0";
-   private static final int RELEASE = 550;
+   private static final String VERSION = "Build 6 Beta 1.0";
+   private static final int RELEASE = 610;
    private GridLayout mainLayout;
    private JPanel mainPanel;
    private JPanel buttonPanel;
-   private JMenuBar menu;
-   private JMenu file, edit, about, export, game;
+   private PersonalMenu menu;
    private JButton addTab, removeTab;
-   private JCheckBoxMenuItem showList;
    private JLabel saveStatus;
 
    private boolean hasBeenSaved = true;
-   private SaveFile saveButton;
-   private Search search;
-   private PrintThread print;
-   private GameStarter start;
-   private OpenGameFile openGame;
-   private NewFile newFile;
-   private OpenFile openFile;
-   private ExportXls exportXls;
 
    private JTabbedPane tabs = null;
    private ArrayList<Player> players = null;
    private ArrayList<PlayerUI> pUI;
 
-   private JToolBar toolBar;
+   private PersonalToolBar toolBar;
    private PanelList listPlayers = null;
 
    private Settings settings;
@@ -69,7 +52,11 @@ public class UserController extends JFrame {
          try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
          } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(
+                    UserController.this,
+                    e.getMessage(),
+                    "LookAndFeel UserController00 V:" + RELEASE + " " + e.getStackTrace()[0].getLineNumber(),
+                    JOptionPane.ERROR_MESSAGE);
          }
       }
 
@@ -77,66 +64,10 @@ public class UserController extends JFrame {
 
       mainPanel = new JPanel(mainLayout = new GridLayout(0, 10));
 
-      menu = new JMenuBar();
-      menu.add(file = new JMenu("File"));
-      file.add(newFile = new NewFile(UserController.this));
-      file.add(openFile = new OpenFile(UserController.this));
-      file.add(saveButton = new SaveFile(UserController.this));
-      file.add(new JSeparator());
-      file.add(export = new JMenu(getSettings().getResourceBundle().getString("export")));
-      file.add(print = new PrintThread(UserController.this));
-      export.add(exportXls = new ExportXls(UserController.this));
-      export.add(new ExportLeaderboard(UserController.this));
+      menu = new PersonalMenu(this);
 
-      export.setEnabled(false);
-      print.setEnabled(false);
-      saveButton.setEnabled(false);
-      exportXls.setEnabled(false);
-
-      toolBar = new JToolBar(SwingConstants.VERTICAL);
-      toolBar.add(newFile);
-      toolBar.add(openFile);
-      toolBar.add(saveButton);
-      toolBar.add(print);
-      toolBar.add(exportXls);
-      toolBar.add(search = new Search(UserController.this));
-      search.setEnabled(false);
+      toolBar = new PersonalToolBar(SwingConstants.VERTICAL, this, menu);
       add(toolBar, BorderLayout.LINE_END);
-
-      menu.add(edit = new JMenu(getSettings().getResourceBundle().getString("edit")));
-      edit.add(search);
-      edit.add(showList = new JCheckBoxMenuItem(getSettings().getResourceBundle().getString("showPlayersList")));
-      edit.add(new JSeparator());
-      edit.add(new SettingsButton(UserController.this));
-      showList.addItemListener(new ItemListener() {
-         @Override
-         public void itemStateChanged(ItemEvent e) {
-            if (listPlayers != null) {
-               listPlayers.updateList();
-               if (((JCheckBoxMenuItem) e.getSource()).getState()) {
-                  listPlayers.setVisible(true);
-               } else {
-                  listPlayers.setVisible(false);
-               }
-            } else {
-               listPlayers = new PanelList(UserController.this);
-               listPlayers.updateList();
-               listPlayers.setVisible(true);
-            }
-
-            validate();
-         }
-      });
-
-      menu.add(game = new JMenu(getSettings().getResourceBundle().getString("game")));
-      game.add(start = new GameStarter(UserController.this));
-      game.add(openGame = new OpenGameFile(UserController.this));
-      openGame.setEnabled(false);
-      start.setEnabled(false);
-
-      menu.add(about = new JMenu(getSettings().getResourceBundle().getString("about")));
-      about.add(new UpdateButton(UserController.this, RELEASE));
-      about.add(new About(UserController.this));
 
       setJMenuBar(menu);
 
@@ -162,7 +93,6 @@ public class UserController extends JFrame {
             }
 
             listPlayers.updateList();
-
             validate();
          }
       });
@@ -242,52 +172,15 @@ public class UserController extends JFrame {
       this.hasBeenSaved = hasBeenSaved;
 
       if (hasBeenSaved) {
-         saveButton.setEnabled(false);
+         menu.getSaveButton().setEnabled(false);
          setTitle(PROGRAM_NAME + VERSION);
          settingsFrame.stopTimer();
          saveStatus.setText("Saved @ " + new SimpleDateFormat("HH.mm.ss").format(new Date()));
       } else {
-         saveButton.setEnabled(true);
+         menu.getSaveButton().setEnabled(true);
          setTitle(PROGRAM_NAME + VERSION + " - *" + getSettings().getResourceBundle().getString("changesNotSaved"));
          settingsFrame.startTimer();
       }
-
-      validate();
-   }
-
-   public void initialise() {
-      if (tabs != null) {
-         remove(tabs);
-      }
-
-      tabs = new JTabbedPane();
-      add(tabs);
-      validate();
-
-      players = new ArrayList<>();
-      pUI = new ArrayList<>();
-
-      players.add(new Player(getSettings().getResourceBundle().getString("newPlayer0"),
-              getSettings().getResourceBundle().getString("newPlayer1"),
-              0, 0, 0, 0, 0));
-      pUI.add(new PlayerUI(players.get(players.size()-1), UserController.this));
-      tabs.addTab(getSettings().getResourceBundle().getString("newPlayer0"), pUI.get(pUI.size()-1).generatePanel());
-
-      addTab.setEnabled(true);
-      search.setEnabled(true);
-      export.setEnabled(true);
-      print.setEnabled(true);
-      start.setEnabled(true);
-      openGame.setEnabled(true);
-      exportXls.setEnabled(true);
-
-      if (listPlayers == null) {
-         listPlayers = new PanelList(UserController.this);
-      }
-
-      listPlayers.updateList();
-
-      setHasBeenSaved(true);
 
       validate();
    }
@@ -301,25 +194,36 @@ public class UserController extends JFrame {
       add(tabs);
       validate();
 
-      this.players = players;
       pUI = new ArrayList<>();
 
-      for (Player p : players) {
-         pUI.add(new PlayerUI(p, UserController.this));
-         tabs.addTab(pUI.get(pUI.size()-1).getJTextName().getText(), pUI.get(pUI.size()-1).generatePanel());
+      if (players == null) {
+         players = new ArrayList<>();
+
+         players.add(new Player(getSettings().getResourceBundle().getString("newPlayer0"),
+                 getSettings().getResourceBundle().getString("newPlayer1"),
+                 0, 0, 0, 0, 0));
+         pUI.add(new PlayerUI(players.get(players.size()-1), UserController.this));
+         tabs.addTab(getSettings().getResourceBundle().getString("newPlayer0"), pUI.get(pUI.size()-1).generatePanel());
+      } else {
+         this.players = players;
+
+         for (Player p : players) {
+            pUI.add(new PlayerUI(p, UserController.this));
+            tabs.addTab(pUI.get(pUI.size()-1).getJTextName().getText(), pUI.get(pUI.size()-1).generatePanel());
+         }
+
+         if (tabs.getTabCount() > 1) {
+            removeTab.setEnabled(true);
+         }
       }
 
       addTab.setEnabled(true);
-      search.setEnabled(true);
-      export.setEnabled(true);
-      print.setEnabled(true);
-      start.setEnabled(true);
-      openGame.setEnabled(true);
-      exportXls.setEnabled(true);
-
-      if (tabs.getTabCount() > 1) {
-         removeTab.setEnabled(true);
-      }
+      menu.getSearch().setEnabled(true);
+      menu.getExport().setEnabled(true);
+      menu.getPrint().setEnabled(true);
+      menu.getStart().setEnabled(true);
+      menu.getOpenGame().setEnabled(true);
+      menu.getExportXls().setEnabled(true);
 
       if (listPlayers == null) {
          listPlayers = new PanelList(UserController.this);
@@ -364,7 +268,7 @@ public class UserController extends JFrame {
    }
 
    JCheckBoxMenuItem getShowList() {
-      return showList;
+      return menu.getShowList();
    }
 
    PanelList getListPlayers() {
@@ -394,7 +298,11 @@ public class UserController extends JFrame {
          out.close();
       } catch (IOException e) {
          e.printStackTrace();
-         JOptionPane.showMessageDialog(UserController.this, e.getMessage(), "Exception", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(
+                 UserController.this,
+                 e.getMessage(),
+                 "SaveSettings UserController01 V:" + RELEASE + " " + e.getStackTrace()[0].getLineNumber(),
+                 JOptionPane.ERROR_MESSAGE);
       }
    }
 
@@ -406,5 +314,13 @@ public class UserController extends JFrame {
 
    public void askForSaving(ActionEvent e) {
       new SaveFile(UserController.this).actionPerformed(e);
+   }
+
+   void setListPlayers(PanelList listPlayers) {
+      this.listPlayers = listPlayers;
+   }
+
+   int getRelease() {
+      return RELEASE;
    }
 }

@@ -51,6 +51,9 @@ public class UpdateRepo {
          jsonBody = json;
          jsonBody = json.substring(jsonBody.indexOf("\"body\":\"") + 8);
          jsonBody = jsonBody.substring(0, jsonBody.indexOf("\"") -8);
+         String replaceString = jsonBody.substring(jsonBody.indexOf("\\r\\n"), jsonBody.indexOf("\\r\\n")+4);
+         System.out.println(replaceString);
+         jsonBody = jsonBody.replaceAll(replaceString, "\n");
 
          try {
             if (Integer.valueOf(jsonVersion) > current) {
@@ -75,13 +78,15 @@ public class UpdateRepo {
                        ui.getSettings().getResourceBundle().getString("availableUpdate"),
                        JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, choice, choice[0]);
 
-               if (choice[option] == choice[0]) {
-                  downloadUpdate(json, jsonVersion);
-               } else if (choice[option] == choice[1]) {
-                  try {
-                     Desktop.getDesktop().browse(new URI(downloadUrl));
-                  } catch (IOException | URISyntaxException e1) {
-                     e1.printStackTrace();
+               if (option != -1) {
+                  if (choice[option] == choice[0]) {
+                     downloadUpdate(json, jsonVersion);
+                  } else if (choice[option] == choice[1]) {
+                     try {
+                        Desktop.getDesktop().browse(new URI(downloadUrl));
+                     } catch (IOException | URISyntaxException e1) {
+                        e1.printStackTrace();
+                     }
                   }
                }
             }

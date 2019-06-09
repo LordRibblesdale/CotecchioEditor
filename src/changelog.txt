@@ -53,3 +53,7 @@ Build 5:
               Add icons to buttons
     Beta 5.0: Add new Update System and Download Manager
               Add layout choice in Settings
+Build 6:
+    Beta 1.0: Add new Player and Games management
+              Add new Game List management
+              Fix exception in UpdateRepo (IndexOutOfBounds -1)

@@ -27,7 +27,7 @@ public class Search extends AbstractAction {
 
       String result = JOptionPane.showInputDialog(ui, ui.getSettings().getResourceBundle().getString("insertName"), previousRes);
 
-      if (result != null) {
+      if (result != null && tab != null) {
          if (!previousRes.equals(result)) {
             i = 0;
          }

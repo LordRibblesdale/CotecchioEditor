@@ -39,7 +39,7 @@ public class Settings implements Serializable, Path {
        } catch (ClassNotFoundException e) {
           e.printStackTrace();
        } catch (IOException e) {
-          refreshSaveRate = 60000;
+          refreshSaveRate = 30000;
           openedFile = "";
           language = "it";
           country = "IT";
