@@ -66,11 +66,15 @@ public class OpenFile extends AbstractAction implements Path {
                }
 
                ui.saveRecentFile(path);
-               ui.initialise(players);
+               ui.prepareForInitialisation(players);
             }
          }
       } catch (FileNotFoundException e3) {
-         JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorInsertingNameFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(
+                 ui,
+                 ui.getSettings().getResourceBundle().getString("errorInsertingNameFile"),
+                 "Error I/O",
+                 JOptionPane.ERROR_MESSAGE);
       } catch (IOException | ClassNotFoundException e1) {
          try {
             input.close();
@@ -92,16 +96,24 @@ public class OpenFile extends AbstractAction implements Path {
                }
 
                ui.saveRecentFile(this.path);
-               ui.initialise(players);
+               ui.prepareForInitialisation(players);
                JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("conversionMessage"),
                        ui.getSettings().getResourceBundle().getString("conversionCompleted"), JOptionPane.WARNING_MESSAGE);
                new SaveFile(ui).actionPerformed(e);
             }
          } catch (IOException | ClassNotFoundException e2) {
             e2.printStackTrace();
+            JOptionPane.showMessageDialog(ui,
+                    ui.getSettings().getResourceBundle().getString("errorReadingFile"),
+                    "Error I/O 01_OpenFile" + e2.getStackTrace()[0].getLineNumber(),
+                    JOptionPane.ERROR_MESSAGE);
          }
       } catch (Exception e2) {
-         JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorReadingFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(
+                 ui,
+                 ui.getSettings().getResourceBundle().getString("errorReadingFile"),
+                 "Error I/O 02_OpenFile" + e2.getStackTrace()[0].getLineNumber(),
+                 JOptionPane.ERROR_MESSAGE);
       }
    }
 

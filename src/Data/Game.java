@@ -10,5 +10,7 @@ public class Game implements Serializable {
     private ArrayList<PlayerStateGame> results;
     private Date date;
 
-    //Game()
+    Game() {
+
+    }
 }

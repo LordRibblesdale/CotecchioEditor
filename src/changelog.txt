@@ -56,4 +56,6 @@ Build 5:
 Build 6:
     Beta 1.0: Add new Player and Games management
               Add new Game List management
+              Refresh UI with CardsLayout
+              Increase exception debugging
               Fix exception in UpdateRepo (IndexOutOfBounds -1)

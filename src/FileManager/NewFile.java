@@ -26,7 +26,7 @@ public class NewFile extends AbstractAction {
       };
 
       if (ui.hasBeenSaved()) {
-         ui.initialise(null);
+         ui.prepareForInitialisation(null);
       } else {
          int selection = JOptionPane.showOptionDialog(ui, ui.getSettings().getResourceBundle().getString("askSaveChanges"),
                  ui.getSettings().getResourceBundle().getString("saveFile"),
@@ -36,7 +36,7 @@ public class NewFile extends AbstractAction {
          if (choice[selection] == choice[0]) {
             ui.askForSaving(e);
          } else if (choice[selection] == choice[1]) {
-            ui.initialise(null);
+            ui.prepareForInitialisation(null);
          }
       }
    }
