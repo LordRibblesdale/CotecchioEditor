@@ -1,5 +1,6 @@
 package FileManager;
 
+import Data.CotecchioDataArray;
 import Data.Player;
 import Interface.UserController;
 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 
 public class OpenFile extends AbstractAction implements Path {
    private UserController ui;
-   private ArrayList<Player> players;
+   private CotecchioDataArray data;
    private ObjectInputStream input;
    private ProgressMonitor pm;
    private String path;
@@ -26,7 +27,6 @@ public class OpenFile extends AbstractAction implements Path {
 
    @Override
    public void actionPerformed(ActionEvent e) {
-      ArrayList<?> tmp2;
       try {
          if (ui.getSettings().getOpenedFile().equals("")) {
             this.path = getFile();
@@ -53,20 +53,11 @@ public class OpenFile extends AbstractAction implements Path {
             Object tmp = input.readObject();
             input.close();
 
-            if (tmp instanceof ArrayList<?>) {
-               tmp2 = (ArrayList<?>) tmp;
-               players = new ArrayList<>();
-
-               for (Object o : tmp2) {
-                  if (!(o instanceof Player)) {
-                     throw new Exception();
-                  } else {
-                     players.add((Player) o);
-                  }
-               }
+            if (tmp instanceof CotecchioDataArray) {
+               data = (CotecchioDataArray) tmp;
 
                ui.saveRecentFile(path);
-               ui.prepareForInitialisation(players);
+               ui.prepareForInitialisation(data);
             }
          }
       } catch (FileNotFoundException e3) {
@@ -83,20 +74,11 @@ public class OpenFile extends AbstractAction implements Path {
             Object tmp = in.readObject();
             in.close();
 
-            if (tmp instanceof  ArrayList<?>) {
-               tmp2 = (ArrayList<?>) tmp;
-               players = new ArrayList<>();
-
-               for (Object o : tmp2) {
-                  if (o instanceof Player) {
-                     Player p = (Player) o;
-
-                     players.add(new Player(p.getName(), p.getUsername(), p.getScore(), p.getPelliccions(), p.getCappottens(), p.getTotalPlays(), p.getTotalWins()));
-                  }
-               }
+            if (tmp instanceof  CotecchioDataArray) {
+               data = (CotecchioDataArray) tmp;
 
                ui.saveRecentFile(this.path);
-               ui.prepareForInitialisation(players);
+               ui.prepareForInitialisation(data);
                JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("conversionMessage"),
                        ui.getSettings().getResourceBundle().getString("conversionCompleted"), JOptionPane.WARNING_MESSAGE);
                new SaveFile(ui).actionPerformed(e);

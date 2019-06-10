@@ -9,13 +9,16 @@ public class CalendarButton extends AbstractAction {
     public CalendarButton(UserController ui) {
         this.ui = ui;
 
-        putValue(Action.SHORT_DESCRIPTION, "Test");
-        putValue(Action.LARGE_ICON_KEY, new ImageIcon(CalendarButton.class.getResource("WebComponent24.gif")));
-        putValue(Action.SMALL_ICON, new ImageIcon(CalendarButton.class.getResource("WebComponent16.gif")));
+        putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("calendarButton"));
+        putValue(Action.SHORT_DESCRIPTION, ui.getSettings().getResourceBundle().getString("calendarDescription"));
+        putValue(Action.LARGE_ICON_KEY, new ImageIcon(CalendarButton.class.getResource("History24.gif")));
+        putValue(Action.SMALL_ICON, new ImageIcon(CalendarButton.class.getResource("History16.gif")));
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        
+        ui.askForNextPage("CALENDAR", ui.getData());
+
+        ui.validate();
     }
 }

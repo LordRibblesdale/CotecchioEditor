@@ -44,8 +44,8 @@ public class SettingsFrame extends JFrame {
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridwidth = 2;
         add(delay = new JSlider(JSlider.HORIZONTAL), constraints);
-        delay.setMinimum(30000);
-        delay.setMaximum(300000);
+        delay.setMinimum(15000);
+        delay.setMaximum(150000);
         delay.setValue(ui.getSettings().getRefreshSaveRate());
         delay.addMouseListener(new MouseAdapter() {
             @Override

@@ -46,7 +46,7 @@ public class ExportLeaderboard extends AbstractAction {
       }
    }
 
-   private String generateList(ArrayList<Player> players) {
+   public String generateList(ArrayList<Player> players) {
       StringBuilder tmp = new StringBuilder();
 
       for (Player p : players) {

@@ -1,5 +1,6 @@
 package FileManager;
 
+import Data.CotecchioDataArray;
 import Data.Player;
 import Interface.UserController;
 
@@ -71,11 +72,11 @@ public class SaveFile extends AbstractAction implements Path {
    }
 
    private void saveThread(String path) {
-      ArrayList<Player> playerList = ui.getPlayers();
+      CotecchioDataArray data = ui.getData();
 
       try {
          ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(path)));
-         output.writeObject(playerList);
+         output.writeObject(data);
          output.close();
       } catch (IOException e1) {
          JOptionPane.showMessageDialog(ui, e1.getMessage(), "Exception", JOptionPane.ERROR_MESSAGE);

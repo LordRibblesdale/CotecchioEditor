@@ -1,5 +1,6 @@
 package Interface;
 
+import Data.CotecchioDataArray;
 import Data.Game;
 import Data.Player;
 import Data.Settings;
@@ -39,6 +40,7 @@ public class UserController extends JFrame {
   public UserController() {
     super(PROGRAM_NAME + VERSION);
     setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("Data/cotecchio.png"))).getImage());
+    setMinimumSize(new Dimension(650, 500));
 
     settings = new Settings();
 
@@ -62,9 +64,6 @@ public class UserController extends JFrame {
     toolBar = new PersonalToolBar(SwingConstants.VERTICAL, this, menu);
     add(toolBar, BorderLayout.LINE_END);
 
-    mainPanel = new ManagementPanel(this);
-    add(mainPanel);
-
     add(saveStatus = new JLabel(), BorderLayout.PAGE_END);
 
     addWindowListener(new WindowAdapter() {
@@ -86,7 +85,6 @@ public class UserController extends JFrame {
       }
     });
 
-    setMinimumSize(new Dimension(650, 500));
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     setLocationRelativeTo(null);
     setVisible(true);
@@ -115,8 +113,15 @@ public class UserController extends JFrame {
     validate();
   }
 
-  public void prepareForInitialisation(ArrayList<Player> players) {
-    mainPanel.getEditPanel().askForInitialisation(players);
+  public void prepareForInitialisation(CotecchioDataArray data) {
+    if (data == null) {
+      data = new CotecchioDataArray();
+    }
+
+    mainPanel = new ManagementPanel(this, data);
+    add(mainPanel);
+
+    mainPanel.getEditPanel().askForInitialisation(data);
 
     if (listPlayers == null) {
       listPlayers = new PanelList(UserController.this);
@@ -128,8 +133,8 @@ public class UserController extends JFrame {
     validate();
   }
 
-  void askForNextPage(String next, ArrayList<Player> players, ArrayList<Game> games) {
-    mainPanel.setNextPage(next, players, games);
+  void askForNextPage(String next, CotecchioDataArray data) {
+    mainPanel.setNextPage(next, data);
   }
 
   void makeVisibleButtons() {
@@ -145,6 +150,10 @@ public class UserController extends JFrame {
 
   public JTabbedPane getTabs() {
     return mainPanel.getEditPanel().getTabs();
+  }
+
+  public CotecchioDataArray getData() {
+    return mainPanel.getEditPanel().getData();
   }
 
   public ArrayList<Player> getPlayers() {
