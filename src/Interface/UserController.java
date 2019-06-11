@@ -133,10 +133,6 @@ public class UserController extends JFrame {
     validate();
   }
 
-  int getBarWidth() {
-    return toolBar.getWidth();
-  }
-
   void askForNextPage(String next) {
     mainPanel.setNextPage(next);
   }
@@ -144,7 +140,7 @@ public class UserController extends JFrame {
   void makeVisibleButtons() {
     menu.getSearch().setEnabled(true);
     menu.getExport().setEnabled(true);
-    menu.getPrint().setEnabled(true);
+    //menu.getPrint().setEnabled(true); //TODO HERE
     menu.getStart().setEnabled(true);
     menu.getOpenGame().setEnabled(true);
     menu.getExportXls().setEnabled(true);

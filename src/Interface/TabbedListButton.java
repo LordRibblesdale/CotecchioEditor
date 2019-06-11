@@ -18,7 +18,5 @@ public class TabbedListButton extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         ui.askForNextPage("EDIT");
-
-        ui.validate();
     }
 }

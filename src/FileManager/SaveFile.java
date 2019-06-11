@@ -30,6 +30,10 @@ public class SaveFile extends AbstractAction implements Path {
          dir = Path.path;
       } else {
          dir = ui.getSettings().getOpenedFile();
+
+         if (!(new File(dir)).exists()) {
+            dir = Path.path;
+         }
       }
 
       file = new File(dir);
@@ -44,6 +48,7 @@ public class SaveFile extends AbstractAction implements Path {
             }
          } catch (IOException e1) {
             e1.printStackTrace();
+            JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorCreatingFile"), "Error I/O" + e1.getStackTrace()[0].getLineNumber(), JOptionPane.ERROR_MESSAGE);
          }
       } else {
          int sel = JOptionPane.showConfirmDialog(ui, ui.getSettings().getResourceBundle().getString("askOverwrite"),

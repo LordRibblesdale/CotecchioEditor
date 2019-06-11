@@ -29,6 +29,7 @@ public class ManagementPanel extends JPanel implements PageList {
 
     EditPanel(UserController ui) {
       super();
+      setLayout(new BorderLayout());
 
       this.ui = ui;
 
@@ -55,6 +56,7 @@ public class ManagementPanel extends JPanel implements PageList {
           }
 
           ui.getListPlayers().updateList();
+          ui.setHasBeenSaved(false);
           validate();
         }
       });
@@ -108,7 +110,6 @@ public class ManagementPanel extends JPanel implements PageList {
 
       tabs = new JTabbedPane();
       add(tabs);
-      validate();
 
       pUI = new ArrayList<>();
 
@@ -132,6 +133,7 @@ public class ManagementPanel extends JPanel implements PageList {
       }
 
       addTab.setEnabled(true);
+      validate();
 
       ui.makeVisibleButtons();
     }
@@ -194,20 +196,54 @@ public class ManagementPanel extends JPanel implements PageList {
   }
 
   class CalendarPanel extends JPanel {
+    private JButton addGame, removeGame;
+    private JScrollPane scrollPane;
+    private JTable table;
+    private ProgramTable modelTable;
+
     private UserController ui;
 
     CalendarPanel(UserController ui) {
       super();
+      setLayout(new BorderLayout());
 
       this.ui = ui;
-      //this.games = ui.getData().getGame();
+
+      bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+      bottomPanel.add(addGame = new JButton(ui.getSettings().getResourceBundle().getString("addGame")));
+      bottomPanel.add(removeGame = new JButton(ui.getSettings().getResourceBundle().getString("removeGame")));
+
+      table = new JTable(modelTable);
+      scrollPane = new JScrollPane(table);
+      scrollPane.setBorder(BorderFactory.createTitledBorder(ui.getSettings().getResourceBundle().getString("matchList")));
+
+      addGame.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+        }
+      });
+
+      removeGame.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          if (!ui.hasBeenSaved()) {
+
+          }
+        }
+      });
+
+      addGame.setEnabled(false);
+      removeGame.setEnabled(false);
+
+      add(bottomPanel, BorderLayout.PAGE_END);
+      add(scrollPane);
     }
   }
 
   class MainPagePanel extends JPanel {
-    private JButton backButton, calendarButton, editButton;
     private JScrollPane leaderboard;
-    private JPanel bottomPanel;
+    private JEditorPane textArea;
 
     private UserController ui;
 
@@ -218,24 +254,16 @@ public class ManagementPanel extends JPanel implements PageList {
       this.ui = ui;
 
       try {
-        leaderboard = new JScrollPane(new JLabel(setUpText()));
+        leaderboard = new JScrollPane(textArea = new JEditorPane());
+        textArea.setContentType("text/html");
+        textArea.setText(setUpText());
+        textArea.setEditable(false);
       } catch (FileNotFoundException e) {
         e.printStackTrace();
-      } finally {
-
+        leaderboard = new JScrollPane(new JLabel(new ExportLeaderboard(ui).generateList(ui.getPlayers())));
       }
 
       add(leaderboard);
-
-      bottomPanel = new JPanel();
-      backButton = new JButton(ui.getSettings().getResourceBundle().getString("goBack"));
-      calendarButton = new JButton(new CalendarButton(ui));
-      editButton = new JButton(new TabbedListButton(ui));
-      bottomPanel.add(backButton);
-      bottomPanel.add(calendarButton);
-      bottomPanel.add(editButton);
-
-      add(bottomPanel, BorderLayout.PAGE_END);
     }
 
     String setUpText() throws FileNotFoundException {
@@ -257,6 +285,9 @@ public class ManagementPanel extends JPanel implements PageList {
   private EditPanel editPanel;
   private CalendarPanel calendarPanel;
 
+  private JPanel bottomPanel;
+  private JButton backButton, calendarButton, editButton;
+
   private CardLayout primaryLayout;
 
   ManagementPanel(UserController ui) {
@@ -271,20 +302,43 @@ public class ManagementPanel extends JPanel implements PageList {
     setLayout(primaryLayout = new CardLayout());
 
     add(main, "BACK");
+
+    bottomPanel = new JPanel();
+    backButton = new JButton(ui.getSettings().getResourceBundle().getString("goBack"));
+    backButton.setEnabled(false);
+    calendarButton = new JButton(new CalendarButton(ui));
+    editButton = new JButton(new TabbedListButton(ui));
+    bottomPanel.add(backButton);
+    bottomPanel.add(calendarButton);
+    bottomPanel.add(editButton);
+
+    backButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        ui.askForNextPage("BACK");
+      }
+    });
+
+    ui.add(bottomPanel, BorderLayout.PAGE_END);
   }
 
-  void setNextPage(String next) {
-    if (next.equals("CALENDAR")) {
-      if (calendarPanel == null) {
-        calendarPanel = new CalendarPanel(ui);
-      } else {
-        primaryLayout.show(calendarPanel, next);
-      }
-    } else if (next.equals("EDIT")) {
-      if (editPanel == null) {
-        editPanel = new EditPanel(ui);
-      }
+  void setNextPage(String next) { //TODO: optimise here
+    switch (next) {
+      case "CALENDAR":
+        add(calendarPanel, "CALENDAR");
+        backButton.setEnabled(true);
+        break;
+      case "EDIT":
+        add(editPanel, "EDIT");
+        backButton.setEnabled(true);
+        break;
+      case "BACK":
+
+        backButton.setEnabled(false);
+        break;
     }
+
+    primaryLayout.show(ManagementPanel.this, next);
   }
 
   public MainPagePanel getMain() {
