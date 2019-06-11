@@ -1,7 +1,6 @@
 package Interface;
 
 import Data.CotecchioDataArray;
-import Data.Game;
 import Data.Player;
 import Export.ExportLeaderboard;
 import FileManager.SaveFile;
@@ -10,20 +9,25 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Scanner;
 
 public class ManagementPanel extends JPanel implements PageList {
   class EditPanel extends JPanel {
     private JButton addTab, removeTab;
 
     private JTabbedPane tabs = null;
-    private CotecchioDataArray data;
     private ArrayList<PlayerUI> pUI;
     private JPanel bottomPanel;
 
     private UserController ui;
 
-    EditPanel(UserController ui, CotecchioDataArray data) {
+    EditPanel(UserController ui) {
       super();
 
       this.ui = ui;
@@ -32,15 +36,14 @@ public class ManagementPanel extends JPanel implements PageList {
       bottomPanel.add(addTab = new JButton(ui.getSettings().getResourceBundle().getString("addTab")));
       bottomPanel.add(removeTab = new JButton(ui.getSettings().getResourceBundle().getString("removeTab")));
 
-      this.data = new CotecchioDataArray();
-      initialise(data);
+      initialise();
 
       addTab.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-          data.getPlayers().add(new Player(ui.getSettings().getResourceBundle().getString("newPlayer0"),
+          ui.getData().getPlayers().add(new Player(ui.getSettings().getResourceBundle().getString("newPlayer0"),
                   ui.getSettings().getResourceBundle().getString("newPlayer1"), 0, 0, 0, 0, 0));
-          pUI.add(new PlayerUI(data.getPlayers().get(data.getPlayers().size()-1), ui));
+          pUI.add(new PlayerUI(ui.getData().getPlayers().get(ui.getData().getPlayers().size()-1), ui));
           tabs.addTab(ui.getSettings().getResourceBundle().getString("newPlayer0"), pUI.get(pUI.size()-1).generatePanel());
 
           if (tabs.getTabCount() > 1) {
@@ -98,7 +101,7 @@ public class ManagementPanel extends JPanel implements PageList {
       add(bottomPanel, BorderLayout.PAGE_END);
     }
 
-    void initialise(CotecchioDataArray data) {
+    void initialise() {
       if (tabs != null) {
         remove(tabs);
       }
@@ -109,18 +112,16 @@ public class ManagementPanel extends JPanel implements PageList {
 
       pUI = new ArrayList<>();
 
-      if (data.getPlayers() == null) {
-        data.setPlayers(new ArrayList<>());
-
-        data.getPlayers().add(new Player(ui.getSettings().getResourceBundle().getString("newPlayer0"),
+      if (ui.getData().getPlayers().isEmpty()) {
+        ui.getData().getPlayers().add(new Player(ui.getSettings().getResourceBundle().getString("newPlayer0"),
                 ui.getSettings().getResourceBundle().getString("newPlayer1"),
                 0, 0, 0, 0, 0));
-        pUI.add(new PlayerUI(data.getPlayers().get(data.getPlayers().size()-1), ui));
+        pUI.add(new PlayerUI(ui.getData().getPlayers().get(ui.getData().getPlayers().size()-1), ui));
         tabs.addTab(ui.getSettings().getResourceBundle().getString("newPlayer0"), pUI.get(pUI.size()-1).generatePanel());
       } else {
-        this.data.setPlayers(data.getPlayers());
+        this.ui.getData().setPlayers(ui.getData().getPlayers());
 
-        for (Player p : data.getPlayers()) {
+        for (Player p : ui.getData().getPlayers()) {
           pUI.add(new PlayerUI(p, ui));
           tabs.addTab(pUI.get(pUI.size()-1).getJTextName().getText(), pUI.get(pUI.size()-1).generatePanel());
         }
@@ -137,12 +138,12 @@ public class ManagementPanel extends JPanel implements PageList {
 
     void askForInitialisation(CotecchioDataArray data) {
       //TODO: increase security
-      initialise(data);
+      initialise();
     }
 
     ArrayList<Player> getPlayers() {
-      for (int i = 0; i < data.getPlayers().size(); i++) {
-        data.getPlayers().set(i, new Player(pUI.get(i).getJTextName().getText(),
+      for (int i = 0; i < ui.getData().getPlayers().size(); i++) {
+        ui.getData().getPlayers().set(i, new Player(pUI.get(i).getJTextName().getText(),
                 pUI.get(i).getUsername().getText(),
                 (Integer) (pUI.get(i).getInsert().get(0).getValue()),
                 (Integer) (pUI.get(i).getInsert().get(1).getValue()),
@@ -151,12 +152,12 @@ public class ManagementPanel extends JPanel implements PageList {
                 (Integer) (pUI.get(i).getInsert().get(4).getValue())));
       }
 
-      return data.getPlayers();
+      return ui.getData().getPlayers();
     }
 
     CotecchioDataArray getData() {
-      for (int i = 0; i < data.getPlayers().size(); i++) {
-        data.getPlayers().set(i, new Player(pUI.get(i).getJTextName().getText(),
+      for (int i = 0; i < ui.getData().getPlayers().size(); i++) {
+        ui.getData().getPlayers().set(i, new Player(pUI.get(i).getJTextName().getText(),
                 pUI.get(i).getUsername().getText(),
                 (Integer) (pUI.get(i).getInsert().get(0).getValue()),
                 (Integer) (pUI.get(i).getInsert().get(1).getValue()),
@@ -165,19 +166,22 @@ public class ManagementPanel extends JPanel implements PageList {
                 (Integer) (pUI.get(i).getInsert().get(4).getValue())));
       }
 
-      return data;
+      return ui.getData();
     }
 
+    void setData(CotecchioDataArray data) {
+      ui.setData(data);
+    }
 
     void setPlayers(ArrayList<Player> players) {
-      this.data.getPlayers().size();
-      this.data.getPlayers().addAll(players);
+      this.getData().getPlayers().clear();
+      this.getData().getPlayers().addAll(players);
     }
 
     ArrayList<Object> getUsernames() {
       ArrayList<Object> usernames = new ArrayList<>();
 
-      for (Player p : data.getPlayers()) {
+      for (Player p : ui.getData().getPlayers()) {
         usernames.add(p.getUsername());
       }
 
@@ -192,57 +196,58 @@ public class ManagementPanel extends JPanel implements PageList {
   class CalendarPanel extends JPanel {
     private UserController ui;
 
-    private ArrayList<Game> games;
-
-    CalendarPanel(UserController ui, ArrayList<Game> games) {
+    CalendarPanel(UserController ui) {
       super();
 
       this.ui = ui;
-      this.games = games;
+      //this.games = ui.getData().getGame();
     }
   }
 
   class MainPagePanel extends JPanel {
-    private JButton calendarButton, editButton;
-    private SpringLayout layout;
-    private JLabel leaderboard;
+    private JButton backButton, calendarButton, editButton;
+    private JScrollPane leaderboard;
+    private JPanel bottomPanel;
 
     private UserController ui;
 
-    MainPagePanel(UserController ui, String list) {
+    MainPagePanel(UserController ui) {
       super();
+      setLayout(new BorderLayout());
 
       this.ui = ui;
 
-      setLayout(layout = new SpringLayout());
-      add(leaderboard = new JLabel(list));
-      add(calendarButton = new JButton(new CalendarButton(ui)));
-      add(editButton = new JButton(new TabbedListButton(ui)));
+      try {
+        leaderboard = new JScrollPane(new JLabel(setUpText()));
+      } catch (FileNotFoundException e) {
+        e.printStackTrace();
+      } finally {
 
-      setUpLayout();
+      }
+
+      add(leaderboard);
+
+      bottomPanel = new JPanel();
+      backButton = new JButton(ui.getSettings().getResourceBundle().getString("goBack"));
+      calendarButton = new JButton(new CalendarButton(ui));
+      editButton = new JButton(new TabbedListButton(ui));
+      bottomPanel.add(backButton);
+      bottomPanel.add(calendarButton);
+      bottomPanel.add(editButton);
+
+      add(bottomPanel, BorderLayout.PAGE_END);
     }
 
-    private void setUpLayout() {
-      layout.putConstraint(SpringLayout.NORTH, leaderboard,
-              5,
-              SpringLayout.NORTH, ui);
-      layout.putConstraint(SpringLayout.WEST, leaderboard,
-              5,
-              SpringLayout.WEST, ui);
+    String setUpText() throws FileNotFoundException {
+      StringBuilder text = new StringBuilder();
+      Scanner s = new Scanner(new BufferedInputStream(new FileInputStream(new File((Objects.requireNonNull(getClass().getClassLoader().getResource("Data/messageIT"))).getPath()))));
 
-      layout.putConstraint(SpringLayout.EAST, ui,
-              -5,
-              SpringLayout.EAST, calendarButton);
-      layout.putConstraint(SpringLayout.NORTH, calendarButton,
-              5,
-              SpringLayout.NORTH, ui);
+      while (s.hasNext()) {
+        text.append(s.nextLine());
+      }
 
-      layout.putConstraint(SpringLayout.NORTH, editButton,
-              5,
-              SpringLayout.SOUTH, calendarButton);
-      layout.putConstraint(SpringLayout.EAST, ui,
-              -5,
-              SpringLayout.EAST, editButton);
+      return text.toString() +
+              (new ExportLeaderboard(ui)).generateList(ui.getPlayers());
     }
   }
 
@@ -253,32 +258,31 @@ public class ManagementPanel extends JPanel implements PageList {
   private CalendarPanel calendarPanel;
 
   private CardLayout primaryLayout;
-  private GridLayout mainLayout; //??
 
-  ManagementPanel(UserController ui, CotecchioDataArray data) {
+  ManagementPanel(UserController ui) {
     super();
 
     this.ui = ui;
 
-    main = new MainPagePanel(ui, (new ExportLeaderboard(ui)).generateList(data.getPlayers()));
-    editPanel = new EditPanel(ui, data);
-    calendarPanel = new CalendarPanel(ui, data.getGame());
+    editPanel = new EditPanel(ui);
+    calendarPanel = new CalendarPanel(ui);
+    main = new MainPagePanel(ui);
 
     setLayout(primaryLayout = new CardLayout());
 
     add(main, "BACK");
   }
 
-  void setNextPage(String next, CotecchioDataArray data) {
+  void setNextPage(String next) {
     if (next.equals("CALENDAR")) {
       if (calendarPanel == null) {
-        calendarPanel = new CalendarPanel(ui, data.getGame());
+        calendarPanel = new CalendarPanel(ui);
       } else {
         primaryLayout.show(calendarPanel, next);
       }
     } else if (next.equals("EDIT")) {
       if (editPanel == null) {
-        editPanel = new EditPanel(ui, data);
+        editPanel = new EditPanel(ui);
       }
     }
   }

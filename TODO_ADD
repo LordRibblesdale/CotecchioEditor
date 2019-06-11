@@ -4,3 +4,5 @@ Add Update window to download jar updates
 Add standalone plays (standalone plays with date and registered boolean)
 Add results and all plays history
 Update UI for Game Simulation
+
+ Toolkit.getDefaultToolkit().sync();

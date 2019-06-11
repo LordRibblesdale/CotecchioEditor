@@ -17,7 +17,7 @@ public class CalendarButton extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ui.askForNextPage("CALENDAR", ui.getData());
+        ui.askForNextPage("CALENDAR");
 
         ui.validate();
     }

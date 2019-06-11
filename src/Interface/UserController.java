@@ -1,7 +1,6 @@
 package Interface;
 
 import Data.CotecchioDataArray;
-import Data.Game;
 import Data.Player;
 import Data.Settings;
 import FileManager.*;
@@ -29,6 +28,7 @@ public class UserController extends JFrame {
   private PersonalMenu menu;
   private JLabel saveStatus;
 
+  private CotecchioDataArray data;
   private boolean hasBeenSaved = true;
 
   private PersonalToolBar toolBar;
@@ -115,13 +115,13 @@ public class UserController extends JFrame {
 
   public void prepareForInitialisation(CotecchioDataArray data) {
     if (data == null) {
-      data = new CotecchioDataArray();
+      this.data = new CotecchioDataArray();
     }
 
-    mainPanel = new ManagementPanel(this, data);
+    mainPanel = new ManagementPanel(this);
     add(mainPanel);
 
-    mainPanel.getEditPanel().askForInitialisation(data);
+    mainPanel.getEditPanel().askForInitialisation(this.data);
 
     if (listPlayers == null) {
       listPlayers = new PanelList(UserController.this);
@@ -133,8 +133,12 @@ public class UserController extends JFrame {
     validate();
   }
 
-  void askForNextPage(String next, CotecchioDataArray data) {
-    mainPanel.setNextPage(next, data);
+  int getBarWidth() {
+    return toolBar.getWidth();
+  }
+
+  void askForNextPage(String next) {
+    mainPanel.setNextPage(next);
   }
 
   void makeVisibleButtons() {
@@ -153,11 +157,15 @@ public class UserController extends JFrame {
   }
 
   public CotecchioDataArray getData() {
-    return mainPanel.getEditPanel().getData();
+    return data;
+  }
+
+  public void setData(CotecchioDataArray data) {
+    this.data = data;
   }
 
   public ArrayList<Player> getPlayers() {
-    return mainPanel.getEditPanel().getPlayers();
+    return getData().getPlayers();
   }
 
   public void setPlayers(ArrayList<Player> players) {
