@@ -11,7 +11,7 @@ public class Game implements Serializable {
     private ArrayList<PlayerStateGame> results;
     private Date date;
 
-    Game(ArrayList<PlayerStateGame> results, Date date) {
+    public Game(ArrayList<PlayerStateGame> results, Date date) {
         this.results = results;
         this.date = date;
 

@@ -280,7 +280,7 @@ class GameProgress extends JFrame implements Serializable, Points {
       this.playerArrayList = playerArrayList;
       bottom = new JPanel();
 
-      ArrayList<Object> usernames = ui.getUsernames();
+      ArrayList<String> usernames = ui.getUsernames();
 
       if (usernames.size() < 3) {
          JOptionPane.showMessageDialog(ui, "There aren't enough players to play simulation", "Too few players", JOptionPane.WARNING_MESSAGE);

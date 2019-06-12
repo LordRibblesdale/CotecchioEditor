@@ -10,6 +10,13 @@ public class PlayerStateGame implements Serializable, Comparable<PlayerStateGame
     private int pelliccionsTaken;
     private int cappottensTaken;
 
+    public PlayerStateGame(String username, int pointsEndGame, int pelliccionsTaken, int cappottensTaken) {
+        this.username = username;
+        this.pointsEndGame = pointsEndGame;
+        this.pelliccionsTaken = pelliccionsTaken;
+        this.cappottensTaken = cappottensTaken;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }

@@ -121,7 +121,7 @@ public class UserController extends JFrame {
     mainPanel = new ManagementPanel(this);
     add(mainPanel);
 
-    mainPanel.getEditPanel().askForInitialisation(this.data);
+    mainPanel.getEditPanel().askForInitialisation();
 
     if (listPlayers == null) {
       listPlayers = new PanelList(UserController.this);
@@ -168,7 +168,7 @@ public class UserController extends JFrame {
     mainPanel.getEditPanel().setPlayers(players);
   }
 
-  public ArrayList<Object> getUsernames() {
+  public ArrayList<String> getUsernames() {
     return mainPanel.getEditPanel().getUsernames();
   }
 
