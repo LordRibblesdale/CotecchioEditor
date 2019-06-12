@@ -149,7 +149,7 @@ public class ManagementPanel extends JPanel implements PageList {
       initialise();
     }
 
-    ArrayList<Player> getPlayers() {
+    void setUpData() {
       for (int i = 0; i < ui.getData().getPlayers().size(); i++) {
         ui.getData().getPlayers().set(i, new Player(pUI.get(i).getJTextName().getText(),
                 pUI.get(i).getUsername().getText(),
@@ -159,22 +159,6 @@ public class ManagementPanel extends JPanel implements PageList {
                 (Integer) (pUI.get(i).getInsert().get(3).getValue()),
                 (Integer) (pUI.get(i).getInsert().get(4).getValue())));
       }
-
-      return ui.getData().getPlayers();
-    }
-
-    CotecchioDataArray getData() {
-      for (int i = 0; i < ui.getData().getPlayers().size(); i++) {
-        ui.getData().getPlayers().set(i, new Player(pUI.get(i).getJTextName().getText(),
-                pUI.get(i).getUsername().getText(),
-                (Integer) (pUI.get(i).getInsert().get(0).getValue()),
-                (Integer) (pUI.get(i).getInsert().get(1).getValue()),
-                (Integer) (pUI.get(i).getInsert().get(2).getValue()),
-                (Integer) (pUI.get(i).getInsert().get(3).getValue()),
-                (Integer) (pUI.get(i).getInsert().get(4).getValue())));
-      }
-
-      return ui.getData();
     }
 
     void setData(CotecchioDataArray data) {
@@ -182,8 +166,8 @@ public class ManagementPanel extends JPanel implements PageList {
     }
 
     void setPlayers(ArrayList<Player> players) {
-      this.getData().getPlayers().clear();
-      this.getData().getPlayers().addAll(players);
+      ui.getData().getPlayers().clear();
+      ui.getData().getPlayers().addAll(players);
     }
 
     ArrayList<String> getUsernames() {
@@ -246,12 +230,13 @@ public class ManagementPanel extends JPanel implements PageList {
       private JDatePickerImpl date;
 
       private final int MINIMUM = 3;
-      private final int MAXIMUM = 8;
+      private int MAXIMUM = 8;
 
       MatchDialog(UserController ui) {
         super(ui, true);
         setLayout(new BorderLayout());
-
+        //TODO FixBug
+        MAXIMUM = MAXIMUM <= ui.getData().getPlayers().size() ? MAXIMUM : ui.getData().getPlayers().size();
         master = new JPanel(new GridLayout(0, 1));
         bottom = new JPanel();
 
@@ -261,7 +246,10 @@ public class ManagementPanel extends JPanel implements PageList {
           players.add(new SinglePanel(ui));
         }
 
-        master.add(playersInGame = new JSpinner(new SpinnerNumberModel(MINIMUM, MINIMUM, MAXIMUM, 1)));
+        master.add(playersInGame = new JSpinner(new SpinnerNumberModel(MINIMUM,
+                MINIMUM,
+                MAXIMUM,
+                1)));
         master.add(date = new JDatePickerImpl(new JDatePanelImpl(new UtilDateModel()), new DateComponentFormatter()));
 
         for (SinglePanel p : players) {
@@ -334,6 +322,8 @@ public class ManagementPanel extends JPanel implements PageList {
             tmp = new Game(list, (Date) date.getModel().getValue());
 
             ui.getData().getGame().add(tmp);
+            ui.getAbstractTable().addProgram(tmp);
+            ui.getTable().repaint();
           }
         });
 
@@ -362,7 +352,7 @@ public class ManagementPanel extends JPanel implements PageList {
       bottomPanel.add(addGame = new JButton(ui.getSettings().getResourceBundle().getString("addGame")));
       bottomPanel.add(removeGame = new JButton(ui.getSettings().getResourceBundle().getString("removeGame")));
 
-      table = new JTable(modelTable);
+      table = new JTable(modelTable = new ProgramTable(ui, ui.getData().getGame().toArray(new Game[0])));
       scrollPane = new JScrollPane(table);
       scrollPane.setBorder(BorderFactory.createTitledBorder(ui.getSettings().getResourceBundle().getString("matchList")));
 
@@ -370,7 +360,10 @@ public class ManagementPanel extends JPanel implements PageList {
         @Override
         public void actionPerformed(ActionEvent e) {
           if (ui.getPlayers().size() < 3) {
-            JOptionPane.showMessageDialog(ui, "Test", "Test", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(ui,
+                    ui.getSettings().getResourceBundle().getString("notEnoughPlayersText"),
+                    ui.getSettings().getResourceBundle().getString("notEnoughPlayersTitle"),
+                    JOptionPane.ERROR_MESSAGE);
             //TODO here language
           } else {
             new MatchDialog(ui);
@@ -416,11 +409,18 @@ public class ManagementPanel extends JPanel implements PageList {
         }
       });
 
-      //addGame.setEnabled(false);
       removeGame.setEnabled(false);
 
       add(bottomPanel, BorderLayout.PAGE_END);
       add(scrollPane);
+    }
+
+    ProgramTable getModelTable() {
+      return modelTable;
+    }
+
+    JTable getTable() {
+      return table;
     }
   }
 
@@ -528,11 +528,11 @@ public class ManagementPanel extends JPanel implements PageList {
     return main;
   }
 
-  public EditPanel getEditPanel() {
+  EditPanel getEditPanel() {
     return editPanel;
   }
 
-  public CalendarPanel getCalendarPanel() {
+  CalendarPanel getCalendarPanel() {
     return calendarPanel;
   }
 }

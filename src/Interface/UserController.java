@@ -116,6 +116,12 @@ public class UserController extends JFrame {
   public void prepareForInitialisation(CotecchioDataArray data) {
     if (data == null) {
       this.data = new CotecchioDataArray();
+    } else {
+      this.data = data;
+    }
+
+    if (mainPanel != null) {
+      remove(mainPanel);
     }
 
     mainPanel = new ManagementPanel(this);
@@ -140,6 +146,7 @@ public class UserController extends JFrame {
   void makeVisibleButtons() {
     menu.getSearch().setEnabled(true);
     menu.getExport().setEnabled(true);
+    menu.getSaveAsButton().setEnabled(true);
     //menu.getPrint().setEnabled(true); //TODO HERE
     menu.getStart().setEnabled(true);
     menu.getOpenGame().setEnabled(true);
@@ -148,12 +155,28 @@ public class UserController extends JFrame {
     validate();
   }
 
+  JTable getTable() {
+    return mainPanel.getCalendarPanel().getTable();
+  }
+
+  ProgramTable getAbstractTable() {
+    return mainPanel.getCalendarPanel().getModelTable();
+  }
+
+  public boolean isAlreadyActive() {
+    return mainPanel != null;
+  }
+
   public JTabbedPane getTabs() {
     return mainPanel.getEditPanel().getTabs();
   }
 
   public CotecchioDataArray getData() {
     return data;
+  }
+
+  public void setUpData() {
+    mainPanel.getEditPanel().setUpData();
   }
 
   public void setData(CotecchioDataArray data) {

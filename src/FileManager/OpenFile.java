@@ -38,6 +38,7 @@ public class OpenFile extends AbstractAction implements Path {
             switch (choice) {
                case JOptionPane.YES_OPTION:
                   this.path = ui.getSettings().getOpenedFile();
+                  System.out.println(this.path);
                   break;
                case JOptionPane.NO_OPTION:
                   this.path = getFile();
@@ -54,6 +55,7 @@ public class OpenFile extends AbstractAction implements Path {
             input.close();
 
             if (tmp instanceof CotecchioDataArray) {
+
                data = (CotecchioDataArray) tmp;
 
                ui.saveRecentFile(path);
@@ -96,6 +98,8 @@ public class OpenFile extends AbstractAction implements Path {
                  ui.getSettings().getResourceBundle().getString("errorReadingFile"),
                  "Error I/O 02_OpenFile" + e2.getStackTrace()[0].getLineNumber(),
                  JOptionPane.ERROR_MESSAGE);
+
+         e2.printStackTrace();
       }
    }
 

@@ -17,6 +17,7 @@ public class PersonalMenu extends JMenuBar {
   private JMenu file, edit, about, export, game;
 
   private SaveFile saveButton;
+  private SaveAsFile saveAsButton;
   private Search search;
   private PrintThread print;
   private GameStarter start;
@@ -37,6 +38,7 @@ public class PersonalMenu extends JMenuBar {
     file.add(newFile = new NewFile(this.ui));
     file.add(openFile = new OpenFile(this.ui));
     file.add(saveButton = new SaveFile(this.ui));
+    file.add(saveAsButton = new SaveAsFile(this.ui));
     file.add(new JSeparator());
     file.add(export = new JMenu(this.ui.getSettings().getResourceBundle().getString("export")));
     file.add(print = new PrintThread(this.ui));
@@ -46,6 +48,7 @@ public class PersonalMenu extends JMenuBar {
     export.setEnabled(false);
     print.setEnabled(false);
     saveButton.setEnabled(false);
+    saveAsButton.setEnabled(false);
     exportXls.setEnabled(false);
 
     add(edit = new JMenu(this.ui.getSettings().getResourceBundle().getString("edit")));
@@ -103,43 +106,47 @@ public class PersonalMenu extends JMenuBar {
     return export;
   }
 
+  SaveFile getSaveAsButton() {
+    return saveAsButton;
+  }
+
   public JMenu getGame() {
     return game;
   }
 
-  public SaveFile getSaveButton() {
+  SaveFile getSaveButton() {
     return saveButton;
   }
 
-  public Search getSearch() {
+  Search getSearch() {
     return search;
   }
 
-  public PrintThread getPrint() {
+  PrintThread getPrint() {
     return print;
   }
 
-  public GameStarter getStart() {
+  GameStarter getStart() {
     return start;
   }
 
-  public OpenGameFile getOpenGame() {
+  OpenGameFile getOpenGame() {
     return openGame;
   }
 
-  public NewFile getNewFile() {
+  NewFile getNewFile() {
     return newFile;
   }
 
-  public OpenFile getOpenFile() {
+  OpenFile getOpenFile() {
     return openFile;
   }
 
-  public ExportXls getExportXls() {
+  ExportXls getExportXls() {
     return exportXls;
   }
 
-  public JCheckBoxMenuItem getShowList() {
+  JCheckBoxMenuItem getShowList() {
     return showList;
   }
 }

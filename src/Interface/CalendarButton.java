@@ -1,12 +1,14 @@
 package Interface;
 
+import FileManager.SaveFile;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class CalendarButton extends AbstractAction {
     private UserController ui;
 
-    public CalendarButton(UserController ui) {
+    CalendarButton(UserController ui) {
         this.ui = ui;
 
         putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("calendarButton"));
@@ -17,6 +19,19 @@ public class CalendarButton extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ui.askForNextPage("CALENDAR");
+        if (!ui.hasBeenSaved()) {
+            int result = JOptionPane.showConfirmDialog(ui,
+                    ui.getSettings().getResourceBundle().getString("saveBeforeClosing"),
+                    ui.getSettings().getResourceBundle().getString("exitConfirmation"),
+                    JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION) {
+                new SaveFile(ui).actionPerformed(null);
+                ui.setUpData();
+                ui.askForNextPage("CALENDAR");
+            }
+        } else {
+            ui.setUpData();
+            ui.askForNextPage("CALENDAR");
+        }
     }
 }

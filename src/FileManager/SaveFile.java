@@ -26,6 +26,8 @@ public class SaveFile extends AbstractAction implements Path {
       File file;
       String dir;
 
+      System.out.println(Path.path);
+
       if (ui.getSettings().getOpenedFile().equals("")) {
          dir = Path.path;
       } else {
@@ -78,6 +80,7 @@ public class SaveFile extends AbstractAction implements Path {
 
    private void saveThread(String path) {
       CotecchioDataArray data = ui.getData();
+      ui.setUpData();
 
       try {
          ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(path)));

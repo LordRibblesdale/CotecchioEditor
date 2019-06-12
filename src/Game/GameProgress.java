@@ -224,10 +224,8 @@ class GameProgress extends JFrame implements Serializable, Points {
             int choice = JOptionPane.showConfirmDialog(GameProgress.this, "Do you want to save?", "Save?",
                     JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
-            switch (choice) {
-               case JOptionPane.OK_OPTION:
-                  new SaveFile(ui).actionPerformed(e);
-                  break;
+            if (choice == JOptionPane.OK_OPTION) {
+               new SaveFile(ui).actionPerformed(e);
             }
          }
       }

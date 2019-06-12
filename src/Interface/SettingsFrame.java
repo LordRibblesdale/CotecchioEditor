@@ -1,11 +1,14 @@
 package Interface;
 
 import FileManager.AutoSaveFile;
+import FileManager.Path;
+import FileManager.SaveFile;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -105,8 +108,20 @@ public class SettingsFrame extends JFrame {
 
         autoSave = new Timer(ui.getSettings().getRefreshSaveRate(), actionEvent -> {
            try {
-              new AutoSaveFile(ui.getSettings().getOpenedFile(), ui.getPlayers());
-              ui.setHasBeenSaved(true);
+             if ((new File(ui.getSettings().getOpenedFile())).exists()) {
+               new AutoSaveFile(ui.getSettings().getOpenedFile(), ui.getPlayers());
+               ui.setHasBeenSaved(true);
+             } else {
+               int choice = JOptionPane.showConfirmDialog(ui,
+                       ui.getSettings().getResourceBundle().getString("askSaveChanges"),
+                       ui.getSettings().getResourceBundle().getString("askSave"),
+                       JOptionPane.YES_NO_OPTION);
+
+               if (choice == JOptionPane.OK_OPTION) {
+                 new SaveFile(ui);
+                 ui.setHasBeenSaved(true);
+               }
+             }
            } catch (IOException e) {
               ui.getStatus().setText(ui.getSettings().getResourceBundle().getString("errorAutoSaving")
                       + autoSave.getDelay()/1000
