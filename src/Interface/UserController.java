@@ -195,6 +195,10 @@ public class UserController extends JFrame {
     return mainPanel.getEditPanel().getUsernames();
   }
 
+  ArrayList<String> getNames() {
+    return mainPanel.getEditPanel().getNames();
+  }
+
   JCheckBoxMenuItem getShowList() {
     return menu.getShowList();
   }

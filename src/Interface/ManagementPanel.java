@@ -6,14 +6,12 @@ import Data.Player;
 import Data.PlayerStateGame;
 import Export.ExportLeaderboard;
 import FileManager.SaveFile;
-import net.sourceforge.jdatepicker.impl.DateComponentFormatter;
-import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
-import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
-import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.List;
 
 public class ManagementPanel extends JPanel implements PageList {
   class EditPanel extends JPanel {
@@ -63,6 +62,7 @@ public class ManagementPanel extends JPanel implements PageList {
 
           ui.getListPlayers().updateList();
           ui.setHasBeenSaved(false);
+          tabs.setSelectedIndex(tabs.getTabCount()-1);
           validate();
         }
       });
@@ -180,6 +180,16 @@ public class ManagementPanel extends JPanel implements PageList {
       return usernames;
     }
 
+    ArrayList<String> getNames() {
+      ArrayList<String> usernames = new ArrayList<>();
+
+      for (Player p : ui.getData().getPlayers()) {
+        usernames.add(p.getName());
+      }
+
+      return usernames;
+    }
+
     JTabbedPane getTabs() {
       return tabs;
     }
@@ -188,13 +198,39 @@ public class ManagementPanel extends JPanel implements PageList {
   class CalendarPanel extends JPanel {
     class MatchDialog extends JDialog {
       class SinglePanel extends JPanel {
+        class ComboBoxToolTipRenderer extends DefaultListCellRenderer {
+          List<String> tooltips;
+
+          @Override
+          public Component getListCellRendererComponent(JList list, Object value,
+                                                        int index, boolean isSelected, boolean cellHasFocus) {
+
+            JComponent comp = (JComponent) super.getListCellRendererComponent(list,
+                    value, index, isSelected, cellHasFocus);
+
+            if (-1 < index && null != value && null != tooltips) {
+              list.setToolTipText(tooltips.get(index));
+            }
+            return comp;
+          }
+
+          public void setTooltips(List<String> tooltips) {
+            this.tooltips = tooltips;
+          }
+        }
+
         private JComboBox<String> players;
+        private ComboBoxToolTipRenderer toolTip;
         private JSpinner points, pelliccions, cappottens;
 
         SinglePanel(UserController ui) {
           super(new GridLayout(0, 2));
 
           add(players = new JComboBox<>(ui.getUsernames().toArray(new String[0])));
+          toolTip = new ComboBoxToolTipRenderer();
+          toolTip.setTooltips(ui.getNames());
+          players.setRenderer(toolTip);
+
           add(new JSeparator());
           add(new JLabel(ui.getSettings().getResourceBundle().getString("pointsMatch")));
           add(points = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1)));
@@ -202,6 +238,25 @@ public class ManagementPanel extends JPanel implements PageList {
           add(pelliccions = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1)));
           add(new JLabel(ui.getSettings().getResourceBundle().getString("cappottens")));
           add(cappottens = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1)));
+        }
+
+        SinglePanel(UserController ui, PlayerStateGame playerStateGame) {
+          super(new GridLayout(0, 2));
+
+          add(players = new JComboBox<>(ui.getUsernames().toArray(new String[0])));
+          toolTip = new ComboBoxToolTipRenderer();
+          toolTip.setTooltips(ui.getNames());
+          players.setRenderer(toolTip);
+
+          players.setSelectedIndex(ui.getUsernames().indexOf(playerStateGame.getUsername()));
+
+          add(new JSeparator());
+          add(new JLabel(ui.getSettings().getResourceBundle().getString("pointsMatch")));
+          add(points = new JSpinner(new SpinnerNumberModel(playerStateGame.getPointsEndGame(), 0, 10, 1)));
+          add(new JLabel(ui.getSettings().getResourceBundle().getString("pelliccions")));
+          add(pelliccions = new JSpinner(new SpinnerNumberModel(playerStateGame.getPelliccionsTaken(), 0, 100, 1)));
+          add(new JLabel(ui.getSettings().getResourceBundle().getString("cappottens")));
+          add(cappottens = new JSpinner(new SpinnerNumberModel(playerStateGame.getCappottensTaken(), 0, 100, 1)));
         }
 
         String getPlayer() {
@@ -219,7 +274,6 @@ public class ManagementPanel extends JPanel implements PageList {
         int getCappottens() {
           return (Integer) cappottens.getValue();
         }
-
       }
 
       private JPanel master;
@@ -227,30 +281,44 @@ public class ManagementPanel extends JPanel implements PageList {
       private JButton back, save;
       private JSpinner playersInGame;
       private ArrayList<SinglePanel> players;
-      private JDatePickerImpl date;
 
       private final int MINIMUM = 3;
       private int MAXIMUM = 8;
+      private int currentIndex;
 
-      MatchDialog(UserController ui) {
+      MatchDialog(UserController ui, Game game) {
         super(ui, true);
         setLayout(new BorderLayout());
-        //TODO FixBug
-        MAXIMUM = MAXIMUM <= ui.getData().getPlayers().size() ? MAXIMUM : ui.getData().getPlayers().size();
+        MAXIMUM = game == null
+                ? (MAXIMUM <= ui.getData().getPlayers().size()
+                    ? MAXIMUM
+                    : ui.getData().getPlayers().size())
+                : game.getResults().size();
         master = new JPanel(new GridLayout(0, 1));
         bottom = new JPanel();
 
-        players = new ArrayList<>(MINIMUM);
+        if (game == null) {
+          players = new ArrayList<>(MINIMUM);
+        } else {
+          players = new ArrayList<>(game.getResults().size());
+        }
 
-        for (int i = 0; i < MINIMUM; i++) {
-          players.add(new SinglePanel(ui));
+        currentIndex = players.size();
+
+        if (game == null) {
+          for (int i = 0; i < MINIMUM; i++) {
+            players.add(new SinglePanel(ui));
+          }
+        } else {
+          for (int i = 0; i < game.getResults().size(); i++) {
+            players.add(new SinglePanel(ui));
+          }
         }
 
         master.add(playersInGame = new JSpinner(new SpinnerNumberModel(MINIMUM,
-                MINIMUM,
+                game == null ? MINIMUM : players.size(),
                 MAXIMUM,
                 1)));
-        master.add(date = new JDatePickerImpl(new JDatePanelImpl(new UtilDateModel()), new DateComponentFormatter()));
 
         for (SinglePanel p : players) {
           master.add(p);
@@ -267,21 +335,16 @@ public class ManagementPanel extends JPanel implements PageList {
           @Override
           public void stateChanged(ChangeEvent e) {
             int num = (Integer) ((JSpinner)(e.getSource())).getValue();
-            int value = players.size() - num;
 
-            if (value < 0) {
-              value = Math.abs(value);
-
-              while (value != 0) {
-                players.remove(value-1);
-                value--;
-              }
-            } else if (value > 0) {
-              while (value != 0) {
-                players.add(new SinglePanel(ui));
-                value--;
-              }
+            if (currentIndex > num) {
+              master.remove(players.get(num-1));
+              players.remove(num-1);
+            } else if (currentIndex < num) {
+              players.add(new SinglePanel(ui));
+              master.add(players.get(num-1));
             }
+
+            currentIndex = num;
 
             validate();
           }
@@ -297,33 +360,57 @@ public class ManagementPanel extends JPanel implements PageList {
         save.addActionListener(new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent e) {
-            Game tmp;
-            ArrayList<PlayerStateGame> list = new ArrayList<>(players.size());
+            boolean isThereTen = false;
+            boolean isThereZero = false;
 
             for (SinglePanel p : players) {
-              list.add(new PlayerStateGame(p.getPlayer(), p.getPoints(), p.getPelliccions(), p.getCappottens()));
+              if (p.getPoints() == 10) {
+                isThereTen = true;
+              } else if (p.getPoints() == 0) {
+                isThereZero = true;
+              }
 
-              for (Player p2 : ui.getPlayers()) {
-                if (p2.getUsername().equals(p.getPlayer())) {
-                  p2.setScore(p2.getScore() + p.getPoints());
-                  p2.setTotalPlays(p2.getTotalPlays() + 1);
-                  p2.setCappottens(p2.getCappottens() + p.getCappottens());
-                  p2.setPelliccions(p2.getPelliccions() + p.getPelliccions());
-
-                  if (p.getPoints() == 10) {
-                    p2.setTotalWins(p2.getTotalWins() + 1);
-                  }
-                }
+              if (isThereTen && isThereZero) {
+                break;
               }
             }
 
-            getEditPanel().initialise();
+            if (!isThereTen || !isThereZero) {
+              JOptionPane.showMessageDialog(ui,
+                      ui.getSettings().getResourceBundle().getString("errorCompilingList"),
+                      ui.getSettings().getResourceBundle().getString("warning"),
+                      JOptionPane.WARNING_MESSAGE);
+            } else {
+              Game tmp;
+              ArrayList<PlayerStateGame> list = new ArrayList<>(players.size());
 
-            tmp = new Game(list, (Date) date.getModel().getValue());
+              for (SinglePanel p : players) {
+                list.add(new PlayerStateGame(p.getPlayer(), p.getPoints(), p.getPelliccions(), p.getCappottens()));
 
-            ui.getData().getGame().add(tmp);
-            ui.getAbstractTable().addProgram(tmp);
-            ui.getTable().repaint();
+                for (Player p2 : ui.getPlayers()) {
+                  if (p2.getUsername().equals(p.getPlayer())) {
+                    p2.setScore(p2.getScore() + p.getPoints());
+                    p2.setTotalPlays(p2.getTotalPlays() + 1);
+                    p2.setCappottens(p2.getCappottens() + p.getCappottens());
+                    p2.setPelliccions(p2.getPelliccions() + p.getPelliccions());
+
+                    if (p.getPoints() == 10) {
+                      p2.setTotalWins(p2.getTotalWins() + 1);
+                    }
+                  }
+                }
+              }
+
+              getEditPanel().initialise();
+
+              tmp = new Game(list, new Date(), true);
+
+              ui.getData().getGame().add(tmp);
+              ui.getAbstractTable().addProgram(tmp);
+
+              MatchDialog.this.dispose();
+              ui.setHasBeenSaved(false);
+            }
           }
         });
 
@@ -334,7 +421,7 @@ public class ManagementPanel extends JPanel implements PageList {
       }
     }
 
-    private JButton addGame, removeGame;
+    private JButton addGame, removeGame, editGame;
     private JScrollPane scrollPane;
     private JTable table;
     private ProgramTable modelTable;
@@ -350,11 +437,20 @@ public class ManagementPanel extends JPanel implements PageList {
 
       bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
       bottomPanel.add(addGame = new JButton(ui.getSettings().getResourceBundle().getString("addGame")));
+      bottomPanel.add(editGame = new JButton(ui.getSettings().getResourceBundle().getString("editGame")));
       bottomPanel.add(removeGame = new JButton(ui.getSettings().getResourceBundle().getString("removeGame")));
 
       table = new JTable(modelTable = new ProgramTable(ui, ui.getData().getGame().toArray(new Game[0])));
       scrollPane = new JScrollPane(table);
       scrollPane.setBorder(BorderFactory.createTitledBorder(ui.getSettings().getResourceBundle().getString("matchList")));
+
+      table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+          removeGame.setEnabled(true);
+          editGame.setEnabled(true);
+        }
+      });
 
       addGame.addActionListener(new ActionListener() {
         @Override
@@ -364,9 +460,8 @@ public class ManagementPanel extends JPanel implements PageList {
                     ui.getSettings().getResourceBundle().getString("notEnoughPlayersText"),
                     ui.getSettings().getResourceBundle().getString("notEnoughPlayersTitle"),
                     JOptionPane.ERROR_MESSAGE);
-            //TODO here language
           } else {
-            new MatchDialog(ui);
+            new MatchDialog(ui, null);
           }
         }
       });
@@ -374,42 +469,44 @@ public class ManagementPanel extends JPanel implements PageList {
       removeGame.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-          /*
-          if (!ui.hasBeenSaved()) {
-            Object[] choice = {ui.getSettings().getResourceBundle().getString("yes"),
-                    ui.getSettings().getResourceBundle().getString("no"),
-                    ui.getSettings().getResourceBundle().getString("goBack")};
-            int sel = JOptionPane.showOptionDialog(ui,
-                    ui.getSettings().getResourceBundle().getString("notSavedTab"),
-                    ui.getSettings().getResourceBundle().getString("saveFile"),
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
-                    choice, choice[0]);
+          int result = JOptionPane.showConfirmDialog(ui,
+                  ui.getSettings().getResourceBundle().getString("askDeletingGame"),
+                  ui.getSettings().getResourceBundle().getString("warning"),
+                  JOptionPane.YES_NO_OPTION);
+          if (result == JOptionPane.YES_OPTION) {
+            for (PlayerStateGame p : ui.getData().getGame().get(table.getSelectedRow()).getResults()) {
+              for (Player p1 : ui.getData().getPlayers()) {
+                if (p.getUsername().equals(p1.getUsername())) {
+                  p1.setScore(p1.getScore() - p.getPointsEndGame());
+                  p1.setCappottens(p1.getCappottens() - p.getCappottensTaken());
+                  p1.setPelliccions(p1.getPelliccions() - p.getPelliccionsTaken());
+                  p1.setTotalPlays(p1.getTotalPlays() - p.getPointsEndGame());
 
-            if (choice[sel] == choice[0]) {
-              new SaveFile(ui).actionPerformed(null);
-            } else if (choice[sel] == choice[1]) {
-              tabs.remove(tabs.getSelectedIndex());
-
-              if (tabs.getTabCount() == 1) {
-                removeTab.setEnabled(false);
+                  if (p.getPointsEndGame() == 10) {
+                    p1.setTotalWins(p1.getTotalWins() - 1);
+                  }
+                }
               }
             }
-          } else {
-            tabs.remove(tabs.getSelectedIndex());
 
-            if (tabs.getTabCount() == 1) {
-              removeTab.setEnabled(false);
-            }
+            ui.getData().getGame().remove(table.getSelectedRow());
+            modelTable.removeProgram(table.getSelectedRow());
 
+            getEditPanel().initialise();
             ui.setHasBeenSaved(false);
           }
+        }
+      });
 
-          validate();
-          */
+      editGame.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          //new MatchDialog(ui, modelTable.getProgram(table.getSelectedRow()).get(table.getSelectedRow()));
         }
       });
 
       removeGame.setEnabled(false);
+      editGame.setEnabled(false);
 
       add(bottomPanel, BorderLayout.PAGE_END);
       add(scrollPane);

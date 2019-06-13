@@ -1,12 +1,14 @@
 package Interface;
 
+import FileManager.SaveFile;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class TabbedListButton extends AbstractAction {
     private UserController ui;
 
-    public TabbedListButton(UserController ui) {
+    TabbedListButton(UserController ui) {
         this.ui = ui;
 
         putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("editButton"));
@@ -17,6 +19,19 @@ public class TabbedListButton extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ui.askForNextPage("EDIT");
+        if (!ui.hasBeenSaved()) {
+            int result = JOptionPane.showConfirmDialog(ui,
+                    ui.getSettings().getResourceBundle().getString("saveBeforeClosing"),
+                    ui.getSettings().getResourceBundle().getString("exitConfirmation"),
+                    JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION) {
+                new SaveFile(ui).actionPerformed(null);
+                //ui.setUpData();
+                ui.askForNextPage("EDIT");
+            }
+        } else {
+            //ui.setUpData();
+            ui.askForNextPage("EDIT");
+        }
     }
 }

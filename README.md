@@ -14,11 +14,11 @@ Maggiori informazioni sono disponibili nel settore Wiki (https://github.com/Lord
 
 # Compatibilità
 
-Il programma è compatibile con la maggior parte delle piattaforme che permettono l'esecuzione di JDK/JRE 8 o superiore.
+Il programma è compatibile con la maggior parte delle piattaforme che permettono l'esecuzione di JRE 8 o superiore.
 
 I requisiti di sistema sono:
 - Windows XP Service Pack 3 o superiore
-- 100MB di memoria RAM
+- 128MB di memoria RAM aggiuntiva (512MB di memoria RAM o superiore)
 - 100MB di spazio minimo aggiuntivo su disco
 
 # Release

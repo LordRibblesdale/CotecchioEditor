@@ -19,7 +19,7 @@ public class PanelList extends JFrame {
       public void valueChanged(ListSelectionEvent e) {
          if (tab != null) {
             tab.setSelectedIndex(((JList<String>) e.getSource()).getSelectedIndex());
-            validate();
+            ui.getAbstractTable().fireTableDataChanged();
          }
       }
    };

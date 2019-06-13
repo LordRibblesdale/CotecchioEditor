@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Observable;
 
 public class Download implements Runnable, Status {
    private static final int MAX_BUFFER_SIZE = 4096;

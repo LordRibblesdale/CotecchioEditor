@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact name="net_sourceforge_jdatepicker_jdatepicker_1_3_2">
-    <output-path>$PROJECT_DIR$/out/artifacts/net_sourceforge_jdatepicker_jdatepicker_1_3_2</output-path>
-    <root id="root">
-      <element id="library" level="project" name="net.sourceforge.jdatepicker:jdatepicker:1.3.2" />
-    </root>
-  </artifact>
-</component>

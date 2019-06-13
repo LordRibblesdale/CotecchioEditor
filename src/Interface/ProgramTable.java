@@ -4,6 +4,7 @@ import Data.Game;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ProgramTable extends AbstractTableModel {
     private String[] columns;
@@ -11,19 +12,7 @@ public class ProgramTable extends AbstractTableModel {
 
     private UserController controller;
 
-    public ProgramTable(UserController controller) {
-        this.controller = controller;
-
-        columns = new String[] {
-                controller.getSettings().getResourceBundle().getString("matchDate"),
-                controller.getSettings().getResourceBundle().getString("playersNumber"),
-                controller.getSettings().getResourceBundle().getString("winnerPlayer")
-        };
-
-        data = new ArrayList<>(1);
-    }
-
-    public ProgramTable(UserController controller, Game[] exec) {
+    ProgramTable(UserController controller, Game[] exec) {
         this.controller = controller;   //TODO is this useful?
 
         columns = new String[] {
@@ -43,16 +32,18 @@ public class ProgramTable extends AbstractTableModel {
         }
     }
 
-    public void addProgram(Game exec) {
+    void addProgram(Game exec) {
         data.add(new Object[] {
                 exec.getDate(),
                 exec.getResults().size(),
                 exec.getWinner()
         });
+
+        fireTableDataChanged();
     }
 
-    public Object[] getProgram(int index) {
-        return data.get(index);
+    public ArrayList<Game> getProgram(int index) {
+        return new ArrayList<>(Arrays.asList((Game[]) data.get(index)));
     }
 
     public void editProgram(int index, Game exec) {
@@ -61,12 +52,16 @@ public class ProgramTable extends AbstractTableModel {
                 exec.getResults().size(),
                 exec.getWinner()
         });
+
+        fireTableDataChanged();
     }
 
     public void removeProgram(int index) {
         if (!data.isEmpty() && index != -1) {
             data.remove(index);
         }
+
+        fireTableDataChanged();
     }
 
     @Override

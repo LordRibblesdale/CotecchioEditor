@@ -5,7 +5,7 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
 public class ProgressRenderer extends JProgressBar implements TableCellRenderer {
-   public ProgressRenderer() {
+   ProgressRenderer() {
       super(0, 100);
       setStringPainted(true);
    }

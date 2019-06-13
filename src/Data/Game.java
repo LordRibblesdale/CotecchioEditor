@@ -2,7 +2,6 @@ package Data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 public class Game implements Serializable {
@@ -10,16 +9,23 @@ public class Game implements Serializable {
 
     private ArrayList<PlayerStateGame> results;
     private Date date;
+    private boolean isEditable;
 
-    public Game(ArrayList<PlayerStateGame> results, Date date) {
+    public Game(ArrayList<PlayerStateGame> results, Date date, boolean isEditable) {
         this.results = results;
         this.date = date;
-
-        Arrays.sort(this.results.toArray(new PlayerStateGame[0]));
     }
 
     public ArrayList<PlayerStateGame> getResults() {
         return results;
+    }
+
+    public boolean isEditable() {
+        return isEditable;
+    }
+
+    public void setEditable(boolean editable) {
+        isEditable = editable;
     }
 
     public void setResults(ArrayList<PlayerStateGame> results) {
@@ -35,6 +41,18 @@ public class Game implements Serializable {
     }
 
     public String getWinner() {
-        return results.get(0).getUsername();
+        StringBuilder w = new StringBuilder();
+
+        for (int i = 0; i < results.size(); i++) {
+            if (i != 0) {
+                w.append(", ");
+            }
+
+            if (results.get(i).getPointsEndGame() == 10) {
+                w.append(results.get(i).getUsername());
+            }
+        }
+
+        return w.toString();
     }
 }
