@@ -7,17 +7,7 @@
       <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.2.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/commons-codec-1.10.jar!/" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$PROJECT_DIR$/lib/httpclient-4.5.6-javadoc.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/httpcore-4.4.10-javadoc.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.2-javadoc.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/commons-codec-1.10-javadoc.jar!/" />
-    </JAVADOC>
-    <SOURCES>
-      <root url="jar://$PROJECT_DIR$/lib/httpclient-4.5.6-sources.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/httpcore-4.4.10-sources.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.2-sources.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/commons-codec-1.10-sources.jar!/" />
-    </SOURCES>
+    <JAVADOC />
+    <SOURCES />
   </library>
 </component>

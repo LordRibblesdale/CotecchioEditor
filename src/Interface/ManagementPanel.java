@@ -15,10 +15,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 
@@ -533,6 +530,11 @@ public class ManagementPanel extends JPanel implements PageList {
 
       this.ui = ui;
 
+      leaderboard = new JScrollPane(textArea = new JEditorPane());
+      textArea.setContentType("text/html");
+      textArea.setText(setUpText());
+      textArea.setEditable(false);
+      /*
       try {
         leaderboard = new JScrollPane(textArea = new JEditorPane());
         textArea.setContentType("text/html");
@@ -542,13 +544,14 @@ public class ManagementPanel extends JPanel implements PageList {
         e.printStackTrace();
         leaderboard = new JScrollPane(new JLabel(new ExportLeaderboard(ui).generateList(ui.getPlayers())));
       }
+      */
 
       add(leaderboard);
     }
 
-    String setUpText() throws FileNotFoundException {
+    String setUpText() {
       StringBuilder text = new StringBuilder();
-      Scanner s = new Scanner(new BufferedInputStream(new FileInputStream(new File((Objects.requireNonNull(getClass().getClassLoader().getResource("Data/messageIT"))).getPath()))));
+      Scanner s = new Scanner(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("messageIT"))));
 
       while (s.hasNext()) {
         text.append(s.nextLine());
