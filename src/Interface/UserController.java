@@ -151,6 +151,7 @@ public class UserController extends JFrame {
     menu.getStart().setEnabled(true);
     menu.getOpenGame().setEnabled(true);
     menu.getExportXls().setEnabled(true);
+    menu.getExportWord().setEnabled(true);
 
     validate();
   }

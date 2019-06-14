@@ -2,6 +2,7 @@ package Interface;
 
 import Edit.Search;
 import Export.ExportLeaderboard;
+import Export.ExportWordLeaderboard;
 import Export.ExportXls;
 import Export.PrintThread;
 import FileManager.*;
@@ -25,6 +26,7 @@ public class PersonalMenu extends JMenuBar {
   private NewFile newFile;
   private OpenFile openFile;
   private ExportXls exportXls;
+  private ExportWordLeaderboard exportWord;
   private JCheckBoxMenuItem showList;
 
   private UserController ui;
@@ -42,6 +44,7 @@ public class PersonalMenu extends JMenuBar {
     file.add(new JSeparator());
     file.add(export = new JMenu(this.ui.getSettings().getResourceBundle().getString("export")));
     file.add(print = new PrintThread(this.ui));
+    export.add(exportWord = new ExportWordLeaderboard(this.ui));
     export.add(exportXls = new ExportXls(this.ui));
     export.add(new ExportLeaderboard(this.ui));
 
@@ -50,6 +53,7 @@ public class PersonalMenu extends JMenuBar {
     saveButton.setEnabled(false);
     saveAsButton.setEnabled(false);
     exportXls.setEnabled(false);
+    exportWord.setEnabled(false);
 
     add(edit = new JMenu(this.ui.getSettings().getResourceBundle().getString("edit")));
     edit.add(search = new Search(this.ui));
@@ -104,6 +108,10 @@ public class PersonalMenu extends JMenuBar {
 
   public JMenu getExport() {
     return export;
+  }
+
+  ExportWordLeaderboard getExportWord() {
+    return exportWord;
   }
 
   SaveFile getSaveAsButton() {

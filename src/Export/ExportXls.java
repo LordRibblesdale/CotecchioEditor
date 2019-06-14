@@ -21,8 +21,6 @@ public class ExportXls extends AbstractAction {
       putValue(Action.SHORT_DESCRIPTION, ui.getSettings().getResourceBundle().getString("exportXLS"));
       putValue(Action.LARGE_ICON_KEY, new ImageIcon(ExportXls.class.getResource("ColumnInsertBefore24.gif")));
       putValue(Action.SMALL_ICON, new ImageIcon(ExportXls.class.getResource("ColumnInsertBefore16.gif")));
-
-
    }
 
    @Override
