@@ -283,9 +283,16 @@ public class ManagementPanel extends JPanel implements PageList {
       private int MAXIMUM = 8;
       private int currentIndex;
 
-      MatchDialog(UserController ui, Game game) {
+      private boolean isGameSet = false;
+      private int index = -1;
+
+      MatchDialog(UserController ui, Game game, int index) {
         super(ui, true);
         setLayout(new BorderLayout());
+
+        isGameSet = game != null;
+        this.index = index;
+
         MAXIMUM = game == null
                 ? (MAXIMUM <= ui.getData().getPlayers().size()
                     ? MAXIMUM
@@ -308,7 +315,7 @@ public class ManagementPanel extends JPanel implements PageList {
           }
         } else {
           for (int i = 0; i < game.getResults().size(); i++) {
-            players.add(new SinglePanel(ui));
+            players.add(new SinglePanel(ui, game.getResults().get(i)));
           }
         }
 
@@ -400,10 +407,15 @@ public class ManagementPanel extends JPanel implements PageList {
 
               getEditPanel().initialise();
 
-              tmp = new Game(list, new Date(), true);
+              if (!isGameSet) {
+                tmp = new Game(list, new Date(), true);
 
-              ui.getData().getGame().add(tmp);
-              ui.getAbstractTable().addProgram(tmp);
+                ui.getData().getGame().add(tmp);
+                ui.getAbstractTable().addProgram(tmp);
+              } else {
+
+              }
+
 
               MatchDialog.this.dispose();
               ui.setHasBeenSaved(false);
@@ -458,7 +470,7 @@ public class ManagementPanel extends JPanel implements PageList {
                     ui.getSettings().getResourceBundle().getString("notEnoughPlayersTitle"),
                     JOptionPane.ERROR_MESSAGE);
           } else {
-            new MatchDialog(ui, null);
+            new MatchDialog(ui, null, -1);
           }
         }
       });
@@ -498,7 +510,7 @@ public class ManagementPanel extends JPanel implements PageList {
       editGame.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-          //new MatchDialog(ui, modelTable.getProgram(table.getSelectedRow()).get(table.getSelectedRow()));
+          new MatchDialog(ui, ui.getData().getGame().get(table.getSelectedRow()), table.getSelectedRow());
         }
       });
 
@@ -534,17 +546,6 @@ public class ManagementPanel extends JPanel implements PageList {
       textArea.setContentType("text/html");
       textArea.setText(setUpText());
       textArea.setEditable(false);
-      /*
-      try {
-        leaderboard = new JScrollPane(textArea = new JEditorPane());
-        textArea.setContentType("text/html");
-        textArea.setText(setUpText());
-        textArea.setEditable(false);
-      } catch (FileNotFoundException e) {
-        e.printStackTrace();
-        leaderboard = new JScrollPane(new JLabel(new ExportLeaderboard(ui).generateList(ui.getPlayers())));
-      }
-      */
 
       add(leaderboard);
     }
