@@ -59,3 +59,10 @@ Build 6:
               Refresh UI with CardsLayout
               Increase exception debugging
               Fix exception in UpdateRepo (IndexOutOfBounds -1)
+Build 7:
+    Beta 1.0: Add Match date, Hands and new stats for leaderboard
+              Add Game List in each player (for won/lost plays and other stats)
+              Add nickname check in Game List (while opening)
+              Fix match adding and points distribution
+              Fix Lost plays (now checks only 0-points matches)
+              Fix Save location and Open methods

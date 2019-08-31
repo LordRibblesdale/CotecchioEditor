@@ -1,6 +1,7 @@
 package Interface;
 
 import Data.CotecchioDataArray;
+import Data.Game;
 import Data.Player;
 import Data.Settings;
 import FileManager.*;
@@ -22,8 +23,8 @@ import static FileManager.Path.setPath;
 
 public class UserController extends JFrame {
   private static final String PROGRAM_NAME = "Cotecchio Editor - ";
-  private static final String VERSION = "Build 6 Beta 1.0";
-  private static final int RELEASE = 610;
+  private static final String VERSION = "Build 7 Beta 1.0";
+  private static final int RELEASE = 710;
   private ManagementPanel mainPanel;
   private PersonalMenu menu;
   private JLabel saveStatus;
@@ -172,8 +173,26 @@ public class UserController extends JFrame {
     return mainPanel.getEditPanel().getTabs();
   }
 
+  public ArrayList<PlayerUI> getPUI() {
+    return mainPanel.getEditPanel().getpUI();
+  }
+
   public CotecchioDataArray getData() {
     return data;
+  }
+
+  public Game[] getUserData(String username) {
+    ArrayList<Game> tmp = new ArrayList<>();
+
+    for (Game a : data.getGame()) {
+      for (int i = 0; i < a.getResults().size(); i++) {
+        if (a.getResults().get(i).getUsername().equals(username)) {
+          tmp.add(a);
+        }
+      }
+    }
+
+    return tmp.toArray(new Game[0]);
   }
 
   public void setUpData() {

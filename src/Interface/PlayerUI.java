@@ -18,6 +18,9 @@ class PlayerUI extends JPanel {
    private final String[] LABEL_STRINGS;
    private final String[] EDITABLE;
 
+   private String usernameText;
+   private JTable table;
+
    private ArrayList<JLabel> labels = new ArrayList<>(LABELS_LENGTH);
    private ArrayList<JSpinner> insert = new ArrayList<>(INSERT_LABELS);
    private JTextField name, username;
@@ -45,6 +48,7 @@ class PlayerUI extends JPanel {
             labels.get(0).setText(LABEL_STRINGS[0] + name.getText());
          } else {
             labels.get(1).setText(LABEL_STRINGS[1] + username.getText());
+            usernameText = username.getText();
          }
 
          ui.setHasBeenSaved(false);
@@ -57,6 +61,7 @@ class PlayerUI extends JPanel {
 
    PlayerUI(Player player, UserController ui) {
       this.ui = ui;
+      this.usernameText = player.getUsername();
 
       String[] PLAYER_STRINGS = new String[]{
               player.getName(),
@@ -168,10 +173,14 @@ class PlayerUI extends JPanel {
    }
 
    JPanel generatePanel() {
-      JPanel ui = new JPanel();
+      JPanel ui = new JPanel(new GridLayout(1, 3));
       JPanel tmp;
       JPanel labelList = new JPanel(new GridLayout(0, 1));
       JPanel editList = new JPanel(new GridLayout(0, 1));
+
+      table = new JTable(new ProgramTable(PlayerUI.this.ui, PlayerUI.this.ui.getUserData(usernameText)));
+      JScrollPane scrollPane = new JScrollPane(table);
+      scrollPane.setBorder(BorderFactory.createTitledBorder(PlayerUI.this.ui.getSettings().getResourceBundle().getString("matchList")));
 
       for (JLabel data : labels) {
          labelList.add(data);
@@ -203,6 +212,7 @@ class PlayerUI extends JPanel {
 
       ui.add(labelList);
       ui.add(editList);
+      ui.add(scrollPane);
 
       return ui;
    }
@@ -217,5 +227,10 @@ class PlayerUI extends JPanel {
 
    ArrayList<JSpinner> getInsert() {
       return insert;
+   }
+
+   void repaintTable() {
+      table.setModel(new ProgramTable(PlayerUI.this.ui, PlayerUI.this.ui.getUserData(usernameText)));
+      ((ProgramTable) table.getModel()).fireTableDataChanged();
    }
 }

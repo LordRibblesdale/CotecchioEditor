@@ -22,7 +22,7 @@ import java.util.List;
 
 public class ManagementPanel extends JPanel implements PageList {
   class EditPanel extends JPanel {
-    private JButton addTab, removeTab;
+    private JButton addTab, removeTab, resetValues;
 
     private JTabbedPane tabs = null;
     private ArrayList<PlayerUI> pUI;
@@ -39,6 +39,7 @@ public class ManagementPanel extends JPanel implements PageList {
       bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
       bottomPanel.add(addTab = new JButton(ui.getSettings().getResourceBundle().getString("addTab")));
       bottomPanel.add(removeTab = new JButton(ui.getSettings().getResourceBundle().getString("removeTab")));
+      bottomPanel.add(resetValues = new JButton(ui.getSettings().getResourceBundle().getString("resetValues")));
 
       initialise();
 
@@ -98,6 +99,28 @@ public class ManagementPanel extends JPanel implements PageList {
           }
 
           validate();
+        }
+      });
+
+      resetValues.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          Object[] sel = {
+              ui.getSettings().getResourceBundle().getString("noneButton"),
+              ui.getSettings().getResourceBundle().getString("singleTabButton"),
+              ui.getSettings().getResourceBundle().getString("allTabsButton")
+          };
+
+          Object choice = JOptionPane.showInputDialog(ui,
+              ui.getSettings().getResourceBundle().getString("resetConfirm"),
+              ui.getSettings().getResourceBundle().getString("resetTitle"),
+              JOptionPane.INFORMATION_MESSAGE, null, sel, sel[0]);
+
+          if (choice == sel[1]) {
+
+          } else if (choice == sel[2]) {
+
+          }
         }
       });
 
@@ -190,6 +213,10 @@ public class ManagementPanel extends JPanel implements PageList {
 
     JTabbedPane getTabs() {
       return tabs;
+    }
+
+    ArrayList<PlayerUI> getpUI() {
+      return pUI;
     }
   }
 
@@ -425,6 +452,7 @@ public class ManagementPanel extends JPanel implements PageList {
                 }
 
                 MatchDialog.this.dispose();
+                removeGame.setEnabled(true);
                 ui.setHasBeenSaved(false);
               }
             });
@@ -439,7 +467,7 @@ public class ManagementPanel extends JPanel implements PageList {
             dialog.add(calendar);
             dialog.add(exit);
             dialog.add(add);
-            dialog.setMinimumSize(new Dimension(150, 100));
+            dialog.setMinimumSize(new Dimension(160, 100));
             dialog.pack();
             dialog.setLocationRelativeTo(ui);
             dialog.setVisible(true);
@@ -513,7 +541,7 @@ public class ManagementPanel extends JPanel implements PageList {
                   p1.setScore(p1.getScore() - p.getPointsEndGame());
                   p1.setCappottens(p1.getCappottens() - p.getCappottensTaken());
                   p1.setPelliccions(p1.getPelliccions() - p.getPelliccionsTaken());
-                  p1.setTotalPlays(p1.getTotalPlays() - p.getPointsEndGame());
+                  p1.setTotalPlays(p1.getTotalPlays() - 1);
 
                   if (p.getPointsEndGame() == 10) {
                     p1.setTotalWins(p1.getTotalWins() - 1);
@@ -526,6 +554,11 @@ public class ManagementPanel extends JPanel implements PageList {
             modelTable.removeProgram(table.getSelectedRow());
 
             getEditPanel().initialise();
+
+            if (ui.getData().getGame().size() == 0) {
+              removeGame.setEnabled(false);
+            }
+
             ui.setHasBeenSaved(false);
           }
         }
@@ -641,7 +674,6 @@ public class ManagementPanel extends JPanel implements PageList {
         backButton.setEnabled(true);
         break;
       case "BACK":
-
         backButton.setEnabled(false);
         break;
     }

@@ -3,7 +3,7 @@ package Data;
 import java.io.Serializable;
 
 public class Player implements Serializable, Comparable<Player> {
-   private static final long serialVersionUID = 310L;
+   private static final long serialVersionUID = 710L;
 
    private String name;
    private String username;
@@ -12,6 +12,7 @@ public class Player implements Serializable, Comparable<Player> {
    private int cappottens;
    private int totalPlays;
    private int totalWins;
+   private int totalLost = 0;
 
    public Player(String name, String username, int score, int pelliccions, int cappottens, int totalPlays, int totalWins) {
       this.name = name;
@@ -77,6 +78,14 @@ public class Player implements Serializable, Comparable<Player> {
 
    public void setTotalWins(int totalWins) {
       this.totalWins = totalWins;
+   }
+
+   public int getTotalLost() {
+      return totalLost;
+   }
+
+   public void setTotalLost(int totalLost) {
+      this.totalLost = totalLost;
    }
 
    @Override

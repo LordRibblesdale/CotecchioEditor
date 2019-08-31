@@ -73,18 +73,28 @@ public class OpenFile extends AbstractAction implements Path {
             input.close();
 
             DecompressibleInputStream in = new DecompressibleInputStream(new BufferedInputStream(new FileInputStream(this.path)));
-            Object tmp = in.readObject();
-            in.close();
 
-            if (tmp instanceof  CotecchioDataArray) {
-               data = (CotecchioDataArray) tmp;
 
-               ui.saveRecentFile(this.path);
-               ui.prepareForInitialisation(data);
-               JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("conversionMessage"),
-                       ui.getSettings().getResourceBundle().getString("conversionCompleted"), JOptionPane.WARNING_MESSAGE);
-               new SaveFile(ui).actionPerformed(e);
+            try {
+               Object tmp = in.readObject();
+               in.close();
+
+               if (tmp instanceof  CotecchioDataArray) {
+                  data = (CotecchioDataArray) tmp;
+
+                  ui.saveRecentFile(this.path);
+                  ui.prepareForInitialisation(data);
+                  JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("conversionMessage"),
+                      ui.getSettings().getResourceBundle().getString("conversionCompleted"), JOptionPane.WARNING_MESSAGE);
+                  new SaveFile(ui).actionPerformed(e);
+               }
+            } catch (StreamCorruptedException sce) {
+               JOptionPane.showMessageDialog(ui,
+                   ui.getSettings().getResourceBundle().getString("errorReadingFile"),
+                   "Error I/O 03_IncompatibleFile" + sce.getStackTrace()[0].getLineNumber(),
+                   JOptionPane.ERROR_MESSAGE);
             }
+
          } catch (IOException | ClassNotFoundException e2) {
             e2.printStackTrace();
             JOptionPane.showMessageDialog(ui,

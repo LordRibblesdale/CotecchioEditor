@@ -39,7 +39,7 @@ public class ProgramTable extends AbstractTableModel {
                 exec.getPlayers()
         });
 
-        fireTableDataChanged();
+        fireChanges();
     }
 
     public ArrayList<Game> getProgram(int index) {
@@ -53,7 +53,7 @@ public class ProgramTable extends AbstractTableModel {
                 exec.getPlayers()
         });
 
-        fireTableDataChanged();
+        fireChanges();
     }
 
     public void removeProgram(int index) {
@@ -61,7 +61,15 @@ public class ProgramTable extends AbstractTableModel {
             data.remove(index);
         }
 
+        fireChanges();
+    }
+
+    void fireChanges() {
         fireTableDataChanged();
+
+        for (int i = 0; i < controller.getPUI().size(); i++) {
+            controller.getPUI().get(i).repaintTable();
+        }
     }
 
     @Override
