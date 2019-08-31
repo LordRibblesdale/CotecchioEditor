@@ -15,6 +15,7 @@
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/xmlbeans/xmlbeans/3.1.0/xmlbeans-3.1.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-compress/1.18/commons-compress-1.18.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/virtuald/curvesapi/1.06/curvesapi-1.06.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/lgooddatepicker/LGoodDatePicker/10.3.1/LGoodDatePicker-10.3.1.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

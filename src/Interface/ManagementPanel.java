@@ -6,6 +6,7 @@ import Data.Player;
 import Data.PlayerStateGame;
 import Export.ExportLeaderboard;
 import FileManager.SaveFile;
+import com.github.lgooddatepicker.components.DatePicker;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -364,62 +365,85 @@ public class ManagementPanel extends JPanel implements PageList {
         save.addActionListener(new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent e) {
-            boolean isThereTen = false;
-            boolean isThereZero = false;
+            //TODO language here
 
-            for (SinglePanel p : players) {
-              if (p.getPoints() == 10) {
-                isThereTen = true;
-              } else if (p.getPoints() == 0) {
-                isThereZero = true;
-              }
+            DatePicker calendar = new DatePicker();
+            JButton add = new JButton(ui.getSettings().getResourceBundle().getString("save"));
+            JButton exit = new JButton(ui.getSettings().getResourceBundle().getString("goBack"));
+            JDialog dialog = new JDialog(MatchDialog.this, true);
+            dialog.setLayout(new GridLayout(0, 1));
 
-              if (isThereTen && isThereZero) {
-                break;
-              }
-            }
+            calendar.setText(ui.getSettings().getResourceBundle().getString("selectDate"));
 
-            if (!isThereTen || !isThereZero) {
-              JOptionPane.showMessageDialog(ui,
-                      ui.getSettings().getResourceBundle().getString("errorCompilingList"),
-                      ui.getSettings().getResourceBundle().getString("warning"),
-                      JOptionPane.WARNING_MESSAGE);
-            } else {
-              Game tmp;
-              ArrayList<PlayerStateGame> list = new ArrayList<>(players.size());
+            add.addActionListener(new ActionListener() {
+              @Override
+              public void actionPerformed(ActionEvent e) {
+                Game tmp;
+                ArrayList<PlayerStateGame> list = new ArrayList<>(players.size());
+                byte hands = 0;
 
-              for (SinglePanel p : players) {
-                list.add(new PlayerStateGame(p.getPlayer(), p.getPoints(), p.getPelliccions(), p.getCappottens()));
+                for (SinglePanel p : players) {
+                  list.add(new PlayerStateGame(p.getPlayer(), p.getPoints(), p.getPelliccions(), p.getCappottens()));
+                  hands += (p.getPelliccions() + p.getCappottens());
 
-                for (Player p2 : ui.getPlayers()) {
-                  if (p2.getUsername().equals(p.getPlayer())) {
-                    p2.setScore(p2.getScore() + p.getPoints());
-                    p2.setTotalPlays(p2.getTotalPlays() + 1);
-                    p2.setCappottens(p2.getCappottens() + p.getCappottens());
-                    p2.setPelliccions(p2.getPelliccions() + p.getPelliccions());
+                  for (Player p2 : ui.getPlayers()) {
+                    if (p2.getUsername().equals(p.getPlayer())) {
+                      System.out.println(p2.getUsername());
 
-                    if (p.getPoints() == 10) {
-                      p2.setTotalWins(p2.getTotalWins() + 1);
+                      System.out.print("Da " + p2.getScore() + " a ");
+                      p2.setScore(p2.getScore() + p.getPoints());
+                      System.out.println(p2.getScore() + " (+" + p.getPoints());
+
+                      System.out.print("Da " + p2.getTotalPlays() + " a ");
+                      p2.setTotalPlays(p2.getTotalPlays() + 1);
+                      System.out.println(p2.getTotalPlays() + " (+1)");
+
+                      System.out.print("Da " + p2.getCappottens() + " a ");
+                      p2.setCappottens(p2.getCappottens() + p.getCappottens());
+                      System.out.println(p2.getCappottens() + " (+" + p.getCappottens());
+
+                      System.out.print("Da " + p2.getPelliccions() + " a ");
+                      p2.setPelliccions(p2.getPelliccions() + p.getPelliccions());
+                      System.out.println(p2.getPelliccions() + " (+" + p.getPelliccions());
+
+                      if (p.getPoints() == 10) {
+                        p2.setTotalWins(p2.getTotalWins() + 1);
+                      }
                     }
                   }
                 }
+
+                getEditPanel().initialise();
+
+                if (!isGameSet) {
+                  tmp = new Game(list, calendar.getDate(), hands, true);
+
+                  ui.getData().getGame().add(tmp);
+                  ui.getAbstractTable().addProgram(tmp);
+                } else {
+
+                }
+
+                MatchDialog.this.dispose();
+                ui.setHasBeenSaved(false);
               }
+            });
 
-              getEditPanel().initialise();
-
-              if (!isGameSet) {
-                tmp = new Game(list, new Date(), true);
-
-                ui.getData().getGame().add(tmp);
-                ui.getAbstractTable().addProgram(tmp);
-              } else {
-
+            exit.addActionListener(new ActionListener() {
+              @Override
+              public void actionPerformed(ActionEvent e) {
+                dialog.dispose();
               }
+            });
 
-
-              MatchDialog.this.dispose();
-              ui.setHasBeenSaved(false);
-            }
+            dialog.add(calendar);
+            dialog.add(exit);
+            dialog.add(add);
+            dialog.setMinimumSize(new Dimension(150, 100));
+            dialog.pack();
+            dialog.setLocationRelativeTo(ui);
+            dialog.setVisible(true);
+            dialog.requestFocus();
           }
         });
 

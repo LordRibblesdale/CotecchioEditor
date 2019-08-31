@@ -1,18 +1,20 @@
 package Data;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Game implements Serializable {
-    private static final long serialVersionUID = 610L;
+    private static final long serialVersionUID = 710L;
 
     private ArrayList<PlayerStateGame> results;
-    private Date date;
+    private byte hands;
+    private LocalDate date;
     private boolean isEditable;
 
-    public Game(ArrayList<PlayerStateGame> results, Date date, boolean isEditable) {
+    public Game(ArrayList<PlayerStateGame> results, LocalDate date, byte hands, boolean isEditable) {
         this.results = results;
+        this.hands = hands;
         this.date = date;
     }
 
@@ -32,15 +34,23 @@ public class Game implements Serializable {
         this.results = results;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public String getWinner() {
+    public byte getHands() {
+        return hands;
+    }
+
+    public void setHands(byte hands) {
+        this.hands = hands;
+    }
+
+    public String getPlayers() {
         StringBuilder w = new StringBuilder();
 
         for (int i = 0; i < results.size(); i++) {
@@ -48,9 +58,7 @@ public class Game implements Serializable {
                 w.append(", ");
             }
 
-            if (results.get(i).getPointsEndGame() == 10) {
-                w.append(results.get(i).getUsername());
-            }
+            w.append(results.get(i).getUsername());
         }
 
         return w.toString();

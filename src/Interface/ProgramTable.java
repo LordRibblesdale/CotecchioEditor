@@ -17,8 +17,8 @@ public class ProgramTable extends AbstractTableModel {
 
         columns = new String[] {
                 controller.getSettings().getResourceBundle().getString("matchDate"),
-                controller.getSettings().getResourceBundle().getString("playersNumber"),
-                controller.getSettings().getResourceBundle().getString("winnerPlayer")
+                controller.getSettings().getResourceBundle().getString("hands"),
+                controller.getSettings().getResourceBundle().getString("listPlayer")
         };
 
         data = new ArrayList<>(exec.length);
@@ -27,7 +27,7 @@ public class ProgramTable extends AbstractTableModel {
             data.add(new Object[] {
                     p.getDate(),
                     p.getResults().size(),
-                    p.getWinner()
+                    p.getPlayers()
             });
         }
     }
@@ -35,8 +35,8 @@ public class ProgramTable extends AbstractTableModel {
     void addProgram(Game exec) {
         data.add(new Object[] {
                 exec.getDate(),
-                exec.getResults().size(),
-                exec.getWinner()
+                exec.getHands(),
+                exec.getPlayers()
         });
 
         fireTableDataChanged();
@@ -49,8 +49,8 @@ public class ProgramTable extends AbstractTableModel {
     public void editProgram(int index, Game exec) {
         data.set(index, new Object[] {
                 exec.getDate(),
-                exec.getResults().size(),
-                exec.getWinner()
+                exec.getHands(),
+                exec.getPlayers()
         });
 
         fireTableDataChanged();
