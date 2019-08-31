@@ -83,6 +83,8 @@ public class ManagementPanel extends JPanel implements PageList {
               new SaveFile(ui).actionPerformed(null);
             } else if (choice[sel] == choice[1]) {
               tabs.remove(tabs.getSelectedIndex());
+              System.out.println(ui.getPlayers().get(tabs.getSelectedIndex()).getUsername());
+              ui.getPlayers().remove(tabs.getSelectedIndex());
 
               if (tabs.getTabCount() == 1) {
                 removeTab.setEnabled(false);
@@ -90,6 +92,8 @@ public class ManagementPanel extends JPanel implements PageList {
             }
           } else {
             tabs.remove(tabs.getSelectedIndex());
+            System.out.println(ui.getPlayers().get(tabs.getSelectedIndex()).getUsername());
+            ui.getPlayers().remove(tabs.getSelectedIndex());
 
             if (tabs.getTabCount() == 1) {
               removeTab.setEnabled(false);
