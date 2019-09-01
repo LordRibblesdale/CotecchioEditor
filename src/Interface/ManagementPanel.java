@@ -690,6 +690,7 @@ public class ManagementPanel extends JPanel implements PageList {
     switch (next) {
       case "CALENDAR":
         add(calendarPanel, "CALENDAR");
+        ui.checkDifferentUsernames();
         //backButton.setEnabled(true);
         break;
       case "EDIT":

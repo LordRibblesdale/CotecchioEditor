@@ -1,9 +1,6 @@
 package Interface;
 
-import Data.CotecchioDataArray;
-import Data.Game;
-import Data.Player;
-import Data.Settings;
+import Data.*;
 import FileManager.*;
 import Update.UpdateRepo;
 
@@ -119,6 +116,8 @@ public class UserController extends JFrame {
       this.data = new CotecchioDataArray();
     } else {
       this.data = data;
+
+      checkDifferentUsernames();
     }
 
     if (mainPanel != null) {
@@ -138,6 +137,45 @@ public class UserController extends JFrame {
     setHasBeenSaved(true);
 
     validate();
+  }
+
+  public void checkDifferentUsernames() {
+    ArrayList<String> usernames = new ArrayList<>();
+
+    for (Player p : data.getPlayers()) {
+      boolean isPresent = false;
+
+      for (Game g : data.getGame()) {
+        if (g.getPlayers().contains(p.getUsername())) {
+          isPresent = true;
+          break;
+        }
+      }
+
+      if (!isPresent) {
+        usernames.add(p.getUsername());
+      }
+    }
+
+    for (String s : usernames) {
+      Object o = JOptionPane.showInputDialog(
+          UserController.this,
+          getSettings().getResourceBundle().getString("fixNeededUsernameText"),
+          getSettings().getResourceBundle().getString("fixUsernameTitle"),
+          JOptionPane.INFORMATION_MESSAGE,
+          null,
+          getData().getPlayers().toArray(),
+          getData().getPlayers().toArray()[0]
+      );
+
+      if (o != null) {
+        for (Game g : getData().getGame()) {
+          for (PlayerStateGame ps : g.getResults()) {
+            ps.setUsername(s);
+          }
+        }
+      }
+    }
   }
 
   void askForNextPage(String next) {
