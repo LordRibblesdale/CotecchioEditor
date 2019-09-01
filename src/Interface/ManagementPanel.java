@@ -445,6 +445,8 @@ public class ManagementPanel extends JPanel implements PageList {
 
                       if (p.getPoints() == 10) {
                         p2.setTotalWins(p2.getTotalWins() + 1);
+                      } else if (p.getPoints() == 0) {
+                        p2.setTotalLost(p2.getTotalLost() + 1);
                       }
                     }
                   }
@@ -561,6 +563,8 @@ public class ManagementPanel extends JPanel implements PageList {
 
                   if (p.getPointsEndGame() == 10) {
                     p1.setTotalWins(p1.getTotalWins() - 1);
+                  } else if (p.getPointsEndGame() == 0) {
+                    p1.setTotalLost(p1.getTotalLost() - 1);
                   }
                 }
               }
@@ -643,7 +647,7 @@ public class ManagementPanel extends JPanel implements PageList {
   private CalendarPanel calendarPanel;
 
   private JPanel bottomPanel;
-  private JButton backButton, calendarButton, editButton;
+  private JButton /*backButton, */calendarButton, editButton;
 
   private CardLayout primaryLayout;
 
@@ -661,20 +665,23 @@ public class ManagementPanel extends JPanel implements PageList {
     add(main, "BACK");
 
     bottomPanel = new JPanel();
-    backButton = new JButton(ui.getSettings().getResourceBundle().getString("goBack"));
-    backButton.setEnabled(false);
+    //backButton = new JButton(ui.getSettings().getResourceBundle().getString("goBack"));
+    //backButton.setEnabled(false);
     calendarButton = new JButton(new CalendarButton(ui));
     editButton = new JButton(new TabbedListButton(ui));
-    bottomPanel.add(backButton);
+    //bottomPanel.add(backButton);
     bottomPanel.add(calendarButton);
     bottomPanel.add(editButton);
 
+    /*
     backButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         ui.askForNextPage("BACK");
       }
     });
+
+     */
 
     ui.add(bottomPanel, BorderLayout.PAGE_END);
   }
@@ -683,14 +690,14 @@ public class ManagementPanel extends JPanel implements PageList {
     switch (next) {
       case "CALENDAR":
         add(calendarPanel, "CALENDAR");
-        backButton.setEnabled(true);
+        //backButton.setEnabled(true);
         break;
       case "EDIT":
         add(editPanel, "EDIT");
-        backButton.setEnabled(true);
+        //backButton.setEnabled(true);
         break;
       case "BACK":
-        backButton.setEnabled(false);
+        //backButton.setEnabled(false);
         break;
     }
 
