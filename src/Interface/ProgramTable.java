@@ -68,6 +68,10 @@ public class ProgramTable extends AbstractTableModel {
         fireChanges();
     }
 
+    public int getTime(int index) {
+        return controller.getData().getGame().get(index).getTime();
+    }
+
     String setUpStringTime(int time) {
         int hours = time/60;
         int mins = time - (hours*60);

@@ -9,7 +9,7 @@ public class Game implements Serializable {
 
     private ArrayList<PlayerStateGame> results;
     private byte hands;
-    private int time;
+    private int time = 0;
     private LocalDate date;
     private boolean isEditable;
 

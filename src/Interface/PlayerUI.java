@@ -60,6 +60,7 @@ class PlayerUI extends JPanel {
    PlayerUI(Player player, UserController ui) {
       this.ui = ui;
       this.usernameText = player.getUsername();
+      this.table = new JTable(new ProgramTable(PlayerUI.this.ui, PlayerUI.this.ui.getUserData(usernameText)));
 
       String[] PLAYER_STRINGS = new String[]{
               player.getName(),
@@ -69,10 +70,16 @@ class PlayerUI extends JPanel {
               String.valueOf(player.getCappottens()),
               String.valueOf(player.getTotalPlays()),
               String.valueOf(player.getTotalWins()),
-              String.valueOf((player.getTotalLost())),
+              String.valueOf(player.getTotalLost()),
               df.format((player.getPelliccions() / (float) player.getTotalPlays())),
               df.format((player.getCappottens() / (float) player.getTotalPlays())),
-              df.format((player.getScore() / (float) player.getTotalPlays()))
+              df.format((player.getScore() / (float) player.getTotalPlays())),
+              df.format(player.getPelliccions() / (float) sumHands()),
+              df.format(player.getCappottens() / (float) sumHands()),
+              "0",   //TODO fix Pellicciosity
+              sumTime(),
+              df.format(100*(player.getTotalWins() / (float) player.getTotalPlays())) + "%",
+              df.format(100*(player.getTotalLost() / (float) player.getTotalPlays())) + "%"
       };
 
       LABEL_STRINGS = new String[] {
@@ -86,7 +93,13 @@ class PlayerUI extends JPanel {
               ui.getSettings().getResourceBundle().getString("totalLoss"),
               ui.getSettings().getResourceBundle().getString("pellAverage"),
               ui.getSettings().getResourceBundle().getString("cappAverage"),
-              ui.getSettings().getResourceBundle().getString("average")
+              ui.getSettings().getResourceBundle().getString("average"),
+              ui.getSettings().getResourceBundle().getString("pelliccionsPerHand"),
+              ui.getSettings().getResourceBundle().getString("cappottensPerHand"),
+              ui.getSettings().getResourceBundle().getString("pellicciosity"),
+              ui.getSettings().getResourceBundle().getString("playTime"),
+              ui.getSettings().getResourceBundle().getString("winrate"),
+              ui.getSettings().getResourceBundle().getString("lossrate")
       };
 
       EDITABLE = new String[] {
@@ -174,11 +187,19 @@ class PlayerUI extends JPanel {
                snm.setMaximum((Integer) insert.get(3).getValue() - (Integer) insert.get(4).getValue());
                insert.get(5).setModel(snm);
 
+               int sumHands = sumHands();
+
                labels.get(6).setText(LABEL_STRINGS[6] + insert.get(4).getValue());
                labels.get(7).setText(LABEL_STRINGS[7] + (insert.get(5).getValue()));
                labels.get(8).setText(LABEL_STRINGS[8] + df.format((Integer) insert.get(1).getValue() / (float) ((Integer) insert.get(3).getValue())));
                labels.get(9).setText(LABEL_STRINGS[9] + df.format((Integer) insert.get(2).getValue() / (float) ((Integer) insert.get(3).getValue())));
                labels.get(10).setText(LABEL_STRINGS[10] + df.format((Integer) insert.get(0).getValue() / (float) ((Integer) insert.get(3).getValue())));
+               labels.get(11).setText(LABEL_STRINGS[11] + df.format((Integer) insert.get(1).getValue() / (float) sumHands));
+               labels.get(12).setText(LABEL_STRINGS[12] + df.format((Integer) insert.get(2).getValue() / (float) sumHands));
+               labels.get(13).setText(LABEL_STRINGS[13] + /*df.format(0)*/ "NULL");   //TODO fix Pellicciosity
+               labels.get(14).setText(LABEL_STRINGS[14] + sumTime());
+               labels.get(15).setText(LABEL_STRINGS[15] + df.format(100*((Integer) insert.get(4).getValue() / (float) ((Integer) insert.get(3).getValue()))) + "%");
+               labels.get(16).setText(LABEL_STRINGS[16] + df.format(100*((Integer) insert.get(5).getValue() / (float) ((Integer) insert.get(3).getValue()))) + "%");
 
                validate();
 
@@ -194,7 +215,6 @@ class PlayerUI extends JPanel {
       JPanel labelList = new JPanel(new GridLayout(0, 1));
       JPanel editList = new JPanel(new GridLayout(0, 1));
 
-      table = new JTable(new ProgramTable(PlayerUI.this.ui, PlayerUI.this.ui.getUserData(usernameText)));
       JScrollPane scrollPane = new JScrollPane(table);
       scrollPane.setBorder(BorderFactory.createTitledBorder(PlayerUI.this.ui.getSettings().getResourceBundle().getString("matchList")));
 
@@ -230,6 +250,8 @@ class PlayerUI extends JPanel {
       ui.add(editList);
       ui.add(scrollPane);
 
+      repaintTable();
+
       return ui;
    }
 
@@ -243,6 +265,32 @@ class PlayerUI extends JPanel {
 
    ArrayList<JSpinner> getInsert() {
       return insert;
+   }
+
+   String sumTime() {
+      int i = 0;
+
+      if (table.getSelectedRow() != -1) {
+         for (int j = 0; j < table.getModel().getRowCount(); j++) {
+            System.out.println(((ProgramTable) table.getModel()).getTime(j));
+            i += ((ProgramTable) table.getModel()).getTime(j);
+         }
+      }
+
+      return (i/60) + "h " + (i - i/60) + "m";
+   }
+
+   int sumHands() {
+      int i = 0;
+
+      if (table.getModel().getRowCount() != -1) {
+         for (int j = 0; j < table.getModel().getRowCount(); j++) {
+            i += (Byte) table.getModel().getValueAt(j, 1);
+            // 1 = Hand, refers to ProgramTable
+         }
+      }
+
+      return i;
    }
 
    void repaintTable() {
