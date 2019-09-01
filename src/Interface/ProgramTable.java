@@ -13,11 +13,12 @@ public class ProgramTable extends AbstractTableModel {
     private UserController controller;
 
     ProgramTable(UserController controller, Game[] exec) {
-        this.controller = controller;   //TODO is this useful?
+        this.controller = controller;
 
         columns = new String[] {
                 controller.getSettings().getResourceBundle().getString("matchDate"),
                 controller.getSettings().getResourceBundle().getString("hands"),
+                controller.getSettings().getResourceBundle().getString("duration"),
                 controller.getSettings().getResourceBundle().getString("listPlayer")
         };
 
@@ -26,7 +27,8 @@ public class ProgramTable extends AbstractTableModel {
         for (Game p : exec) {
             data.add(new Object[] {
                     p.getDate(),
-                    p.getResults().size(),
+                    p.getHands(),
+                    setUpStringTime(p.getTime()),
                     p.getPlayers()
             });
         }
@@ -36,6 +38,7 @@ public class ProgramTable extends AbstractTableModel {
         data.add(new Object[] {
                 exec.getDate(),
                 exec.getHands(),
+                setUpStringTime(exec.getTime()),
                 exec.getPlayers()
         });
 
@@ -50,6 +53,7 @@ public class ProgramTable extends AbstractTableModel {
         data.set(index, new Object[] {
                 exec.getDate(),
                 exec.getHands(),
+                setUpStringTime(exec.getTime()),
                 exec.getPlayers()
         });
 
@@ -62,6 +66,13 @@ public class ProgramTable extends AbstractTableModel {
         }
 
         fireChanges();
+    }
+
+    String setUpStringTime(int time) {
+        int hours = time/60;
+        int mins = time - (hours*60);
+
+        return hours + "h " + mins + "m";
     }
 
     void fireChanges() {

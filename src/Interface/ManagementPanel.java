@@ -47,7 +47,7 @@ public class ManagementPanel extends JPanel implements PageList {
         @Override
         public void actionPerformed(ActionEvent e) {
           ui.getData().getPlayers().add(new Player(ui.getSettings().getResourceBundle().getString("newPlayer0"),
-                  ui.getSettings().getResourceBundle().getString("newPlayer1"), 0, 0, 0, 0, 0));
+                  ui.getSettings().getResourceBundle().getString("newPlayer1"), 0, 0, 0, 0, 0, 0));
           pUI.add(new PlayerUI(ui.getData().getPlayers().get(ui.getData().getPlayers().size()-1), ui));
           tabs.addTab(ui.getSettings().getResourceBundle().getString("newPlayer0"), pUI.get(pUI.size()-1).generatePanel());
 
@@ -147,7 +147,7 @@ public class ManagementPanel extends JPanel implements PageList {
       if (ui.getData().getPlayers().isEmpty()) {
         ui.getData().getPlayers().add(new Player(ui.getSettings().getResourceBundle().getString("newPlayer0"),
                 ui.getSettings().getResourceBundle().getString("newPlayer1"),
-                0, 0, 0, 0, 0));
+                0, 0, 0, 0, 0, 0));
         pUI.add(new PlayerUI(ui.getData().getPlayers().get(ui.getData().getPlayers().size()-1), ui));
         tabs.addTab(ui.getSettings().getResourceBundle().getString("newPlayer0"), pUI.get(pUI.size()-1).generatePanel());
       } else {
@@ -182,7 +182,8 @@ public class ManagementPanel extends JPanel implements PageList {
                 (Integer) (pUI.get(i).getInsert().get(1).getValue()),
                 (Integer) (pUI.get(i).getInsert().get(2).getValue()),
                 (Integer) (pUI.get(i).getInsert().get(3).getValue()),
-                (Integer) (pUI.get(i).getInsert().get(4).getValue())));
+                (Integer) (pUI.get(i).getInsert().get(4).getValue()),
+                (Integer) (pUI.get(i).getInsert().get(5).getValue())));
       }
     }
 
@@ -401,6 +402,11 @@ public class ManagementPanel extends JPanel implements PageList {
             DatePicker calendar = new DatePicker();
             JButton add = new JButton(ui.getSettings().getResourceBundle().getString("save"));
             JButton exit = new JButton(ui.getSettings().getResourceBundle().getString("goBack"));
+            JLabel hoursTxt = new JLabel(ui.getSettings().getResourceBundle().getString("hoursText"));
+            JSpinner hours = new JSpinner(new SpinnerNumberModel(0, 0, 24, 1));
+            JLabel minutesText = new JLabel(ui.getSettings().getResourceBundle().getString("minutesText"));
+            JSpinner minutes = new JSpinner(new SpinnerNumberModel(0, 0, 50, 10));
+            //TODO up to 60, new hour
             JDialog dialog = new JDialog(MatchDialog.this, true);
             dialog.setLayout(new GridLayout(0, 1));
 
@@ -447,7 +453,9 @@ public class ManagementPanel extends JPanel implements PageList {
                 getEditPanel().initialise();
 
                 if (!isGameSet) {
-                  tmp = new Game(list, calendar.getDate(), hands, true);
+                  tmp = new Game(list, calendar.getDate(), hands,
+                      ((60*(Integer) hours.getModel().getValue() + (Integer) minutes.getModel().getValue())),
+                      true);
 
                   ui.getData().getGame().add(tmp);
                   ui.getAbstractTable().addProgram(tmp);
@@ -469,6 +477,10 @@ public class ManagementPanel extends JPanel implements PageList {
             });
 
             dialog.add(calendar);
+            dialog.add(hoursTxt);
+            dialog.add(hours);
+            dialog.add(minutesText);
+            dialog.add(minutes);
             dialog.add(exit);
             dialog.add(add);
             dialog.setMinimumSize(new Dimension(160, 100));

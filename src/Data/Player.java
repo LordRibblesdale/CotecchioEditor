@@ -14,7 +14,7 @@ public class Player implements Serializable, Comparable<Player> {
    private int totalWins;
    private int totalLost = 0;
 
-   public Player(String name, String username, int score, int pelliccions, int cappottens, int totalPlays, int totalWins) {
+   public Player(String name, String username, int score, int pelliccions, int cappottens, int totalPlays, int totalWins, int totalLost) {
       this.name = name;
       this.username = username;
       this.score = score;
@@ -22,6 +22,7 @@ public class Player implements Serializable, Comparable<Player> {
       this.cappottens = cappottens;
       this.totalPlays = totalPlays;
       this.totalWins = totalWins;
+      this.totalLost = totalLost;
    }
 
    public int getCappottens() {

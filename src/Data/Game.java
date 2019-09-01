@@ -9,12 +9,14 @@ public class Game implements Serializable {
 
     private ArrayList<PlayerStateGame> results;
     private byte hands;
+    private int time;
     private LocalDate date;
     private boolean isEditable;
 
-    public Game(ArrayList<PlayerStateGame> results, LocalDate date, byte hands, boolean isEditable) {
+    public Game(ArrayList<PlayerStateGame> results, LocalDate date, byte hands, int time, boolean isEditable) {
         this.results = results;
         this.hands = hands;
+        this.time = time;
         this.date = date;
     }
 
@@ -48,6 +50,14 @@ public class Game implements Serializable {
 
     public void setHands(byte hands) {
         this.hands = hands;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
     }
 
     public String getPlayers() {
