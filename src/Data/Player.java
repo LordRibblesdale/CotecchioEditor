@@ -96,6 +96,6 @@ public class Player implements Serializable, Comparable<Player> {
 
    @Override
    public String toString() {
-      return this.getName() + " Media: " + (this.getScore() / (float) this.getTotalPlays());
+      return this.getName() + " - " + this.getUsername();
    }
 }

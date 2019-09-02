@@ -598,6 +598,10 @@ public class ManagementPanel extends JPanel implements PageList {
       add(scrollPane);
     }
 
+    void setModelTable(ProgramTable modelTable) {
+      this.modelTable = modelTable;
+    }
+
     ProgramTable getModelTable() {
       return modelTable;
     }

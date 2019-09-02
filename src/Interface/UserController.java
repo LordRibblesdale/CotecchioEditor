@@ -12,9 +12,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Date;
-import java.util.Objects;
 
 import static FileManager.Path.setPath;
 
@@ -140,40 +139,60 @@ public class UserController extends JFrame {
   }
 
   public void checkDifferentUsernames() {
-    ArrayList<String> usernames = new ArrayList<>();
-
-    for (Player p : data.getPlayers()) {
-      boolean isPresent = false;
+    if (data.getGame().size() != 0) {
+      ArrayList<String> usernames = new ArrayList<>();
 
       for (Game g : data.getGame()) {
-        if (g.getPlayers().contains(p.getUsername())) {
-          isPresent = true;
-          break;
-        }
-      }
+        for (PlayerStateGame ps : g.getResults()) {
+          boolean isPresent = false;
 
-      if (!isPresent) {
-        usernames.add(p.getUsername());
-      }
-    }
+          for (Player p : getPlayers()) {
+            if (ps.getUsername().equals(p.getUsername())) {
+              isPresent = true;
+            }
+          }
 
-    for (String s : usernames) {
-      Object o = JOptionPane.showInputDialog(
-          UserController.this,
-          getSettings().getResourceBundle().getString("fixNeededUsernameText"),
-          getSettings().getResourceBundle().getString("fixUsernameTitle"),
-          JOptionPane.INFORMATION_MESSAGE,
-          null,
-          getData().getPlayers().toArray(),
-          getData().getPlayers().toArray()[0]
-      );
+          if (!isPresent) {
+            usernames.add(ps.getUsername());
 
-      if (o != null) {
-        for (Game g : getData().getGame()) {
-          for (PlayerStateGame ps : g.getResults()) {
-            ps.setUsername(s);
+            System.out.println(ps.getUsername());
           }
         }
+      }
+
+      if (usernames.size() != 0) {
+        for (String s : usernames) {
+          Object o = JOptionPane.showInputDialog(
+              UserController.this,
+              getSettings().getResourceBundle().getString("fixNeededUsernameText") + " ("
+                  + s + ")",
+              getSettings().getResourceBundle().getString("fixUsernameTitle") + s,
+              JOptionPane.INFORMATION_MESSAGE,
+              null,
+              getData().getPlayers().toArray(),
+              getData().getPlayers().toArray()[0]
+          );
+
+
+          if (o != null) {
+            for (Game g : getData().getGame()) {
+              for (PlayerStateGame ps : g.getResults()) {
+                if (ps.getUsername().equals(s)) {
+                  System.out.println(ps.getUsername());
+                  ps.setUsername(((Player) o).getUsername());
+                  System.out.println(ps.getUsername());
+                }
+              }
+            }
+          }
+        }
+
+        if (mainPanel != null) {
+          mainPanel.getCalendarPanel().setModelTable(new ProgramTable(UserController.this, UserController.this.getData().getGame().toArray(new Game[0])));
+          mainPanel.getCalendarPanel().getTable().repaint();
+        }
+
+        setHasBeenSaved(false);
       }
     }
   }
