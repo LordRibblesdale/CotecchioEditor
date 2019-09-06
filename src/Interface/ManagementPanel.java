@@ -16,6 +16,8 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.io.*;
 import java.util.*;
 import java.util.List;
@@ -252,6 +254,17 @@ public class ManagementPanel extends JPanel implements PageList {
         private JComboBox<String> players;
         private ComboBoxToolTipRenderer toolTip;
         private JSpinner points, pelliccions, cappottens;
+        private FocusAdapter focusAdapter = new FocusAdapter() {
+          @Override
+          public void focusGained(FocusEvent e) {
+            super.focusGained(e);
+
+            if (((JFormattedTextField) e.getSource()).hasFocus()) {
+
+              SwingUtilities.invokeLater(() -> ((JFormattedTextField) e.getSource()).selectAll());
+            }
+          }
+        };
 
         SinglePanel(UserController ui) {
           super(new GridLayout(0, 2));
@@ -264,10 +277,13 @@ public class ManagementPanel extends JPanel implements PageList {
           add(new JSeparator());
           add(new JLabel(ui.getSettings().getResourceBundle().getString("pointsMatch")));
           add(points = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1)));
+          ((JSpinner.DefaultEditor) points.getEditor()).getTextField().addFocusListener(focusAdapter);
           add(new JLabel(ui.getSettings().getResourceBundle().getString("pelliccions")));
           add(pelliccions = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1)));
+          ((JSpinner.DefaultEditor) pelliccions.getEditor()).getTextField().addFocusListener(focusAdapter);
           add(new JLabel(ui.getSettings().getResourceBundle().getString("cappottens")));
           add(cappottens = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1)));
+          ((JSpinner.DefaultEditor) cappottens.getEditor()).getTextField().addFocusListener(focusAdapter);
         }
 
         SinglePanel(UserController ui, PlayerStateGame playerStateGame) {

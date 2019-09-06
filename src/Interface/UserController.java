@@ -38,6 +38,7 @@ public class UserController extends JFrame {
     super(PROGRAM_NAME + VERSION);
     setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("Data/cotecchio.png"))).getImage());
     setMinimumSize(new Dimension(650, 500));
+    setLayout(new BorderLayout());
 
     settings = new Settings();
 
@@ -138,7 +139,7 @@ public class UserController extends JFrame {
     validate();
   }
 
-  public void checkDifferentUsernames() {
+  void checkDifferentUsernames() {
     if (data.getGame().size() != 0) {
       ArrayList<String> usernames = new ArrayList<>();
 
@@ -189,7 +190,7 @@ public class UserController extends JFrame {
 
         if (mainPanel != null) {
           mainPanel.getCalendarPanel().setModelTable(new ProgramTable(UserController.this, UserController.this.getData().getGame().toArray(new Game[0])));
-          mainPanel.getCalendarPanel().getTable().repaint();
+          mainPanel.getCalendarPanel().getModelTable().fireChanges();
         }
 
         setHasBeenSaved(false);
@@ -230,7 +231,7 @@ public class UserController extends JFrame {
     return mainPanel.getEditPanel().getTabs();
   }
 
-  public ArrayList<PlayerUI> getPUI() {
+  ArrayList<PlayerUI> getPUI() {
     return mainPanel.getEditPanel().getpUI();
   }
 
@@ -238,7 +239,7 @@ public class UserController extends JFrame {
     return data;
   }
 
-  public Game[] getUserData(String username) {
+  Game[] getUserData(String username) {
     ArrayList<Game> tmp = new ArrayList<>();
 
     for (Game a : data.getGame()) {

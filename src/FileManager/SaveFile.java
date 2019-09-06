@@ -26,7 +26,7 @@ public class SaveFile extends AbstractAction implements Path {
       File file;
       String dir;
 
-      System.out.println(Path.path);
+      System.out.println(ui.getSettings().getOpenedFile());
 
       if (ui.getSettings().getOpenedFile().equals("")) {
          dir = Path.path;
