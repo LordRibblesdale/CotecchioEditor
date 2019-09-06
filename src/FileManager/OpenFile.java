@@ -28,7 +28,7 @@ public class OpenFile extends AbstractAction implements Path {
    @Override
    public void actionPerformed(ActionEvent e) {
       try {
-         if (ui.getSettings().getOpenedFile().equals("")) {
+         if (ui.getSettings().getOpenedFile().equals("") || !(new File(ui.getSettings().getOpenedFile()).exists())) {
             this.path = getFile();
          } else {
             int choice = JOptionPane.showConfirmDialog(ui, ui.getSettings().getResourceBundle().getString("openLastFile"),
