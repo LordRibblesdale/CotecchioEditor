@@ -117,7 +117,7 @@ public class UpdateRepo {
 
       ProgressRenderer bar = new ProgressRenderer();
 
-      Download update = new Download(new URL(json), jsonVersion);
+      Download update = new Download(new URL(json), jsonVersion, true);
 
       final float[] oldDownload = {0};
       final float[] newDownload = {0};

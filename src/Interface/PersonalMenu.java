@@ -8,6 +8,7 @@ import Export.PrintThread;
 import FileManager.*;
 import Game.GameStarter;
 import Game.OpenGameFile;
+import Update.DownloadDataButton;
 import Update.UpdateButton;
 
 import javax.swing.*;
@@ -28,7 +29,7 @@ public class PersonalMenu extends JMenuBar {
   private ExportXls exportXls;
   private ExportWordLeaderboard exportWord;
   private JCheckBoxMenuItem showList;
-  //priv
+  private DownloadDataButton downloadDataButton;
 
   private UserController ui;
 
@@ -44,6 +45,7 @@ public class PersonalMenu extends JMenuBar {
     file.add(saveAsButton = new SaveAsFile(this.ui));
     file.add(new JSeparator());
     file.add(export = new JMenu(this.ui.getSettings().getResourceBundle().getString("export")));
+    file.add(downloadDataButton = new DownloadDataButton(ui));
     //file.add(print = new PrintThread(this.ui));
     export.add(exportWord = new ExportWordLeaderboard(this.ui));
     //export.add(exportXls = new ExportXls(this.ui));

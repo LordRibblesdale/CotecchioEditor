@@ -1,5 +1,6 @@
 package Update;
 
+import FileManager.OpenFile;
 import Interface.UserController;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -47,7 +48,7 @@ public class DownloadData {
 
       ProgressRenderer bar = new ProgressRenderer();
 
-      Download update = new Download(new URL(json), jsonVersion);
+      Download update = new Download(new URL(json), jsonVersion, false);
 
       final float[] oldDownload = {0};
       final float[] newDownload = {0};
@@ -88,31 +89,44 @@ public class DownloadData {
                   t.stop();
                }
 
-               File downloaded = new File(update.getName());
-               String newRename = downloaded.getName().substring(0, downloaded.getName().length()-4);
-               downloaded.renameTo(new File(newRename)); //TODO Fix here
+               if (update.isExecutable()) {
+                  File downloaded = new File(update.getName());
+                  String newRename = downloaded.getName().substring(0, downloaded.getName().length()-4);
+                  downloaded.renameTo(new File(newRename)); //TODO Fix here
 
-               ArrayList<File> oldVersionFiles = new ArrayList<>(2);
-               oldVersionFiles.add(new File("settings.set"));
+                  ArrayList<File> oldVersionFiles = new ArrayList<>(2);
+                  oldVersionFiles.add(new File("settings.set"));
 
-               for (File file : oldVersionFiles) {
-                  try {
-                     Files.copy(file.toPath(), new FileOutputStream(file.getName() + ".old." + jsonVersion));
-                  } catch (IOException e1) {
-                     e1.printStackTrace();
+                  for (File file : oldVersionFiles) {
+                     try {
+                        Files.copy(file.toPath(), new FileOutputStream(file.getName() + ".old." + jsonVersion));
+                     } catch (IOException e1) {
+                        e1.printStackTrace();
+                     }
                   }
-               }
 
-               int c = JOptionPane.showConfirmDialog(ui, ui.getSettings().getResourceBundle().getString("updateRestart"),
-                       ui.getSettings().getResourceBundle().getString("updateDownloaded"),
-                       JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                  int c = JOptionPane.showConfirmDialog(ui, ui.getSettings().getResourceBundle().getString("updateRestart"),
+                      ui.getSettings().getResourceBundle().getString("updateDownloaded"),
+                      JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
-               if (c == JOptionPane.OK_OPTION) {
-                  try {
-                     Runtime.getRuntime().exec("java -jar " + newRename);
-                     System.exit(0);
-                  } catch (IOException e1) {
-                     e1.printStackTrace();
+                  if (c == JOptionPane.OK_OPTION) {
+                     try {
+                        Runtime.getRuntime().exec("java -jar " + newRename);
+                        System.exit(0);
+                     } catch (IOException e1) {
+                        e1.printStackTrace();
+                     }
+                  }
+               } else {
+                  if ((update.getName().substring(update.getName().lastIndexOf("."))).equals(".cda")) {
+                     int c = JOptionPane.showConfirmDialog(ui, ui.getSettings().getResourceBundle().getString("openDownloadedFile"),
+                         ui.getSettings().getResourceBundle().getString("downloadCompleted"),
+                         JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+
+                     if (c == JOptionPane.OK_OPTION) {
+                        ui.getSettings().setOpenedFile((new File(update.getName())).getPath());
+                        new OpenFile(ui);
+                     }
                   }
                }
             } else if (update.getStatus() == CANCELLED) {

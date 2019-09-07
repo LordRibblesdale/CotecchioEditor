@@ -15,10 +15,12 @@ public class Download implements Runnable, Status {
    private int size;
    private int downloaded;
    private int status;
+   private boolean isExecutable;
 
-   public Download(URL url, String version) {
+   public Download(URL url, String version, boolean isExecutable) {
       this.url = url;
       this.version = version;
+      this.isExecutable = isExecutable;
       name = null;
 
       size = -1;
@@ -34,6 +36,10 @@ public class Download implements Runnable, Status {
 
    public int getSize() {
       return size;
+   }
+
+   public boolean isExecutable() {
+      return isExecutable;
    }
 
    public int getStatus() {
@@ -77,11 +83,18 @@ public class Download implements Runnable, Status {
    }
 
    private String getFileName(URL url) {
-      String fileName = url.getFile();
-      fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
-      fileName += version + ".jar.tmp";
-      name = fileName;
-      return fileName;
+      if (isExecutable) {
+         String fileName = url.getFile();
+         fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+         fileName += version + ".jar.tmp";
+         name = fileName;
+         return fileName;
+      } else {
+         String fileName = url.getFile();
+         fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+         name = fileName;
+         return fileName;
+      }
    }
 
    @Override
@@ -95,10 +108,12 @@ public class Download implements Runnable, Status {
          connection.connect();
 
          if (connection.getResponseCode() / 100 != 2) {
+            System.out.println("sas1");
             error();
          }
 
          if (connection.getContentLength() < 1) {
+            System.out.println("sas2");
             error();
          }
 
