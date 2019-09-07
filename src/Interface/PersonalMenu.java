@@ -10,6 +10,7 @@ import Game.GameStarter;
 import Game.OpenGameFile;
 import Update.DownloadDataButton;
 import Update.UpdateButton;
+import Update.UploadButton;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
@@ -30,6 +31,7 @@ public class PersonalMenu extends JMenuBar {
   private ExportWordLeaderboard exportWord;
   private JCheckBoxMenuItem showList;
   private DownloadDataButton downloadDataButton;
+  private UploadButton uploadButton;
 
   private UserController ui;
 
@@ -46,6 +48,8 @@ public class PersonalMenu extends JMenuBar {
     file.add(new JSeparator());
     file.add(export = new JMenu(this.ui.getSettings().getResourceBundle().getString("export")));
     file.add(downloadDataButton = new DownloadDataButton(ui));
+    file.add(new JSeparator());
+    file.add(uploadButton = new UploadButton(ui));
     //file.add(print = new PrintThread(this.ui));
     export.add(exportWord = new ExportWordLeaderboard(this.ui));
     //export.add(exportXls = new ExportXls(this.ui));
@@ -57,6 +61,7 @@ public class PersonalMenu extends JMenuBar {
     saveAsButton.setEnabled(false);
     //exportXls.setEnabled(false);
     exportWord.setEnabled(false);
+    uploadButton.setEnabled(false);
 
     add(edit = new JMenu(this.ui.getSettings().getResourceBundle().getString("edit")));
     edit.add(search = new Search(this.ui));
@@ -159,5 +164,9 @@ public class PersonalMenu extends JMenuBar {
 
   JCheckBoxMenuItem getShowList() {
     return showList;
+  }
+
+  UploadButton getUploadButton() {
+    return uploadButton;
   }
 }

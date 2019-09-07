@@ -124,8 +124,16 @@ public class DownloadData {
                          JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
                      if (c == JOptionPane.OK_OPTION) {
-                        ui.getSettings().setOpenedFile((new File(update.getName())).getPath());
-                        new OpenFile(ui);
+                        if (ui.hasBeenSaved()) {
+                           ui.getSettings().setOpenedFile((new File(update.getName())).getPath());
+                           (new OpenFile(ui)).actionPerformed(new ActionEvent(ui, 0, ""));   //TODO Fix all actionPerformed
+                        } else {
+                           JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("playerListSaved")
+                               + " "
+                               + ui.getSettings().getOpenedFile()
+                               + ui.getSettings().getResourceBundle().getString("playerListSaved_uiNotSaved"));
+
+                        }
                      }
                   }
                }

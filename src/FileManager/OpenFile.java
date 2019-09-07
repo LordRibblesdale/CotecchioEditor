@@ -31,22 +31,27 @@ public class OpenFile extends AbstractAction implements Path {
          if (ui.getSettings().getOpenedFile().equals("") || !(new File(ui.getSettings().getOpenedFile()).exists())) {
             this.path = getFile();
          } else {
-            int choice = JOptionPane.showConfirmDialog(ui, ui.getSettings().getResourceBundle().getString("openLastFile"),
-                    ui.getSettings().getResourceBundle().getString("openRecent"), JOptionPane.YES_NO_CANCEL_OPTION,
-                    JOptionPane.INFORMATION_MESSAGE);
+            if (e.getID() != 0) {
+               int choice = JOptionPane.showConfirmDialog(ui, ui.getSettings().getResourceBundle().getString("openLastFile"),
+                   ui.getSettings().getResourceBundle().getString("openRecent"), JOptionPane.YES_NO_CANCEL_OPTION,
+                   JOptionPane.INFORMATION_MESSAGE);
 
-            switch (choice) {
-               case JOptionPane.YES_OPTION:
-                  this.path = ui.getSettings().getOpenedFile();
-                  System.out.println(this.path);
-                  break;
-               case JOptionPane.NO_OPTION:
-                  this.path = getFile();
-                  break;
-               case JOptionPane.CANCEL_OPTION:
-                  this.path = null;
-                  break;
+               switch (choice) {
+                  case JOptionPane.YES_OPTION:
+                     this.path = ui.getSettings().getOpenedFile();
+                     System.out.println(this.path);
+                     break;
+                  case JOptionPane.NO_OPTION:
+                     this.path = getFile();
+                     break;
+                  case JOptionPane.CANCEL_OPTION:
+                     this.path = null;
+                     break;
+               }
+            } else {
+               this.path = ui.getSettings().getOpenedFile();
             }
+
          }
 
          if (this.path != null) {

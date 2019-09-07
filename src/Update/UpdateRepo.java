@@ -140,12 +140,12 @@ public class UpdateRepo {
                   statusString = "ERROR";
             }
 
-            label.setText(ui.getSettings().getResourceBundle().getString("downloadStatus") + statusString);
+            label.setText(ui.getSettings().getResourceBundle().getString("downloadStatus") + " " +  statusString);
 
             newDownload[0] = ((float) update.getDownloaded() / 1000000);
-            size.setText((String.valueOf(newDownload[0]) + "MB"));
+            size.setText((newDownload[0] + "MB"));
 
-            speed.setText((String.valueOf((newDownload[0] - oldDownload[0])*1000 / 30) + "KB/s"));
+            speed.setText(((newDownload[0] - oldDownload[0]) * 1000 / 30 + "KB/s"));
             oldDownload[0] = newDownload[0];
 
             bar.setValue((int) update.getProgress());
@@ -162,6 +162,7 @@ public class UpdateRepo {
                String newRename = downloaded.getName().substring(0, downloaded.getName().length()-4);
                downloaded.renameTo(new File(newRename)); //TODO Fix here
 
+               /*
                ArrayList<File> oldVersionFiles = new ArrayList<>(2);
                oldVersionFiles.add(new File("settings.set"));
 
@@ -172,6 +173,14 @@ public class UpdateRepo {
                      e1.printStackTrace();
                   }
                }
+               */
+
+               try {
+                  Files.copy((new File("settings.set")).toPath(), new FileOutputStream((new File("settings.set")).getName() + ".old." + jsonVersion));
+               } catch (IOException e1) {
+                  e1.printStackTrace();
+               }
+
 
                int c = JOptionPane.showConfirmDialog(ui, ui.getSettings().getResourceBundle().getString("updateRestart"),
                        ui.getSettings().getResourceBundle().getString("updateDownloaded"),
