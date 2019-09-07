@@ -64,6 +64,7 @@ Build 7:
               Add Game List in each player (for won/lost plays and other stats)
               Add nickname check in Game List (while opening)
               Add % option for limited players leaderboard
+              Add DOC export
               Fix match adding and points distribution
               Fix Lost plays
               Fix Save location and Open methods
