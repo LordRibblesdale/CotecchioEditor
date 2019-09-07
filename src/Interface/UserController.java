@@ -207,9 +207,9 @@ public class UserController extends JFrame {
     menu.getExport().setEnabled(true);
     menu.getSaveAsButton().setEnabled(true);
     //menu.getPrint().setEnabled(true); //TODO HERE
-    menu.getStart().setEnabled(true);
-    menu.getOpenGame().setEnabled(true);
-    menu.getExportXls().setEnabled(true);
+    //menu.getStart().setEnabled(true);
+    //menu.getOpenGame().setEnabled(true);
+    //menu.getExportXls().setEnabled(true);
     menu.getExportWord().setEnabled(true);
 
     validate();

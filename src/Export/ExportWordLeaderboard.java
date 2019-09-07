@@ -46,7 +46,7 @@ public class ExportWordLeaderboard extends AbstractAction {
       }
    }
 
-   private ArrayList<Player> getWorthyPlayers() {
+   private Player[] getWorthyPlayers() {
       ArrayList<Player> tmp = new ArrayList<>();
       int max = 0;
 
@@ -57,17 +57,18 @@ public class ExportWordLeaderboard extends AbstractAction {
       }
 
       for (Player p : ui.getPlayers()) {
-         if (p.getTotalPlays() >= max*0.2) {
+         if (p.getTotalPlays() >= max*(float) ui.getSettings().getPercentage()/100) {
             tmp.add(p);
          }
       }
 
-      Arrays.sort(tmp.toArray(new Player[0]));
+      Player[] tmp2 = tmp.toArray(new Player[0]);
+      Arrays.sort(tmp2);
 
-      return tmp;
+      return tmp2;
    }
 
-   private void export(ArrayList<Player> topPlayers) {
+   private void export(Player[] topPlayers) {
       String path = getFile();
 
       if (path != null) {
@@ -90,8 +91,7 @@ public class ExportWordLeaderboard extends AbstractAction {
       int res = fileChooser.showSaveDialog(ui);
 
       if (res == JFileChooser.APPROVE_OPTION) {
-         System.out.println(fileChooser.getSelectedFile().getName().substring(fileChooser.getSelectedFile().getName().length()-4));
-         if (fileChooser.getSelectedFile().getName().substring(fileChooser.getSelectedFile().getName().length()-4).equals("docx")) {
+         if (fileChooser.getSelectedFile().getName().lastIndexOf(".") != -1) {
             return fileChooser.getSelectedFile().getPath();
          } else {
             return fileChooser.getSelectedFile().getPath() + ".docx";
@@ -103,7 +103,7 @@ public class ExportWordLeaderboard extends AbstractAction {
       return null;
    }
 
-   private void write(XWPFDocument paper, FileOutputStream out, ArrayList<Player> top) throws IOException{
+   private void write(XWPFDocument paper, FileOutputStream out, Player[] top) throws IOException{
       XWPFParagraph setup = paper.createParagraph();
       XWPFRun title = setup.createRun();
       title.setText("COTECCHIO 2019");
@@ -117,9 +117,18 @@ public class ExportWordLeaderboard extends AbstractAction {
          XWPFRun player = setup2.createRun();
          player.setFontSize(25);
          player.setColor("000000");
-         player.setText(p.getName().substring(0, p.getName().indexOf(" ")+1).toUpperCase()
-                 + p.getName().substring(p.getName().indexOf(" ")+1, p.getName().indexOf(" ")+2)
-                 + ".");
+
+         String name;
+
+         if (p.getName().lastIndexOf(" ") != -1) {
+           name = p.getName().substring(0, p.getName().indexOf(" ")+1).toUpperCase()
+               + p.getName().substring(p.getName().indexOf(" ")+1, p.getName().indexOf(" ")+2)
+               + ".";
+         } else {
+           name = p.getName();
+         }
+
+         player.setText(name);
          player.addTab();
          player.setText(new DecimalFormat().format((p.getScore() / (float) p.getTotalPlays())));
          player.addBreak();

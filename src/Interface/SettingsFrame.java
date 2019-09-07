@@ -14,10 +14,13 @@ import java.util.Objects;
 
 public class SettingsFrame extends JFrame {
     private final String text;
+    private final String text2;
     private final String[] locale = {"English", "Italiano"};
     private Timer autoSave;
     private JLabel timerInfo;
+    private JLabel percentageInfo;
     private JSlider delay;
+    private JSlider percentage;
     private JComboBox languages;
     private JCheckBox useLookAndFeel;
     private UserController ui;
@@ -27,6 +30,7 @@ public class SettingsFrame extends JFrame {
     public SettingsFrame(UserController ui) {
         super(ui.getSettings().getResourceBundle().getString("settings"));
         text = ui.getSettings().getResourceBundle().getString("autoSaveText");
+        text2 = ui.getSettings().getResourceBundle().getString("percentagePlays");
         setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("Data/cotecchio.png"))).getImage());
         this.ui = ui;
 
@@ -63,28 +67,60 @@ public class SettingsFrame extends JFrame {
             }
         });
 
-        constraints = new GridBagConstraints();
         constraints.insets = insets;
         constraints.gridx = 0;
         constraints.gridy = 2;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.gridwidth = 2;
+        add(percentageInfo = new JLabel(text2 + " " + ui.getSettings().getPercentage()), constraints);
+
+        constraints = new GridBagConstraints();
+        constraints.insets = insets;
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.gridwidth = 2;
+        add(percentage = new JSlider(JSlider.HORIZONTAL), constraints);
+        percentage.setMinimum(0);
+        percentage.setMaximum(100);
+        percentage.setPaintTicks(true);
+        percentage.setSnapToTicks(true);
+        percentage.setValue(ui.getSettings().getPercentage());
+        percentage.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int range = percentage.getMaximum() - percentage.getMinimum();
+                double valueAt = e.getPoint().x / (double) percentage.getWidth();
+                percentage.setValue((int) (percentage.getMinimum() + valueAt*range));
+                ui.getSettings().setPercentage(percentage.getValue());
+
+                validate();
+                saveSettings();
+            }
+        });
+
+        constraints = new GridBagConstraints();
+        constraints.insets = insets;
+        constraints.gridx = 0;
+        constraints.gridy = 4;
         add(new JLabel(ui.getSettings().getResourceBundle().getString("selectLanguage")), constraints);
 
         constraints = new GridBagConstraints();
         constraints.insets = insets;
         constraints.gridx = 1;
-        constraints.gridy = 2;
+        constraints.gridy = 4;
         add(languages = new JComboBox(locale), constraints);
 
         constraints = new GridBagConstraints();
         constraints.insets = insets;
         constraints.gridx = 0;
-        constraints.gridy = 3;
+        constraints.gridy = 5;
         add(new JLabel(ui.getSettings().getResourceBundle().getString("useLookAndFeel")), constraints);
 
         constraints = new GridBagConstraints();
         constraints.insets = insets;
         constraints.gridx = 1;
-        constraints.gridy = 3;
+        constraints.gridy = 5;
         add(useLookAndFeel = new JCheckBox(), constraints);
         useLookAndFeel.setSelected(ui.getSettings().isUsingLookAndFeel());
 
@@ -143,6 +179,14 @@ public class SettingsFrame extends JFrame {
             }
             ui.getSettings().setRefreshSaveRate(((JSlider) changeEvent.getSource()).getValue());
             timerInfo.setText(text + delay.getValue()/1000 + " " + ui.getSettings().getResourceBundle().getString("seconds"));
+
+            saveSettings();
+            validate();
+        });
+
+        percentage.addChangeListener(changeEvent -> {
+            ui.getSettings().setPercentage(((JSlider) changeEvent.getSource()).getValue());
+            percentageInfo.setText(text2 + percentage.getValue());
 
             saveSettings();
             validate();

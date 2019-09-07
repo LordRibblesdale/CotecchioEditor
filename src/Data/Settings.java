@@ -10,12 +10,13 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class Settings implements Serializable, Path {
-    private static long serialVersionUID = 550L;
+    private static long serialVersionUID = 710L;
 
     private int refreshSaveRate;
     private String openedFile;
     private String language;
     private String country;
+    private int percentage;
     private boolean useLookAndFeel;
     private transient ResourceBundle resourceBundle;
 
@@ -33,6 +34,7 @@ public class Settings implements Serializable, Path {
              useLookAndFeel = tmp.isUsingLookAndFeel();
              language = tmp.getLanguage();
              country = tmp.getCountry();
+             percentage = tmp.getPercentage();
              Locale locale = new Locale(language, country);
              resourceBundle = ResourceBundle.getBundle("MessagesBundle", locale);
           }
@@ -43,6 +45,7 @@ public class Settings implements Serializable, Path {
           openedFile = "";
           language = "it";
           country = "IT";
+          percentage = 20;
           useLookAndFeel = true;
           Locale locale = new Locale(language, country);
           resourceBundle = ResourceBundle.getBundle("MessagesBundle", locale);
@@ -104,5 +107,13 @@ public class Settings implements Serializable, Path {
 
    public void setResourceBundle(ResourceBundle resourceBundle) {
       this.resourceBundle = resourceBundle;
+   }
+
+   public int getPercentage() {
+      return percentage;
+   }
+
+   public void setPercentage(int percentage) {
+      this.percentage = percentage;
    }
 }
