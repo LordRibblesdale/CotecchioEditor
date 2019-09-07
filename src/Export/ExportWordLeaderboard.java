@@ -57,7 +57,7 @@ public class ExportWordLeaderboard extends AbstractAction {
       }
 
       for (Player p : ui.getPlayers()) {
-         if (p.getTotalPlays() > max*0.2) {
+         if (p.getTotalPlays() >= max*0.2) {
             tmp.add(p);
          }
       }

@@ -368,8 +368,8 @@ public class ManagementPanel extends JPanel implements PageList {
           }
         }
 
-        master.add(playersInGame = new JSpinner(new SpinnerNumberModel(MINIMUM,
-                game == null ? MINIMUM : players.size(),
+        master.add(playersInGame = new JSpinner(new SpinnerNumberModel(game == null ? MINIMUM : game.getResults().size(),
+                MINIMUM,
                 MAXIMUM,
                 1)));
 
@@ -421,56 +421,70 @@ public class ManagementPanel extends JPanel implements PageList {
             JLabel hoursTxt = new JLabel(ui.getSettings().getResourceBundle().getString("hoursText"));
             JSpinner hours = new JSpinner(new SpinnerNumberModel(0, 0, 24, 1));
             JLabel minutesText = new JLabel(ui.getSettings().getResourceBundle().getString("minutesText"));
-            JSpinner minutes = new JSpinner(new SpinnerNumberModel(0, 0, 50, 10));
-            //TODO up to 60, new hour
+            JSpinner minutes = new JSpinner(new SpinnerNumberModel(0, 0, 60, 5));
             JDialog dialog = new JDialog(MatchDialog.this, true);
             dialog.setLayout(new GridLayout(0, 1));
 
             calendar.setText(ui.getSettings().getResourceBundle().getString("selectDate"));
 
+            minutes.addChangeListener(new ChangeListener() {
+              @Override
+              public void stateChanged(ChangeEvent e) {
+                if ((Integer) ((JSpinner) e.getSource()).getValue() == 60) {
+                  if ((Integer) hours.getValue() + 1 < 24) {
+                    hours.setValue((Integer) hours.getValue() + 1);
+                  }
+
+                  minutes.setValue(0);
+
+                  validate();
+                }
+              }
+            });
+
             add.addActionListener(new ActionListener() {
               @Override
               public void actionPerformed(ActionEvent e) {
-                Game tmp;
-                ArrayList<PlayerStateGame> list = new ArrayList<>(players.size());
-                byte hands = 0;
+                if (!isGameSet) {
+                  Game tmp;
+                  ArrayList<PlayerStateGame> list = new ArrayList<>(players.size());
+                  byte hands = 0;
 
-                for (SinglePanel p : players) {
-                  list.add(new PlayerStateGame(p.getPlayer(), p.getPoints(), p.getPelliccions(), p.getCappottens()));
-                  hands += (p.getPelliccions() + p.getCappottens());
+                  for (SinglePanel p : players) {
+                    list.add(new PlayerStateGame(p.getPlayer(), p.getPoints(), p.getPelliccions(), p.getCappottens()));
+                    hands += (p.getPelliccions() + p.getCappottens());
 
-                  for (Player p2 : ui.getPlayers()) {
-                    if (p2.getUsername().equals(p.getPlayer())) {
-                      System.out.println(p2.getUsername());
+                    for (Player p2 : ui.getPlayers()) {
+                      if (p2.getUsername().equals(p.getPlayer())) {
+                        System.out.println(p2.getUsername());
 
-                      System.out.print("Da " + p2.getScore() + " a ");
-                      p2.setScore(p2.getScore() + p.getPoints());
-                      System.out.println(p2.getScore() + " (+" + p.getPoints());
+                        System.out.print("Da " + p2.getScore() + " a ");
+                        p2.setScore(p2.getScore() + p.getPoints());
+                        System.out.println(p2.getScore() + " (+" + p.getPoints());
 
-                      System.out.print("Da " + p2.getTotalPlays() + " a ");
-                      p2.setTotalPlays(p2.getTotalPlays() + 1);
-                      System.out.println(p2.getTotalPlays() + " (+1)");
+                        System.out.print("Da " + p2.getTotalPlays() + " a ");
+                        p2.setTotalPlays(p2.getTotalPlays() + 1);
+                        System.out.println(p2.getTotalPlays() + " (+1)");
 
-                      System.out.print("Da " + p2.getCappottens() + " a ");
-                      p2.setCappottens(p2.getCappottens() + p.getCappottens());
-                      System.out.println(p2.getCappottens() + " (+" + p.getCappottens());
+                        System.out.print("Da " + p2.getCappottens() + " a ");
+                        p2.setCappottens(p2.getCappottens() + p.getCappottens());
+                        System.out.println(p2.getCappottens() + " (+" + p.getCappottens());
 
-                      System.out.print("Da " + p2.getPelliccions() + " a ");
-                      p2.setPelliccions(p2.getPelliccions() + p.getPelliccions());
-                      System.out.println(p2.getPelliccions() + " (+" + p.getPelliccions());
+                        System.out.print("Da " + p2.getPelliccions() + " a ");
+                        p2.setPelliccions(p2.getPelliccions() + p.getPelliccions());
+                        System.out.println(p2.getPelliccions() + " (+" + p.getPelliccions());
 
-                      if (p.getPoints() == 10) {
-                        p2.setTotalWins(p2.getTotalWins() + 1);
-                      } else if (p.getPoints() == 0) {
-                        p2.setTotalLost(p2.getTotalLost() + 1);
+                        if (p.getPoints() == 10) {
+                          p2.setTotalWins(p2.getTotalWins() + 1);
+                        } else if (p.getPoints() == 0) {
+                          p2.setTotalLost(p2.getTotalLost() + 1);
+                        }
                       }
                     }
                   }
-                }
 
-                getEditPanel().initialise();
+                  getEditPanel().initialise();
 
-                if (!isGameSet) {
                   tmp = new Game(list, calendar.getDate(), hands,
                       ((60*(Integer) hours.getModel().getValue() + (Integer) minutes.getModel().getValue())),
                       true);
@@ -536,6 +550,7 @@ public class ManagementPanel extends JPanel implements PageList {
       bottomPanel.add(removeGame = new JButton(ui.getSettings().getResourceBundle().getString("removeGame")));
 
       table = new JTable(modelTable = new ProgramTable(ui, ui.getData().getGame().toArray(new Game[0])));
+      table.setAutoCreateRowSorter(true);
       scrollPane = new JScrollPane(table);
       scrollPane.setBorder(BorderFactory.createTitledBorder(ui.getSettings().getResourceBundle().getString("matchList")));
 
@@ -543,7 +558,7 @@ public class ManagementPanel extends JPanel implements PageList {
         @Override
         public void valueChanged(ListSelectionEvent e) {
           removeGame.setEnabled(true);
-          editGame.setEnabled(true);
+          //editGame.setEnabled(true);
         }
       });
 
