@@ -30,7 +30,7 @@ public class DownloadData {
    public DownloadData(UserController ui) {
       this.ui = ui;
 
-      String downloadUrl = "https://github.com/LordRibblesdale/CotecchioEditor/raw/master/settings.set";
+      String downloadUrl = "https://github.com/LordRibblesdale/CotecchioEditor/raw/master/Data.cda";
 
       try {
          downloadUpdate(downloadUrl, "");
@@ -74,9 +74,9 @@ public class DownloadData {
             label.setText(ui.getSettings().getResourceBundle().getString("downloadStatus") + statusString);
 
             newDownload[0] = ((float) update.getDownloaded() / 1000000);
-            size.setText((String.valueOf(newDownload[0]) + "MB"));
+            size.setText((newDownload[0] + "MB"));
 
-            speed.setText((String.valueOf((newDownload[0] - oldDownload[0])*1000 / 30) + "KB/s"));
+            speed.setText(((newDownload[0] - oldDownload[0]) * 1000 / 30 + "KB/s"));
             oldDownload[0] = newDownload[0];
 
             bar.setValue((int) update.getProgress());
