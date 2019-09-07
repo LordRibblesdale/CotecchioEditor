@@ -4,7 +4,7 @@ import javax.swing.filechooser.FileFilter;
 import java.io.File;
 
 public class BinFilter extends FileFilter {
-   private String ext = "cda";
+   static String ext = "cda";
 
    @Override
    public boolean accept(File f) {

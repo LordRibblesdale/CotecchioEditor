@@ -109,8 +109,7 @@ public class SettingsFrame extends JFrame {
         autoSave = new Timer(ui.getSettings().getRefreshSaveRate(), actionEvent -> {
            try {
              if ((new File(ui.getSettings().getOpenedFile())).exists()) {
-               new AutoSaveFile(ui.getSettings().getOpenedFile(), ui.getPlayers());
-               ui.setHasBeenSaved(true);
+               new AutoSaveFile(ui);
              } else {
                int choice = JOptionPane.showConfirmDialog(ui,
                        ui.getSettings().getResourceBundle().getString("askSaveChanges"),
@@ -126,10 +125,18 @@ public class SettingsFrame extends JFrame {
               ui.getStatus().setText(ui.getSettings().getResourceBundle().getString("errorAutoSaving")
                       + autoSave.getDelay()/1000
                       + " " + ui.getSettings().getResourceBundle().getString("seconds"));
+           } catch (ClassNotFoundException e) {
+             e.printStackTrace();
+             JOptionPane.showMessageDialog(ui,
+                 ui.getSettings().getResourceBundle().getString("errorReadingFile"),
+                 "Error Settings 00_AutoSaveFile" + e.getStackTrace()[0].getLineNumber(),
+                 JOptionPane.ERROR_MESSAGE);
+
            }
         });
 
         delay.addChangeListener(changeEvent -> {
+            System.out.println(((JSlider) changeEvent.getSource()).getValue());
             autoSave.setDelay(((JSlider) changeEvent.getSource()).getValue());
             if (!ui.hasBeenSaved()) {
                 autoSave.start();

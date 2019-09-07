@@ -28,14 +28,10 @@ public class SaveFile extends AbstractAction implements Path {
 
       System.out.println(ui.getSettings().getOpenedFile());
 
-      if (ui.getSettings().getOpenedFile().equals("")) {
+      if (ui.getSettings().getOpenedFile().equals("") || !(new File(ui.getSettings().getOpenedFile())).exists()) {
          dir = Path.path;
       } else {
          dir = ui.getSettings().getOpenedFile();
-
-         if (!(new File(dir)).exists()) {
-            dir = Path.path;
-         }
       }
 
       file = new File(dir);
@@ -66,12 +62,21 @@ public class SaveFile extends AbstractAction implements Path {
             int res = fileChooser.showSaveDialog(ui);
 
             if (res == JFileChooser.APPROVE_OPTION) {
-               saveThread(fileChooser.getSelectedFile().getPath());
+               dir = fileChooser.getSelectedFile().getPath();
+
+               if (dir.lastIndexOf(".") == -1) {
+                  dir += "." + BinFilter.ext;
+               }
+
+               saveThread(dir);
+
             } else if (res != JFileChooser.CANCEL_OPTION) {
                JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorSavingFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
             }
          }
       }
+
+      ui.getSettings().setOpenedFile(dir);
 
       if (e == null) {
          ui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -81,6 +86,7 @@ public class SaveFile extends AbstractAction implements Path {
    private void saveThread(String path) {
       CotecchioDataArray data = ui.getData();
       ui.setUpData();
+      data.setSaveNumber(data.getSaveNumber() +1);
 
       try {
          ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(path)));
