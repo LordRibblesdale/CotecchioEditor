@@ -51,7 +51,7 @@ public class ExportLeaderboard extends AbstractAction {
 
       for (Player p : players) {
          tmp.append(p);
-         tmp.append("\n");
+         tmp.append("; ");
       }
 
       return tmp.toString();

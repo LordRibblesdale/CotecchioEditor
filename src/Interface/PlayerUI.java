@@ -168,7 +168,7 @@ class PlayerUI extends JPanel {
                if ((Integer) insert.get(3).getValue() - (Integer) insert.get(5).getValue() < (Integer) insert.get(4).getValue()) {
                   snm.setValue((Integer) insert.get(3).getValue() - (Integer) insert.get(5).getValue());
                } else {
-                  snm.setValue(insert.get(4).getValue());   //TODO ??
+                  snm.setValue(insert.get(4).getValue());
                }
 
                snm.setMinimum(0);
@@ -180,7 +180,7 @@ class PlayerUI extends JPanel {
                if ((Integer) insert.get(3).getValue() - (Integer) insert.get(4).getValue() < (Integer) insert.get(5).getValue()) {
                   snm.setValue((Integer) insert.get(3).getValue() - (Integer) insert.get(4).getValue());
                } else {
-                  snm.setValue(insert.get(5).getValue());   //TODO ??
+                  snm.setValue(insert.get(5).getValue());
                }
 
                snm.setMinimum(0);
@@ -267,7 +267,7 @@ class PlayerUI extends JPanel {
       return insert;
    }
 
-   String sumTime() {
+   private String sumTime() {
       int i = 0;
 
       if (table.getSelectedRow() != -1) {
@@ -280,7 +280,7 @@ class PlayerUI extends JPanel {
       return (i/60) + "h " + (i - i/60) + "m";
    }
 
-   int sumHands() {
+   private int sumHands() {
       int i = 0;
 
       if (table.getModel().getRowCount() != -1) {

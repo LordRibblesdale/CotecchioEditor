@@ -68,3 +68,10 @@ Build 7:
               Fix match adding and points distribution
               Fix Lost plays
               Fix Save location and Open methods
+    Beta 1.1: Set up Data.cda upload system
+              Set up players alphabetical sorting while saving
+              Fix Match Dialog UI
+              Fix component remove
+              Fix UI bug (component duplicate)
+              Organise code
+    Beta 1.2:

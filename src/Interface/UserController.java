@@ -19,11 +19,12 @@ import static FileManager.Path.setPath;
 
 public class UserController extends JFrame {
   private static final String PROGRAM_NAME = "Cotecchio Editor - ";
-  private static final String VERSION = "Build 7 Beta 1.0";
-  private static final int RELEASE = 710;
+  private static final String VERSION = "Build 7 Beta 1.1";
+  private static final int RELEASE = 711;
   private ManagementPanel mainPanel;
   private PersonalMenu menu;
   private JLabel saveStatus;
+  private String page;
 
   private CotecchioDataArray data;
   private boolean hasBeenSaved = true;
@@ -37,7 +38,7 @@ public class UserController extends JFrame {
   public UserController() {
     super(PROGRAM_NAME + VERSION);
     setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("Data/cotecchio.png"))).getImage());
-    setMinimumSize(new Dimension(650, 500));
+    setMinimumSize(new Dimension(800, 600));
     setLayout(new BorderLayout());
 
     settings = new Settings();
@@ -108,10 +109,11 @@ public class UserController extends JFrame {
       settingsFrame.startTimer();
     }
 
-    validate();
+    revalidate();
+    repaint();
   }
 
-  public void prepareForInitialisation(CotecchioDataArray data) {
+  public void prepareForInitialisation(CotecchioDataArray data, boolean isFirstCreation) {
     if (data == null) {
       this.data = new CotecchioDataArray();
     } else {
@@ -120,8 +122,25 @@ public class UserController extends JFrame {
       checkDifferentUsernames();
     }
 
+    int mpIndex = 0;
+
     if (mainPanel != null) {
-      remove(mainPanel);
+      mpIndex = mainPanel.getEditPanel().getTabs().getSelectedIndex();
+
+      for (Component c : getContentPane().getComponents()) {
+        if (c == mainPanel) {
+          getContentPane().remove(c);
+        } else if (c == mainPanel.getBottomPanel()) {
+          getContentPane().remove(c);
+        }
+      }
+
+      getContentPane().revalidate();
+      getContentPane().repaint();
+    }
+
+    if (!isFirstCreation) {
+      page = PageList.SELECTION;
     }
 
     mainPanel = new ManagementPanel(this);
@@ -135,6 +154,11 @@ public class UserController extends JFrame {
 
     listPlayers.updateList();
     setHasBeenSaved(true);
+
+    if (!isFirstCreation) {
+      mainPanel.setNextPage(page);
+      mainPanel.getEditPanel().getTabs().setSelectedIndex(mpIndex);
+    }
 
     validate();
   }
@@ -155,8 +179,6 @@ public class UserController extends JFrame {
 
           if (!isPresent) {
             usernames.add(ps.getUsername());
-
-            System.out.println(ps.getUsername());
           }
         }
       }
@@ -179,9 +201,7 @@ public class UserController extends JFrame {
             for (Game g : getData().getGame()) {
               for (PlayerStateGame ps : g.getResults()) {
                 if (ps.getUsername().equals(s)) {
-                  System.out.println(ps.getUsername());
                   ps.setUsername(((Player) o).getUsername());
-                  System.out.println(ps.getUsername());
                 }
               }
             }
@@ -220,12 +240,16 @@ public class UserController extends JFrame {
     return mainPanel.getCalendarPanel().getTable();
   }
 
-  ProgramTable getAbstractTable() {
-    return mainPanel.getCalendarPanel().getModelTable();
+  EditPanel getEditPanel() {
+    return mainPanel.getEditPanel();
   }
 
-  public boolean isAlreadyActive() {
-    return mainPanel != null;
+  CalendarPanel getCalendarPanel() {
+    return mainPanel.getCalendarPanel();
+  }
+
+  ProgramTable getAbstractTable() {
+    return mainPanel.getCalendarPanel().getModelTable();
   }
 
   public JTabbedPane getTabs() {
@@ -333,5 +357,13 @@ public class UserController extends JFrame {
 
   int getRelease() {
     return RELEASE;
+  }
+
+  String getPage() {
+    return page;
+  }
+
+  void setPage(String page) {
+    this.page = page;
   }
 }

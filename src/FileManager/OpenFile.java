@@ -64,7 +64,7 @@ public class OpenFile extends AbstractAction implements Path {
                data = (CotecchioDataArray) tmp;
 
                ui.saveRecentFile(path);
-               ui.prepareForInitialisation(data);
+               ui.prepareForInitialisation(data, true);
             }
          }
       } catch (FileNotFoundException e3) {
@@ -79,7 +79,6 @@ public class OpenFile extends AbstractAction implements Path {
 
             DecompressibleInputStream in = new DecompressibleInputStream(new BufferedInputStream(new FileInputStream(this.path)));
 
-
             try {
                Object tmp = in.readObject();
                in.close();
@@ -88,7 +87,7 @@ public class OpenFile extends AbstractAction implements Path {
                   data = (CotecchioDataArray) tmp;
 
                   ui.saveRecentFile(this.path);
-                  ui.prepareForInitialisation(data);
+                  ui.prepareForInitialisation(data, true);
                   JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("conversionMessage"),
                       ui.getSettings().getResourceBundle().getString("conversionCompleted"), JOptionPane.WARNING_MESSAGE);
                   new SaveFile(ui).actionPerformed(e);

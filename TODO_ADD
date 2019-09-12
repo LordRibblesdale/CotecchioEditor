@@ -1,10 +1,5 @@
-Add Download manager (for Player.bin and newer updates)
 Add new push/pull for Player.bin using auth token or login -> new upload player system
 Add Update window to download jar updates
 Update UI for Game Simulation
-Add confirmation exit in MatchDialog
-
-IMPORTANT: "Se i giocatori presenti nella lista sono meno di 3, ma nei match sono presenti giocatori eliminati:
-            -> Quelle partite non potranno essere più eliminate"
 
  Toolkit.getDefaultToolkit().sync();

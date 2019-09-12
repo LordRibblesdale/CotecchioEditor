@@ -18,8 +18,8 @@ Il programma è compatibile con la maggior parte delle piattaforme che permetton
 
 I requisiti di sistema sono:
 - Windows XP Service Pack 3 o superiore
-- 128MB di memoria RAM aggiuntiva (512MB di memoria RAM o superiore)
-- 100MB di spazio minimo aggiuntivo su disco
+- 256MB di memoria RAM aggiuntiva (768MB di memoria RAM o superiore)
+- 150MB di spazio minimo aggiuntivo su disco
 
 # Release
 

@@ -96,6 +96,6 @@ public class Player implements Serializable, Comparable<Player> {
 
    @Override
    public String toString() {
-      return this.getName() + " - " + this.getUsername();
+      return this.getName() + " (" + this.getUsername() + ")";
    }
 }

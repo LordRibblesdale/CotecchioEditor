@@ -30,7 +30,7 @@ public class DownloadData {
    public DownloadData(UserController ui) {
       this.ui = ui;
 
-      String downloadUrl = "https://github.com/LordRibblesdale/CotecchioEditor/raw/master/Data.cda";
+      String downloadUrl = "https://github.com/LordRibblesdale/CotecchioEditor/raw/master/Data/Data.cda";
 
       try {
          downloadUpdate(downloadUrl, "");
