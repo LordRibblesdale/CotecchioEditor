@@ -72,7 +72,7 @@ public class SettingsFrame extends JFrame {
         constraints.gridy = 2;
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridwidth = 2;
-        add(percentageInfo = new JLabel(text2 + " " + ui.getSettings().getPercentage()), constraints);
+        add(percentageInfo = new JLabel(ui.getSettings().getPercentage() + text2), constraints);
 
         constraints = new GridBagConstraints();
         constraints.insets = insets;
@@ -186,7 +186,7 @@ public class SettingsFrame extends JFrame {
 
         percentage.addChangeListener(changeEvent -> {
             ui.getSettings().setPercentage(((JSlider) changeEvent.getSource()).getValue());
-            percentageInfo.setText(text2 + percentage.getValue());
+            percentageInfo.setText(percentage.getValue() + text2);
 
             saveSettings();
             validate();

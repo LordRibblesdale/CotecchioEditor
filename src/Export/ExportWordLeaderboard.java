@@ -77,6 +77,9 @@ public class ExportWordLeaderboard extends AbstractAction {
             FileOutputStream out = new FileOutputStream(new File(path));
 
             write(word, out, topPlayers);
+         } catch (FileNotFoundException e1) {
+            JOptionPane.showMessageDialog(ui, e1.getMessage(), "Exception in ExportWord", JOptionPane.ERROR_MESSAGE);
+            e1.printStackTrace();
          } catch (IOException e) {
             e.printStackTrace();
          }

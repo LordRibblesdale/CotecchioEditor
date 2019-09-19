@@ -171,7 +171,7 @@ class EditPanel extends JPanel {
     initialise();
   }
 
-  void setUpData() {
+  void setUpData(boolean isFirstCreation) {
     for (int i = 0; i < ui.getData().getPlayers().size(); i++) {
       ui.getData().getPlayers().set(i, new Player(pUI.get(i).getJTextName().getText(),
           pUI.get(i).getUsername().getText(),
@@ -184,7 +184,7 @@ class EditPanel extends JPanel {
     }
 
     ui.getPlayers().sort(Comparator.comparing(Player::getName));
-    ui.prepareForInitialisation(ui.getData(), false);
+    ui.prepareForInitialisation(ui.getData(), isFirstCreation);
   }
 
   void setData(CotecchioDataArray data) {

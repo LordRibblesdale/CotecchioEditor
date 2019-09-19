@@ -26,11 +26,11 @@ public class CalendarButton extends AbstractAction {
                     JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.YES_OPTION) {
                 new SaveFile(ui).actionPerformed(null);
-                ui.setUpData();
+                ui.setUpData(false);
                 ui.askForNextPage("CALENDAR");
             }
         } else {
-            ui.setUpData();
+            ui.setUpData(false);
             ui.askForNextPage("CALENDAR");
         }
     }

@@ -139,7 +139,7 @@ public class UserController extends JFrame {
       getContentPane().repaint();
     }
 
-    if (!isFirstCreation) {
+    if (isFirstCreation) {
       page = PageList.SELECTION;
     }
 
@@ -278,8 +278,8 @@ public class UserController extends JFrame {
     return tmp.toArray(new Game[0]);
   }
 
-  public void setUpData() {
-    mainPanel.getEditPanel().setUpData();
+  public void setUpData(boolean isFirstCreation) {
+    mainPanel.getEditPanel().setUpData(isFirstCreation);
   }
 
   public void setData(CotecchioDataArray data) {

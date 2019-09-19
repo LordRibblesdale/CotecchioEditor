@@ -18,7 +18,7 @@ public class AutoSaveFile {
 
         ObjectInputStream input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(ui.getSettings().getOpenedFile())));
         CotecchioDataArray tmp = (CotecchioDataArray) input.readObject();
-        ui.setUpData();
+        ui.setUpData(false);
 
         if (tmp.getSaveNumber() == data.getSaveNumber()) {
             saveMethod(ui, data);

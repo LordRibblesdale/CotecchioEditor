@@ -85,7 +85,7 @@ public class SaveFile extends AbstractAction implements Path {
 
    private void saveThread(String path) {
       CotecchioDataArray data = ui.getData();
-      ui.setUpData();
+      ui.setUpData(false);
       data.setSaveNumber(data.getSaveNumber() +1);
 
       try {
