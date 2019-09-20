@@ -19,8 +19,8 @@ import static FileManager.Path.setPath;
 
 public class UserController extends JFrame {
   private static final String PROGRAM_NAME = "Cotecchio Editor - ";
-  private static final String VERSION = "Build 7 Beta 1.1";
-  private static final int RELEASE = 711;
+  private static final String VERSION = "Build 7 Beta 2.0";
+  private static final int RELEASE = 720;
   private ManagementPanel mainPanel;
   private PersonalMenu menu;
   private JLabel saveStatus;
@@ -168,34 +168,41 @@ public class UserController extends JFrame {
       ArrayList<String> usernames = new ArrayList<>();
 
       for (Game g : data.getGame()) {
-        for (PlayerStateGame ps : g.getResults()) {
-          boolean isPresent = false;
+        if (!g.isSetByPass()) {
+          for (PlayerStateGame ps : g.getResults()) {
+            boolean isPresent = false;
 
-          for (Player p : getPlayers()) {
-            if (ps.getUsername().equals(p.getUsername())) {
-              isPresent = true;
+            for (Player p : getPlayers()) {
+              if (ps.getUsername().equals(p.getUsername())) {
+                isPresent = true;
+              }
             }
-          }
 
-          if (!isPresent) {
-            usernames.add(ps.getUsername());
+            if (!isPresent) {
+              usernames.add(ps.getUsername());
+            }
           }
         }
       }
 
       if (usernames.size() != 0) {
         for (String s : usernames) {
+          JEditorPane ep = new JEditorPane(
+              JEditorPane.getEditorKitClassNameForContentType("text/html"),
+              getSettings().getResourceBundle().getString("fixNeededUsernameText") + " (" + s + ")<br>"
+                    + getSettings().getResourceBundle().getString("fixNeededUsernameText2"));
+
+          ep.setEditable(false);
+
           Object o = JOptionPane.showInputDialog(
               UserController.this,
-              getSettings().getResourceBundle().getString("fixNeededUsernameText") + " ("
-                  + s + ")",
+              ep,
               getSettings().getResourceBundle().getString("fixUsernameTitle") + s,
               JOptionPane.INFORMATION_MESSAGE,
               null,
               getData().getPlayers().toArray(),
               getData().getPlayers().toArray()[0]
           );
-
 
           if (o != null) {
             for (Game g : getData().getGame()) {
@@ -204,6 +211,27 @@ public class UserController extends JFrame {
                   ps.setUsername(((Player) o).getUsername());
                 }
               }
+            }
+          } else {
+            ep.setText(getSettings().getResourceBundle().getString("setNonEditableGameText"));
+            int choice = JOptionPane.showConfirmDialog(
+                UserController.this,
+                ep,
+                getSettings().getResourceBundle().getString("fixUsernameTitle") + s,
+                JOptionPane.YES_NO_OPTION
+                );
+
+            switch (choice) {
+              case JOptionPane.YES_OPTION:
+                for (Game g : getData().getGame()) {
+                  g.setEditable(false);
+                }
+                break;
+              case JOptionPane.NO_OPTION:
+                for (Game g : getData().getGame()) {
+                  g.setByPass(true);
+                }
+                break;
             }
           }
         }
@@ -218,6 +246,10 @@ public class UserController extends JFrame {
     }
   }
 
+  int getGameIndex() {
+    return (Integer) getTable().getValueAt(getTable().getSelectedRow(), 0) -1;
+  }
+
   void askForNextPage(String next) {
     mainPanel.setNextPage(next);
   }
@@ -226,7 +258,7 @@ public class UserController extends JFrame {
     menu.getSearch().setEnabled(true);
     menu.getExport().setEnabled(true);
     menu.getSaveAsButton().setEnabled(true);
-    //menu.getPrint().setEnabled(true); //TODO HERE
+    //menu.getPrint().setEnabled(true);
     //menu.getStart().setEnabled(true);
     //menu.getOpenGame().setEnabled(true);
     //menu.getExportXls().setEnabled(true);

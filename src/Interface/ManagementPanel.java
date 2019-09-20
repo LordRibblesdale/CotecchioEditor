@@ -76,10 +76,6 @@ public class ManagementPanel extends JPanel implements PageList {
     primaryLayout.show(ManagementPanel.this.panel, next);
   }
 
-  public MainPagePanel getMain() {
-    return main;
-  }
-
   EditPanel getEditPanel() {
     return editPanel;
   }

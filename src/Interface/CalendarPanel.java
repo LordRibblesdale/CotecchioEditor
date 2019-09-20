@@ -33,6 +33,7 @@ class CalendarPanel extends JPanel {
     bottomPanel.add(removeGame = new JButton(ui.getSettings().getResourceBundle().getString("removeGame")));
 
     table = new JTable(modelTable = new ProgramTable(ui, ui.getData().getGame().toArray(new Game[0])));
+    table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
     table.setAutoCreateRowSorter(true);
     scrollPane = new JScrollPane(table);
     scrollPane.setBorder(BorderFactory.createTitledBorder(ui.getSettings().getResourceBundle().getString("matchList")));
@@ -40,8 +41,14 @@ class CalendarPanel extends JPanel {
     table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {
-        removeGame.setEnabled(true);
-        //editGame.setEnabled(true);
+        if (table.getSelectedRow() == -1) {
+          removeGame.setEnabled(false);
+          editGame.setEnabled(false);
+        } else {
+          removeGame.setEnabled(true);
+          editGame.setEnabled(true);
+        }
+
       }
     });
 
@@ -66,8 +73,9 @@ class CalendarPanel extends JPanel {
             ui.getSettings().getResourceBundle().getString("askDeletingGame"),
             ui.getSettings().getResourceBundle().getString("warning"),
             JOptionPane.YES_NO_OPTION);
+
         if (result == JOptionPane.YES_OPTION) {
-          for (PlayerStateGame p : ui.getData().getGame().get(table.getSelectedRow()).getResults()) {
+          for (PlayerStateGame p : ui.getData().getGame().get(ui.getGameIndex()).getResults()) {
             for (Player p1 : ui.getData().getPlayers()) {
               if (p.getUsername().equals(p1.getUsername())) {
                 p1.setScore(p1.getScore() - p.getPointsEndGame());
@@ -84,14 +92,13 @@ class CalendarPanel extends JPanel {
             }
           }
 
-          ui.getData().getGame().remove(table.getSelectedRow());
-          modelTable.removeProgram(table.getSelectedRow());
+          ui.getData().getGame().remove(ui.getGameIndex());
+          modelTable.removeProgram(ui.getGameIndex());
 
           ui.getEditPanel().initialise();
 
-          if (ui.getData().getGame().size() == 0) {
-            removeGame.setEnabled(false);
-          }
+          table.clearSelection();
+          removeGame.setEnabled(false);
 
           ui.setHasBeenSaved(false);
         }
@@ -101,7 +108,7 @@ class CalendarPanel extends JPanel {
     editGame.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-
+        new MatchDialog(ui, ui.getData().getGame().get(ui.getGameIndex()));
       }
     });
 

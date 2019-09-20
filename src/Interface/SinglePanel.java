@@ -1,5 +1,7 @@
 package Interface;
 
+import Data.Game;
+import Data.Player;
 import Data.PlayerStateGame;
 
 import javax.swing.*;
@@ -71,7 +73,13 @@ class SinglePanel extends JPanel {
     setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
   }
 
-  void setLayout() {
+  SinglePanel(UserController ui, PlayerStateGame game) {
+    this(ui);
+
+    setPoints(game);
+  }
+
+  private void setLayout() {
     constraints = new GridBagConstraints();
 
     constraints.gridx = 0;
@@ -106,6 +114,12 @@ class SinglePanel extends JPanel {
     constraints.gridx = 3;
     constraints.gridy = 1;
     add(cappottens = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1)), constraints);
+  }
+
+  private void setPoints(PlayerStateGame game) {
+
+
+
   }
 
   String getPlayer() {

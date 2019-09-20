@@ -165,10 +165,14 @@ class PlayerUI extends JPanel {
 
                SpinnerNumberModel snm = new SpinnerNumberModel();
 
-               if ((Integer) insert.get(3).getValue() - (Integer) insert.get(5).getValue() < (Integer) insert.get(4).getValue()) {
-                  snm.setValue((Integer) insert.get(3).getValue() - (Integer) insert.get(5).getValue());
+               if ((Integer) insert.get(3).getValue() - (Integer) insert.get(5).getValue() >= 0) {
+                  if ((Integer) insert.get(3).getValue() - (Integer) insert.get(5).getValue() < (Integer) insert.get(4).getValue()) {
+                     snm.setValue((Integer) insert.get(3).getValue() - (Integer) insert.get(5).getValue());
+                  } else {
+                     snm.setValue(insert.get(4).getValue());
+                  }
                } else {
-                  snm.setValue(insert.get(4).getValue());
+                  snm.setValue(0);
                }
 
                snm.setMinimum(0);
@@ -270,9 +274,8 @@ class PlayerUI extends JPanel {
    private String sumTime() {
       int i = 0;
 
-      if (table.getSelectedRow() != -1) {
+      if (table.getSelectedRow()-1 != -1) {
          for (int j = 0; j < table.getModel().getRowCount(); j++) {
-            System.out.println(((ProgramTable) table.getModel()).getTime(j));
             i += ((ProgramTable) table.getModel()).getTime(j);
          }
       }
@@ -285,12 +288,18 @@ class PlayerUI extends JPanel {
 
       if (table.getModel().getRowCount() != -1) {
          for (int j = 0; j < table.getModel().getRowCount(); j++) {
-            i += (Byte) table.getModel().getValueAt(j, 1);
-            // 1 = Hand, refers to ProgramTable
+            i += (Byte) table.getModel().getValueAt(j, 2);
+            // 2 = Hand, refers to ProgramTable
          }
       }
 
       return i;
+   }
+
+   void resetPoints() {
+      for (JSpinner s : insert) {
+         s.setValue(0);
+      }
    }
 
    void repaintTable() {

@@ -11,13 +11,16 @@ public class Game implements Serializable {
     private byte hands;
     private int time = 0;
     private LocalDate date;
-    private boolean isEditable;
+    private boolean isEditable = true;
+    private boolean setByPass = false;
 
-    public Game(ArrayList<PlayerStateGame> results, LocalDate date, byte hands, int time, boolean isEditable) {
+    public Game(ArrayList<PlayerStateGame> results, LocalDate date, byte hands, int time, boolean isEditable, boolean setByPass) {
         this.results = results;
         this.hands = hands;
         this.time = time;
         this.date = date;
+        this.isEditable = isEditable;
+        this.setByPass = setByPass;
     }
 
     public ArrayList<PlayerStateGame> getResults() {
@@ -58,6 +61,14 @@ public class Game implements Serializable {
 
     public void setTime(int time) {
         this.time = time;
+    }
+
+    public boolean isSetByPass() {
+        return setByPass;
+    }
+
+    public void setByPass(boolean setByPass) {
+        this.setByPass = setByPass;
     }
 
     public String getPlayers() {

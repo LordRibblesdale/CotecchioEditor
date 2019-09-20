@@ -9,6 +9,7 @@ import java.util.Arrays;
 public class ProgramTable extends AbstractTableModel {
     private String[] columns;
     private ArrayList<Object[]> data;
+    private int i = 0;
 
     private UserController controller;
 
@@ -16,6 +17,7 @@ public class ProgramTable extends AbstractTableModel {
         this.controller = controller;
 
         columns = new String[] {
+                "#",
                 controller.getSettings().getResourceBundle().getString("matchDate"),
                 controller.getSettings().getResourceBundle().getString("hands"),
                 controller.getSettings().getResourceBundle().getString("duration"),
@@ -26,6 +28,7 @@ public class ProgramTable extends AbstractTableModel {
 
         for (Game p : exec) {
             data.add(new Object[] {
+                    ++i,
                     p.getDate(),
                     p.getHands(),
                     setUpStringTime(p.getTime()),
@@ -36,6 +39,7 @@ public class ProgramTable extends AbstractTableModel {
 
     void addProgram(Game exec) {
         data.add(new Object[] {
+                ++i,
                 exec.getDate(),
                 exec.getHands(),
                 setUpStringTime(exec.getTime()),
@@ -43,10 +47,6 @@ public class ProgramTable extends AbstractTableModel {
         });
 
         fireChanges();
-    }
-
-    public ArrayList<Game> getProgram(int index) {
-        return new ArrayList<>(Arrays.asList((Game[]) data.get(index)));
     }
 
     public void editProgram(int index, Game exec) {
@@ -63,6 +63,7 @@ public class ProgramTable extends AbstractTableModel {
     public void removeProgram(int index) {
         if (!data.isEmpty() && index != -1) {
             data.remove(index);
+            i--;
         }
 
         fireChanges();
@@ -80,7 +81,7 @@ public class ProgramTable extends AbstractTableModel {
     }
 
     void fireChanges() {
-        fireTableDataChanged();
+        fireTableStructureChanged();
 
         for (int i = 0; i < controller.getPUI().size(); i++) {
             controller.getPUI().get(i).repaintTable();

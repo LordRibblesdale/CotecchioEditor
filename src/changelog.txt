@@ -74,4 +74,10 @@ Build 7:
               Fix component remove
               Fix UI bug (component duplicate)
               Organise code
-    Beta 1.2: Fix SetPage while saving & autosaving
+    Beta 2.0: Improve missing player cases in Calendar Panel
+              Add Edit Match
+              Add isEditable and setByPass in Game for better data management
+              Add Match Info Panel
+              Fix Reset Points
+              Fix Remove Match while sorting table
+              Fix SetPage while saving & autosaving

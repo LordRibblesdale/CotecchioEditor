@@ -111,9 +111,11 @@ class EditPanel extends JPanel {
             JOptionPane.INFORMATION_MESSAGE, null, sel, sel[0]);
 
         if (choice == sel[1]) {
-
+          ui.getPUI().get(ui.getTabs().getSelectedIndex()).resetPoints();
         } else if (choice == sel[2]) {
-
+          for (PlayerUI p : ui.getPUI()) {
+            p.resetPoints();
+          }
         }
       }
     });
