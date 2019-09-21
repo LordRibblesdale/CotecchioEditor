@@ -117,9 +117,18 @@ class SinglePanel extends JPanel {
   }
 
   private void setPoints(PlayerStateGame game) {
+    int i;
+    for (i = 0; i < players.getItemCount(); i++) {
+      if (players.getModel().getElementAt(i).equals(game.getUsername())) {
+        break;
+      }
+    }
 
+    players.getModel().setSelectedItem(players.getModel().getElementAt(i));
 
-
+    points.setValue(game.getPointsEndGame());
+    pelliccions.setValue(game.getPelliccionsTaken());
+    cappottens.setValue(game.getCappottensTaken());
   }
 
   String getPlayer() {

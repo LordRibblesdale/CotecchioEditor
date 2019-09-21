@@ -46,9 +46,27 @@ class CalendarPanel extends JPanel {
           editGame.setEnabled(false);
         } else {
           removeGame.setEnabled(true);
-          editGame.setEnabled(true);
-        }
 
+          boolean isEqual = true;
+          for (PlayerStateGame p : ui.getData().getGame().get(ui.getGameIndex()).getResults()) {
+            isEqual = false;
+            for (Player pl : ui.getPlayers()) {
+              if (p.getUsername().equals(pl.getUsername())) {
+                isEqual = true;
+              }
+            }
+
+            if (!isEqual) {
+              break;
+            }
+          }
+
+          if (!isEqual) {
+            editGame.setEnabled(false);
+          } else {
+            editGame.setEnabled(true);
+          }
+        }
       }
     });
 
@@ -95,9 +113,9 @@ class CalendarPanel extends JPanel {
           ui.getData().getGame().remove(ui.getGameIndex());
           modelTable.removeProgram(ui.getGameIndex());
 
-          ui.getEditPanel().initialise();
-
           table.clearSelection();
+          ui.setUpData(false);
+
           removeGame.setEnabled(false);
 
           ui.setHasBeenSaved(false);

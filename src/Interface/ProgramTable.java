@@ -49,7 +49,7 @@ public class ProgramTable extends AbstractTableModel {
         fireChanges();
     }
 
-    public void editProgram(int index, Game exec) {
+    void editProgram(int index, Game exec) {
         data.set(index, new Object[] {
                 exec.getDate(),
                 exec.getHands(),
@@ -60,7 +60,7 @@ public class ProgramTable extends AbstractTableModel {
         fireChanges();
     }
 
-    public void removeProgram(int index) {
+    void removeProgram(int index) {
         if (!data.isEmpty() && index != -1) {
             data.remove(index);
             i--;
@@ -69,11 +69,11 @@ public class ProgramTable extends AbstractTableModel {
         fireChanges();
     }
 
-    public int getTime(int index) {
+    int getTime(int index) {
         return controller.getData().getGame().get(index).getTime();
     }
 
-    String setUpStringTime(int time) {
+    private String setUpStringTime(int time) {
         int hours = time/60;
         int mins = time - (hours*60);
 

@@ -155,11 +155,10 @@ class MatchDialog extends JDialog {
             ui.getData().getGame().add(tmp);
             ui.getAbstractTable().addProgram(tmp);
 
-            MatchDialog.this.dispose();
-            if (ui.getTable().getSelectedRow() != -1) {
-              ui.getCalendarPanel().getRemoveGame().setEnabled(true);
-            }
+            ui.getTable().clearSelection();
             ui.setHasBeenSaved(false);
+
+            MatchDialog.this.dispose();
           }
         });
 
@@ -262,7 +261,7 @@ class MatchDialog extends JDialog {
         JLabel hoursTxt = new JLabel(ui.getSettings().getResourceBundle().getString("hoursText"));
         JSpinner hours = new JSpinner(new SpinnerNumberModel(game.getTime()/60, 0, 24, 1));
         JLabel minutesText = new JLabel(ui.getSettings().getResourceBundle().getString("minutesText"));
-        JSpinner minutes = new JSpinner(new SpinnerNumberModel(game.getTime() - game.getTime()/60, 0, 60, 5));
+        JSpinner minutes = new JSpinner(new SpinnerNumberModel(game.getTime() - (game.getTime()/60)*60, 0, 60, 5));
         JDialog dialog = new JDialog(MatchDialog.this, true);
         dialog.setLayout(new GridLayout(0, 1));
 
@@ -327,22 +326,19 @@ class MatchDialog extends JDialog {
               }
             }
 
-            ui.getEditPanel().initialise();
-
             tmp = new Game(list, calendar.getDate(), hands,
-                ((60*(Integer) hours.getModel().getValue() + (Integer) minutes.getModel().getValue())),
+                60*(Integer) hours.getModel().getValue() + (Integer) minutes.getModel().getValue(),
                 true, false);
-
 
             ui.getData().getGame().set(ui.getGameIndex(), tmp);
             ui.getAbstractTable().editProgram(ui.getGameIndex(), tmp);
 
-            MatchDialog.this.dispose();
-            if (ui.getTable().getSelectedRow() != -1) {
-              ui.getCalendarPanel().getRemoveGame().setEnabled(true);
-            }
-
+            ui.getTable().clearSelection();
+            ui.getCalendarPanel().getRemoveGame().setEnabled(false);
+            ui.setUpData(false);
             ui.setHasBeenSaved(false);
+
+            MatchDialog.this.dispose();
           }
         });
 
