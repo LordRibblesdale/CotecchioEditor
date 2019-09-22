@@ -8,8 +8,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class MatchInfoPanel extends JDialog {
+class MatchInfoPanel extends JDialog {
   MatchInfoPanel(UserController ui, Game game) {
+    super(ui);
+    String date = game.getDate() != null ? game.getDate().toString() : "?";
+    setTitle(ui.getSettings().getResourceBundle().getString("match") + date + " - " + game.toStringTime());
     setLayout(new BorderLayout());
 
     JPanel master = new JPanel();

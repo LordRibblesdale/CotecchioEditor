@@ -10,7 +10,7 @@ public class Game implements Serializable {
     private ArrayList<PlayerStateGame> results;
     private byte hands;
     private int time = 0;
-    private LocalDate date;
+    private LocalDate date = null;
     private boolean isEditable = true;
     private boolean setByPass = false;
 
@@ -61,6 +61,13 @@ public class Game implements Serializable {
 
     public void setTime(int time) {
         this.time = time;
+    }
+
+    public String toStringTime() {
+        int hours = time/60;
+        int mins = time - (hours*60);
+
+        return hours + "h " + mins + "m";
     }
 
     public boolean isSetByPass() {
