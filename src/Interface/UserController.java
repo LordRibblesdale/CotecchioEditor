@@ -187,16 +187,18 @@ public class UserController extends JFrame {
 
       if (usernames.size() != 0) {
         for (String s : usernames) {
-          JEditorPane ep = new JEditorPane(
-              JEditorPane.getEditorKitClassNameForContentType("text/html"),
-              getSettings().getResourceBundle().getString("fixNeededUsernameText") + " (" + s + ")<br>"
-                    + getSettings().getResourceBundle().getString("fixNeededUsernameText2"));
-
-          ep.setEditable(false);
+          StringBuilder string = new StringBuilder()
+              .append(getSettings().getResourceBundle().getString("fixNeededUsernameText"))
+              .append(" (")
+              .append(s)
+              .append(")")
+              .append("\n")
+              .append("\n")
+              .append(getSettings().getResourceBundle().getString("fixNeededUsernameText2"));
 
           Object o = JOptionPane.showInputDialog(
               UserController.this,
-              ep,
+              string.toString(),
               getSettings().getResourceBundle().getString("fixUsernameTitle") + s,
               JOptionPane.INFORMATION_MESSAGE,
               null,
@@ -213,10 +215,16 @@ public class UserController extends JFrame {
               }
             }
           } else {
-            ep.setText(getSettings().getResourceBundle().getString("setNonEditableGameText"));
+            string = new StringBuilder()
+                .append(getSettings().getResourceBundle().getString("setNonEditableGameText"))
+                .append("\n")
+                .append(getSettings().getResourceBundle().getString("setNonEditableGameText2"))
+                .append("\n")
+                .append(getSettings().getResourceBundle().getString("setNonEditableGameText3"));
+
             int choice = JOptionPane.showConfirmDialog(
                 UserController.this,
-                ep,
+                string,
                 getSettings().getResourceBundle().getString("fixUsernameTitle") + s,
                 JOptionPane.YES_NO_OPTION
                 );

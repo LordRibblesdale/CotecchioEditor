@@ -14,9 +14,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 class MatchDialog extends JDialog {
-  private GridBagLayout layout;
-  private GridBagConstraints constraints;
-
   private JPanel master;
   private JPanel bottom;
   private JButton back, save;
@@ -24,7 +21,6 @@ class MatchDialog extends JDialog {
   private ArrayList<SinglePanel> players;
 
   private final int WIDTH = 343;
-  private final int HEIGHT = 600;
 
   private final int MINIMUM = 3;
   private int MAXIMUM = 8;
@@ -213,7 +209,7 @@ class MatchDialog extends JDialog {
     master.add(p);
 
     for (int i = 0; i < currentIndex; i++) {
-      players.add(new SinglePanel(ui, game.getResults().get(i)));
+      players.add(new SinglePanel(ui, game.getResults().get(i), true));
       master.add(players.get(i));
     }
 
@@ -325,6 +321,8 @@ class MatchDialog extends JDialog {
                 }
               }
             }
+
+            ui.getEditPanel().initialise();
 
             tmp = new Game(list, calendar.getDate(), hands,
                 60*(Integer) hours.getModel().getValue() + (Integer) minutes.getModel().getValue(),

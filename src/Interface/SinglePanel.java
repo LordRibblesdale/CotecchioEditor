@@ -73,10 +73,14 @@ class SinglePanel extends JPanel {
     setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
   }
 
-  SinglePanel(UserController ui, PlayerStateGame game) {
+  SinglePanel(UserController ui, PlayerStateGame game, boolean isEditable) {
     this(ui);
 
     setPoints(game);
+
+    if (!isEditable) {
+      disableAll();
+    }
   }
 
   private void setLayout() {
@@ -129,6 +133,13 @@ class SinglePanel extends JPanel {
     points.setValue(game.getPointsEndGame());
     pelliccions.setValue(game.getPelliccionsTaken());
     cappottens.setValue(game.getCappottensTaken());
+  }
+
+  private void disableAll() {
+    players.setEnabled(false);
+    points.setEnabled(false);
+    pelliccions.setEnabled(false);
+    cappottens.setEnabled(false);
   }
 
   String getPlayer() {

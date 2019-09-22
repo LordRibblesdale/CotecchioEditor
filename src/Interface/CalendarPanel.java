@@ -10,9 +10,10 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 class CalendarPanel extends JPanel {
-
   private JButton addGame, removeGame, editGame;
   private JScrollPane scrollPane;
   private JTable table;
@@ -34,10 +35,12 @@ class CalendarPanel extends JPanel {
 
     table = new JTable(modelTable = new ProgramTable(ui, ui.getData().getGame().toArray(new Game[0])));
     table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     table.setAutoCreateRowSorter(true);
     scrollPane = new JScrollPane(table);
     scrollPane.setBorder(BorderFactory.createTitledBorder(ui.getSettings().getResourceBundle().getString("matchList")));
 
+    //TODO create new extended JTable class
     table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {
@@ -66,6 +69,17 @@ class CalendarPanel extends JPanel {
           } else {
             editGame.setEnabled(true);
           }
+        }
+      }
+    });
+
+    table.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        super.mouseClicked(e);
+
+        if (e.getClickCount() == 2) {
+          new MatchInfoPanel(ui, ui.getData().getGame().get(ui.getGameIndex()));
         }
       }
     });

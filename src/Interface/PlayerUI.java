@@ -8,6 +8,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -61,6 +63,18 @@ class PlayerUI extends JPanel {
       this.ui = ui;
       this.usernameText = player.getUsername();
       this.table = new JTable(new ProgramTable(PlayerUI.this.ui, PlayerUI.this.ui.getUserData(usernameText)));
+      table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+      this.table.addMouseListener(new MouseAdapter() {
+         @Override
+         public void mouseClicked(MouseEvent e) {
+            super.mouseClicked(e);
+
+            if (e.getClickCount() == 2) {
+               int index = (Integer) table.getModel().getValueAt(table.getSelectedRow(), 0)-1;
+               new MatchInfoPanel(ui, ui.getUserData(usernameText)[index]);
+            }
+         }
+      });
 
       String[] PLAYER_STRINGS = new String[]{
               player.getName(),
@@ -213,6 +227,7 @@ class PlayerUI extends JPanel {
       }
    }
 
+   /*
    JPanel generatePanel() {
       JPanel ui = new JPanel(new GridLayout(1, 3));
       JPanel tmp;
@@ -258,6 +273,59 @@ class PlayerUI extends JPanel {
 
       return ui;
    }
+    */
+
+   JSplitPane generatePanel() {
+      //JPanel ui = new JPanel(new GridLayout(1, 3));
+      JPanel tmp;
+      JPanel labelList = new JPanel(new GridLayout(0, 1));
+      JPanel editList = new JPanel(new GridLayout(0, 1));
+
+      JScrollPane scrollPane = new JScrollPane(table);
+      scrollPane.setBorder(BorderFactory.createTitledBorder(PlayerUI.this.ui.getSettings().getResourceBundle().getString("matchList")));
+
+      for (JLabel data : labels) {
+         labelList.add(data);
+      }
+
+      for (int i = 0; i < 2; i++) {
+         tmp = new JPanel();
+         tmp.add(new JLabel(EDITABLE[i]));
+
+         switch (i) {
+            case 0:
+               tmp.add(name);
+               break;
+            case 1:
+               tmp.add(username);
+               break;
+         }
+
+         editList.add(tmp);
+      }
+
+      for (int i = 0; i < EDITABLE.length-2; i++) {
+         tmp = new JPanel(new GridLayout(1, 2));
+         tmp.add(new JLabel(EDITABLE[i+2]));
+         tmp.add(insert.get(i));
+
+         editList.add(tmp);
+      }
+
+      JSplitPane data = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, labelList, editList);
+      JSplitPane pane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, data, scrollPane);
+
+      /*
+      ui.add(labelList);
+      ui.add(editList);
+      ui.add(scrollPane);
+       */
+
+      repaintTable();
+
+      return pane;
+   }
+
 
    JTextField getJTextName() {
       return name;

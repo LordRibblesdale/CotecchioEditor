@@ -79,5 +79,8 @@ Build 7:
               Add isEditable and setByPass in Game for better data management
               Add Match Info Panel
               Fix Reset Points
+              Fix JTextField length in EditPanel
+              Fix JTable selection (instead of multi selection)
               Fix Remove Match while sorting table
               Fix SetPage while saving & autosaving
+              Fix UpdateRepo text from Release body

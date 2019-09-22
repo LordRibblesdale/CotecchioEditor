@@ -118,7 +118,7 @@ public class ExportWordLeaderboard extends AbstractAction {
       XWPFParagraph setup2 = paper.createParagraph();
       for (Player p : top) {
          XWPFRun player = setup2.createRun();
-         player.setFontSize(25);
+         player.setFontSize(22);
          player.setColor("000000");
 
          String name;
@@ -132,6 +132,8 @@ public class ExportWordLeaderboard extends AbstractAction {
          }
 
          player.setText(name);
+         player.addTab();
+         player.addTab();
          player.addTab();
          player.setText(new DecimalFormat().format((p.getScore() / (float) p.getTotalPlays())));
          player.addBreak();

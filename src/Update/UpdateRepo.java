@@ -50,23 +50,36 @@ public class UpdateRepo {
 
          jsonBody = json;
          jsonBody = json.substring(jsonBody.indexOf("\"body\":\"") + 8);
-         jsonBody = jsonBody.substring(0, jsonBody.indexOf("\"") -8);
-         String replaceString = jsonBody.substring(jsonBody.indexOf("\\r\\n"), jsonBody.indexOf("\\r\\n")+4);
-         System.out.println(replaceString);
-         jsonBody = jsonBody.replaceAll(replaceString, "\n");
+         jsonBody = jsonBody.substring(0, jsonBody.indexOf("\"") -4);
+
+         ArrayList<String> replace = new ArrayList<>();
+
+         int index = -1;
+         while (jsonBody.contains("\\r\\n")) {
+            index = jsonBody.indexOf("\\r\\n");
+            replace.add(jsonBody.substring(0, index));
+            replace.add("\n");
+
+            jsonBody = jsonBody.substring(index+4);
+         }
 
          try {
             if (Integer.valueOf(jsonVersion) > current) {
                StringBuilder update = new StringBuilder()
-                       .append(ui.getSettings().getResourceBundle().getString("newUpdate"))
-                       .append("\n")
-                       .append(ui.getSettings().getResourceBundle().getString("newVersion"))
-                       .append(" ")
-                       .append(jsonVersion)
-                       .append("\n")
-                       .append(jsonBody)
-                       .append("\n")
-                       .append(ui.getSettings().getResourceBundle().getString("askDownloadUpdate"));
+                   .append(ui.getSettings().getResourceBundle().getString("newUpdate"))
+                   .append("\n")
+                   .append(ui.getSettings().getResourceBundle().getString("newVersion"))
+                   .append(" ")
+                   .append(jsonVersion)
+                   .append("\n");
+
+               for (String s : replace) {
+                  update.append(s);
+               }
+
+               update.append(jsonBody)
+                   .append("\n")
+                   .append(ui.getSettings().getResourceBundle().getString("askDownloadUpdate"));
 
                Object[] choice = {
                        ui.getSettings().getResourceBundle().getString("downloadNow"),

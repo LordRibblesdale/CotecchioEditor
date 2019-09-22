@@ -69,6 +69,10 @@ public class ProgramTable extends AbstractTableModel {
         fireChanges();
     }
 
+    public ArrayList<Game> getProgram(int index) {
+        return new ArrayList<>(Arrays.asList((Game[]) data.get(index)));
+    }
+
     int getTime(int index) {
         return controller.getData().getGame().get(index).getTime();
     }
