@@ -20,7 +20,7 @@ import static FileManager.Path.setPath;
 public class UserController extends JFrame {
   private static final String PROGRAM_NAME = "Cotecchio Editor - ";
   private static final String VERSION = "Build 7 Beta 2.0";
-  private static final int RELEASE = 720;
+  private static final int RELEASE = 620;
   private ManagementPanel mainPanel;
   private PersonalMenu menu;
   private JLabel saveStatus;
@@ -175,11 +175,22 @@ public class UserController extends JFrame {
             for (Player p : getPlayers()) {
               if (ps.getUsername().equals(p.getUsername())) {
                 isPresent = true;
+                break;
               }
             }
 
             if (!isPresent) {
-              usernames.add(ps.getUsername());
+              boolean isInArray = false;
+              for (String s : usernames) {
+                if (s.equals(ps.getUsername())) {
+                  isInArray = true;
+                  break;
+                }
+              }
+
+              if (!isInArray) {
+                usernames.add(ps.getUsername());
+              }
             }
           }
         }

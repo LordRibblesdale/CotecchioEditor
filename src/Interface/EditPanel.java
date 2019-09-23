@@ -73,8 +73,8 @@ class EditPanel extends JPanel {
             new SaveFile(ui).actionPerformed(null);
           } else if (choice[sel] == choice[1]) {
             tabs.remove(tabs.getSelectedIndex());
-            System.out.println(ui.getPlayers().get(tabs.getSelectedIndex()).getUsername());
             ui.getPlayers().remove(tabs.getSelectedIndex());
+            pUI.remove(tabs.getSelectedIndex());
 
             if (tabs.getTabCount() == 1) {
               removeTab.setEnabled(false);
@@ -82,8 +82,8 @@ class EditPanel extends JPanel {
           }
         } else {
           tabs.remove(tabs.getSelectedIndex());
-          System.out.println(ui.getPlayers().get(tabs.getSelectedIndex()).getUsername());
           ui.getPlayers().remove(tabs.getSelectedIndex());
+          pUI.remove(tabs.getSelectedIndex());
 
           if (tabs.getTabCount() == 1) {
             removeTab.setEnabled(false);
@@ -175,6 +175,7 @@ class EditPanel extends JPanel {
 
   void setUpData(boolean isFirstCreation) {
     for (int i = 0; i < ui.getData().getPlayers().size(); i++) {
+      System.out.println(ui.getData().getPlayers().get(i).getUsername());
       ui.getData().getPlayers().set(i, new Player(pUI.get(i).getJTextName().getText(),
           pUI.get(i).getUsername().getText(),
           (Integer) (pUI.get(i).getInsert().get(0).getValue()),

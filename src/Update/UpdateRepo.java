@@ -54,7 +54,7 @@ public class UpdateRepo {
 
          ArrayList<String> replace = new ArrayList<>();
 
-         int index = -1;
+         int index;
          while (jsonBody.contains("\\r\\n")) {
             index = jsonBody.indexOf("\\r\\n");
             replace.add(jsonBody.substring(0, index));

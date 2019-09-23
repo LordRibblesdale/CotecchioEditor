@@ -84,9 +84,9 @@ public class SaveFile extends AbstractAction implements Path {
    }
 
    private void saveThread(String path) {
-      CotecchioDataArray data = ui.getData();
       ui.setUpData(false);
-      data.setSaveNumber(data.getSaveNumber() +1);
+
+      CotecchioDataArray data = ui.getData();
 
       try {
          ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(path)));
@@ -96,6 +96,8 @@ public class SaveFile extends AbstractAction implements Path {
          JOptionPane.showMessageDialog(ui, e1.getMessage(), "Exception", JOptionPane.ERROR_MESSAGE);
          e1.printStackTrace();
       }
+
+      data.setSaveNumber(data.getSaveNumber() +1);
 
       ui.saveRecentFile(path);
       ui.setHasBeenSaved(true);
