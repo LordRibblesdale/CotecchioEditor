@@ -1,12 +1,11 @@
 package Interface;
 
-import Data.Game;
-import Data.Player;
 import Data.PlayerStateGame;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.List;
@@ -34,6 +33,7 @@ class SinglePanel extends JPanel {
   }
 
   private UserController ui;
+  private int index;
 
   private GridBagLayout layout;
   private GridBagConstraints constraints;
@@ -71,6 +71,14 @@ class SinglePanel extends JPanel {
     ((JSpinner.DefaultEditor) cappottens.getEditor()).getTextField().addFocusListener(focusAdapter);
 
     setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+  }
+
+  SinglePanel(UserController ui, int index) {
+    this(ui);
+
+    players.setSelectedIndex(index);
+    this.index = index;
+    //validate();
   }
 
   SinglePanel(UserController ui, PlayerStateGame game, boolean isEditable) {
@@ -121,14 +129,20 @@ class SinglePanel extends JPanel {
   }
 
   private void setPoints(PlayerStateGame game) {
-    int i;
-    for (i = 0; i < players.getItemCount(); i++) {
+    boolean isSet = false;
+    for (int i = 0; i < players.getItemCount(); i++) {
       if (players.getModel().getElementAt(i).equals(game.getUsername())) {
+        players.getModel().setSelectedItem(players.getModel().getElementAt(i));
+        isSet = true;
         break;
       }
     }
 
-    players.getModel().setSelectedItem(players.getModel().getElementAt(i));
+    if (!isSet) {
+      players.setModel(new DefaultComboBoxModel<>(new String[] {
+          game.getUsername()
+      }));
+    }
 
     points.setValue(game.getPointsEndGame());
     pelliccions.setValue(game.getPelliccionsTaken());
@@ -157,4 +171,14 @@ class SinglePanel extends JPanel {
   int getCappottens() {
     return (Integer) cappottens.getValue();
   }
+
+  void setListener(ActionListener l) {
+    players.addActionListener(l);
+  }
+
+  boolean isEqualUsername(String username) {
+    return username.equals(players.getModel().getSelectedItem());
+  }
+
+
 }

@@ -18,9 +18,22 @@ import java.util.Date;
 import static FileManager.Path.setPath;
 
 public class UserController extends JFrame {
+  /* TODO:
+  * Il problema principale del presente UserController è di gestire contemporaneamente sia JFrame sia richieste da
+  *   altre classi.
+  * In generale, sarà da correggere a tale problema creando una nuova classe che, unicamente lei, potrà gestire
+  *   sia richieste al JFrame sia richieste da altre classi senza integrare l'interfaccia.
+  * In questo modo sarà possibile aumentare la sicurezza dell'intero programma, facendo accedere solamente ai metodi
+  *   necessari, poiché al momento, accedendo a UserController, è possibile modificare una grande varietà di
+  *   impostazioni e dati.
+  * Lo stesso problema intercorre in tutte le altre classi, ove esistono metodi che richiamano l'oggetto stesso, e non
+  *   l'azione che deve eseguire.
+  */
+
+  private static final int BASE_RELEASE = 800;
   private static final String PROGRAM_NAME = "Cotecchio Editor - ";
-  private static final String VERSION = "Build 7 Beta 2.0";
-  private static final int RELEASE = 620;
+  private static final String VERSION = "Release Candidate 1";
+  private static final int RELEASE = BASE_RELEASE + 1;
   private ManagementPanel mainPanel;
   private PersonalMenu menu;
   private JLabel saveStatus;
@@ -100,6 +113,7 @@ public class UserController extends JFrame {
 
     if (hasBeenSaved) {
       menu.getSaveButton().setEnabled(false);
+      getListPlayers().updateList();
       setTitle(PROGRAM_NAME + VERSION);
       settingsFrame.stopTimer();
       saveStatus.setText("Saved @ " + new SimpleDateFormat("HH.mm.ss").format(new Date()));
@@ -168,7 +182,7 @@ public class UserController extends JFrame {
       ArrayList<String> usernames = new ArrayList<>();
 
       for (Game g : data.getGame()) {
-        if (!g.isSetByPass()) {
+        if (g.isEditable()) {
           for (PlayerStateGame ps : g.getResults()) {
             boolean isPresent = false;
 
@@ -226,31 +240,12 @@ public class UserController extends JFrame {
               }
             }
           } else {
-            string = new StringBuilder()
-                .append(getSettings().getResourceBundle().getString("setNonEditableGameText"))
-                .append("\n")
-                .append(getSettings().getResourceBundle().getString("setNonEditableGameText2"))
-                .append("\n")
-                .append(getSettings().getResourceBundle().getString("setNonEditableGameText3"));
-
-            int choice = JOptionPane.showConfirmDialog(
-                UserController.this,
-                string,
-                getSettings().getResourceBundle().getString("fixUsernameTitle") + s,
-                JOptionPane.YES_NO_OPTION
-                );
-
-            switch (choice) {
-              case JOptionPane.YES_OPTION:
-                for (Game g : getData().getGame()) {
+            for (Game g : getData().getGame()) {
+              for (PlayerStateGame ps : g.getResults()) {
+                if (ps.getUsername().equals(s)) {
                   g.setEditable(false);
                 }
-                break;
-              case JOptionPane.NO_OPTION:
-                for (Game g : getData().getGame()) {
-                  g.setByPass(true);
-                }
-                break;
+              }
             }
           }
         }
@@ -277,12 +272,9 @@ public class UserController extends JFrame {
     menu.getSearch().setEnabled(true);
     menu.getExport().setEnabled(true);
     menu.getSaveAsButton().setEnabled(true);
-    //menu.getPrint().setEnabled(true);
-    //menu.getStart().setEnabled(true);
-    //menu.getOpenGame().setEnabled(true);
-    //menu.getExportXls().setEnabled(true);
     menu.getExportWord().setEnabled(true);
-    //menu.getUploadButton().setEnabled(true);
+    menu.getResetButton().setEnabled(true);
+    menu.getShowList().setEnabled(true);
 
     validate();
   }
@@ -408,10 +400,6 @@ public class UserController extends JFrame {
 
   int getRelease() {
     return RELEASE;
-  }
-
-  String getPage() {
-    return page;
   }
 
   void setPage(String page) {

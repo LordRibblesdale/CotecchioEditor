@@ -1,7 +1,5 @@
 package Interface;
 
-import Export.ExportLeaderboard;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
@@ -36,7 +34,6 @@ class MainPagePanel extends JPanel {
       text.append(s.nextLine());
     }
 
-    return text.toString() +
-        (new ExportLeaderboard(ui)).generateList(ui.getPlayers());
+    return text.toString();
   }
 }

@@ -161,6 +161,7 @@ public class SettingsFrame extends JFrame {
               ui.getStatus().setText(ui.getSettings().getResourceBundle().getString("errorAutoSaving")
                       + autoSave.getDelay()/1000
                       + " " + ui.getSettings().getResourceBundle().getString("seconds"));
+              System.out.println("SettingsFrame160");
            } catch (ClassNotFoundException e) {
              e.printStackTrace();
              JOptionPane.showMessageDialog(ui,

@@ -69,6 +69,10 @@ public class ProgramTable extends AbstractTableModel {
         fireChanges();
     }
 
+    void removeAll() {
+        data.clear();
+    }
+
     public ArrayList<Game> getProgram(int index) {
         return new ArrayList<>(Arrays.asList((Game[]) data.get(index)));
     }

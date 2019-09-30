@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 
 public class UploadButton extends AbstractAction {
     private UserController ui;
-    private int version;
 
     public UploadButton(UserController ui) {
         this.ui = ui;
@@ -19,7 +18,11 @@ public class UploadButton extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        GitUpload git = new GitUpload(ui);
         ui.getStatus().setText(ui.getSettings().getResourceBundle().getString("uploadButtonText"));
-        new GitUpload(ui);
+
+        git.run();
+
+        while (git.getStatus() == 0);
     }
 }

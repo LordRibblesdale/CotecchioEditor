@@ -89,6 +89,7 @@ class EditPanel extends JPanel {
             removeTab.setEnabled(false);
           }
 
+          ui.getListPlayers().updateList();
           ui.setHasBeenSaved(false);
         }
 
@@ -175,7 +176,6 @@ class EditPanel extends JPanel {
 
   void setUpData(boolean isFirstCreation) {
     for (int i = 0; i < ui.getData().getPlayers().size(); i++) {
-      System.out.println(ui.getData().getPlayers().get(i).getUsername());
       ui.getData().getPlayers().set(i, new Player(pUI.get(i).getJTextName().getText(),
           pUI.get(i).getUsername().getText(),
           (Integer) (pUI.get(i).getInsert().get(0).getValue()),

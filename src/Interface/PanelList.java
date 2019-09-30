@@ -11,15 +11,17 @@ import java.util.Objects;
 
 public class PanelList extends JFrame {
    private UserController ui;
-   private JTabbedPane tab;
    private JScrollPane scrollPane;
    private JList<String> list;
    private ListSelectionListener l = new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {
-         if (tab != null) {
-            tab.setSelectedIndex(((JList<String>) e.getSource()).getSelectedIndex());
-            ui.getAbstractTable().fireTableDataChanged();
+         if (ui.getTabs() != null) {
+            if (((JList<String>) e.getSource()).getSelectedIndex() != -1) {
+               ui.getTabs().setSelectedIndex(((JList<String>) e.getSource()).getSelectedIndex());
+            } else {
+               ui.getTabs().setSelectedIndex(0);
+            }
          }
       }
    };
@@ -46,34 +48,24 @@ public class PanelList extends JFrame {
    }
 
    void updateList() {
-      if (tab == null) {
-         tab = ui.getTabs();
-      }
-
-      if (tab != null) {
-         if (scrollPane != null) {
-            remove(scrollPane);
-         }
-
+      if (ui.getTabs() != null) {
          ArrayList<String> strings = new ArrayList<>();
 
-         for (int i = 0; i < tab.getTabCount(); i++) {
-            strings.add(tab.getTitleAt(i));
+         for (int i = 0; i < ui.getPlayers().size(); i++) {
+            strings.add(ui.getPlayers().get(i).getName());
          }
 
-         String[] strings1 = new String[strings.size()];
+         if (scrollPane != null) {
+            list.setModel(new DefaultComboBoxModel<>(strings.toArray(new String[0])));
+         } else {
+            list = new JList<>(strings.toArray(new String[0]));
+            list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+            list.addListSelectionListener(l);
+            scrollPane = new JScrollPane(list);
+            scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-         for (int i = 0; i < strings1.length; i++) {
-            strings1[i] = strings.get(i);
+            add(scrollPane);
          }
-
-         list = new JList<>(strings1);
-         list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-         list.addListSelectionListener(l);
-         scrollPane = new JScrollPane(list);
-         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-
-         add(scrollPane);
 
          validate();
       }

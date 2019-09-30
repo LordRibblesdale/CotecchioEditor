@@ -24,8 +24,8 @@ public class ExportWordLeaderboard extends AbstractAction {
 
       putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("exportWord"));
       putValue(Action.SHORT_DESCRIPTION, ui.getSettings().getResourceBundle().getString("exportWord"));
-      putValue(Action.LARGE_ICON_KEY, new ImageIcon(ExportXls.class.getResource("AlignLeft24.gif")));
-      putValue(Action.SMALL_ICON, new ImageIcon(ExportXls.class.getResource("AlignLeft16.gif")));
+      putValue(Action.LARGE_ICON_KEY, new ImageIcon(ExportWordLeaderboard.class.getResource("AlignLeft24.gif")));
+      putValue(Action.SMALL_ICON, new ImageIcon(ExportWordLeaderboard.class.getResource("AlignLeft16.gif")));
    }
 
    @Override
@@ -124,17 +124,20 @@ public class ExportWordLeaderboard extends AbstractAction {
          String name;
 
          if (p.getName().lastIndexOf(" ") != -1) {
-           name = p.getName().substring(0, p.getName().indexOf(" ")+1).toUpperCase()
-               + p.getName().substring(p.getName().indexOf(" ")+1, p.getName().indexOf(" ")+2)
+           name = p.getName().substring(0, p.getName().indexOf(" ") +1).toUpperCase()
+               + p.getName().substring(p.getName().indexOf(" ") +1, p.getName().indexOf(" ") +2)
                + ".";
          } else {
-           name = p.getName();
+           name = p.getName().toUpperCase();
          }
 
          player.setText(name);
-         player.addTab();
-         player.addTab();
-         player.addTab();
+
+
+         for (int i = 0; i < (32-name.length())/4; i++) {
+            player.addTab();
+         }
+
          player.setText(new DecimalFormat().format((p.getScore() / (float) p.getTotalPlays())));
          player.addBreak();
       }

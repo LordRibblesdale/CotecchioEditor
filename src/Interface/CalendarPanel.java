@@ -14,7 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 class CalendarPanel extends JPanel {
-  private JButton addGame, removeGame, editGame;
+  private JButton addGame, removeGame, removeAll, editGame;
   private JScrollPane scrollPane;
   private JTable table;
   private ProgramTable modelTable;
@@ -32,6 +32,7 @@ class CalendarPanel extends JPanel {
     bottomPanel.add(addGame = new JButton(ui.getSettings().getResourceBundle().getString("addGame")));
     bottomPanel.add(editGame = new JButton(ui.getSettings().getResourceBundle().getString("editGame")));
     bottomPanel.add(removeGame = new JButton(ui.getSettings().getResourceBundle().getString("removeGame")));
+    bottomPanel.add(removeAll = new JButton(ui.getSettings().getResourceBundle().getString("removeAllGames")));
 
     table = new JTable(modelTable = new ProgramTable(ui, ui.getData().getGame().toArray(new Game[0])));
     table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -134,6 +135,21 @@ class CalendarPanel extends JPanel {
 
           ui.setHasBeenSaved(false);
         }
+      }
+    });
+
+    removeAll.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        ui.getData().getGame().clear();
+        modelTable.removeAll();
+
+        table.clearSelection();
+        ui.setUpData(false);
+
+        removeGame.setEnabled(false);
+
+        ui.setHasBeenSaved(false);
       }
     });
 

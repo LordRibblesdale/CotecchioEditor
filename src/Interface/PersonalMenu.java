@@ -1,10 +1,8 @@
 package Interface;
 
+import Data.Game;
 import Edit.Search;
-import Export.ExportLeaderboard;
 import Export.ExportWordLeaderboard;
-import Export.ExportXls;
-import Export.PrintThread;
 import FileManager.*;
 import Game.GameStarter;
 import Game.OpenGameFile;
@@ -13,27 +11,28 @@ import Update.UpdateButton;
 import Update.UploadButton;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 public class PersonalMenu extends JMenuBar {
+  private UserController ui;
+
   private JMenu file, edit, about, export, game;
 
   private SaveFile saveButton;
   private SaveAsFile saveAsButton;
   private Search search;
-  private PrintThread print;
   private GameStarter start;
   private OpenGameFile openGame;
   private NewFile newFile;
   private OpenFile openFile;
-  private ExportXls exportXls;
   private ExportWordLeaderboard exportWord;
   private JCheckBoxMenuItem showList;
   private DownloadDataButton downloadDataButton;
   private UploadButton uploadButton;
 
-  private UserController ui;
+  private AbstractAction reset;
 
   PersonalMenu(UserController ui) {
     super();
@@ -50,26 +49,34 @@ public class PersonalMenu extends JMenuBar {
     file.add(downloadDataButton = new DownloadDataButton(ui));
     file.add(new JSeparator());
     file.add(uploadButton = new UploadButton(ui));
-    //file.add(print = new PrintThread(this.ui));
     export.add(exportWord = new ExportWordLeaderboard(this.ui));
-    //export.add(exportXls = new ExportXls(this.ui));
-    //export.add(new ExportLeaderboard(this.ui));
 
     export.setEnabled(false);
-    //print.setEnabled(false);
     saveButton.setEnabled(false);
     saveAsButton.setEnabled(false);
-    //exportXls.setEnabled(false);
     exportWord.setEnabled(false);
-    uploadButton.setEnabled(false);
+    //uploadButton.setEnabled(false);
 
     add(edit = new JMenu(this.ui.getSettings().getResourceBundle().getString("edit")));
     edit.add(search = new Search(this.ui));
     edit.add(showList = new JCheckBoxMenuItem(this.ui.getSettings().getResourceBundle().getString("showPlayersList")));
     edit.add(new JSeparator());
+    edit.add(reset = new AbstractAction(ui.getSettings().getResourceBundle().getString("resetEditableGames")) {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        for (Game g : ui.getData().getGame()) {
+          g.setEditable(true);
+          ui.revalidate();
+          ui.setHasBeenSaved(false);
+        }
+      }
+    });
+
+    edit.add(new JSeparator());
     edit.add(new SettingsButton(this.ui));
 
     search.setEnabled(false);
+    reset.setEnabled(false);
 
     showList.addItemListener(new ItemListener() {
       @Override
@@ -91,6 +98,8 @@ public class PersonalMenu extends JMenuBar {
       }
     });
 
+    showList.setEnabled(false);
+
     add(game = new JMenu(this.ui.getSettings().getResourceBundle().getString("game")));
     game.add(start = new GameStarter(this.ui));
     game.add(openGame = new OpenGameFile(this.ui));
@@ -104,14 +113,6 @@ public class PersonalMenu extends JMenuBar {
 
   public JMenu getFile() {
     return file;
-  }
-
-  public JMenu getEdit() {
-    return edit;
-  }
-
-  public JMenu getAbout() {
-    return about;
   }
 
   public JMenu getExport() {
@@ -138,18 +139,6 @@ public class PersonalMenu extends JMenuBar {
     return search;
   }
 
-  PrintThread getPrint() {
-    return print;
-  }
-
-  GameStarter getStart() {
-    return start;
-  }
-
-  OpenGameFile getOpenGame() {
-    return openGame;
-  }
-
   NewFile getNewFile() {
     return newFile;
   }
@@ -158,15 +147,15 @@ public class PersonalMenu extends JMenuBar {
     return openFile;
   }
 
-  ExportXls getExportXls() {
-    return exportXls;
-  }
-
   JCheckBoxMenuItem getShowList() {
     return showList;
   }
 
   UploadButton getUploadButton() {
     return uploadButton;
+  }
+
+  AbstractAction getResetButton() {
+    return reset;
   }
 }

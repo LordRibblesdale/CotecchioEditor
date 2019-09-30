@@ -40,13 +40,9 @@ public class DownloadData {
    }
 
    private void downloadUpdate(String json, String jsonVersion) throws MalformedURLException {
-      JFrame status = new JFrame("Download");
-      JPanel panel = new JPanel(new GridLayout(0, 1));
-      JLabel label = new JLabel(ui.getSettings().getResourceBundle().getString("downloadStatus"));
-      JLabel size = new JLabel();
-      JLabel speed = new JLabel();
-
-      ProgressRenderer bar = new ProgressRenderer();
+      ProgressRenderer bar = new ProgressRenderer(ui,
+          json,
+          ui.getSettings().getResourceBundle().getString("downloadStatus"));
 
       Download update = new Download(new URL(json), jsonVersion, false);
 
@@ -57,7 +53,6 @@ public class DownloadData {
       t = new Timer(500, new ActionListener() {
          @Override
          public void actionPerformed(ActionEvent e) {
-            System.out.println(num[0]++);
             String statusString;
 
             switch (update.getStatus()) {
@@ -71,20 +66,17 @@ public class DownloadData {
                   statusString = "ERROR";
             }
 
-            label.setText(ui.getSettings().getResourceBundle().getString("downloadStatus") + statusString);
-
             newDownload[0] = ((float) update.getDownloaded() / 1000000);
-            size.setText((newDownload[0] + "MB"));
+            bar.setNote(statusString + " - " + ((newDownload[0] + "MB") + " - " + (((newDownload[0] - oldDownload[0]) * 1000 / 30 + "KB/s"))));
 
-            speed.setText(((newDownload[0] - oldDownload[0]) * 1000 / 30 + "KB/s"));
             oldDownload[0] = newDownload[0];
 
-            bar.setValue((int) update.getProgress());
-
-            status.validate();
+            bar.setProgress((int) update.getProgress());
 
             if (update.getStatus() == COMPLETED) {
-               status.dispose();
+               bar.close();
+               update.stop();
+
                if (t != null) {
                   t.stop();
                }
@@ -137,15 +129,21 @@ public class DownloadData {
                      }
                   }
                }
-            } else if (update.getStatus() == CANCELLED) {
+            } else if (update.getStatus() == CANCELLED || bar.isCanceled()) {
                if (t != null) {
                   t.stop();
+                  update.stop();
                }
 
                try {
                   System.out.println(update.getName());
+
+                  synchronized (DownloadData.this) {
+                    DownloadData.this.wait(1000);
+                  }
+
                   Files.delete((new File(update.getName())).toPath());
-               } catch (IOException e1) {
+               } catch (IOException | InterruptedException e1) {
                   e1.printStackTrace();
                }
             }
@@ -153,25 +151,5 @@ public class DownloadData {
       });
 
       t.start();
-
-      panel.add(label);
-      panel.add(size);
-      panel.add(speed);
-
-      status.addWindowListener(new WindowAdapter() {
-         @Override
-         public void windowClosing(WindowEvent e) {
-            status.dispose();
-            update.stop();
-         }
-      });
-
-      status.setSize(new Dimension(300, 300));
-      status.setResizable(false);
-      status.add(panel);
-      status.add(bar, BorderLayout.PAGE_END);
-
-      status.setLocationRelativeTo(ui);
-      status.setVisible(true);
    }
 }
