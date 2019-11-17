@@ -20,7 +20,7 @@ public class CalendarButton extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (!ui.hasBeenSaved()) {
-            int result = JOptionPane.showConfirmDialog(ui,
+            int result = JOptionPane.showConfirmDialog(ui.getFrame(),
                     ui.getSettings().getResourceBundle().getString("saveBeforeClosing"),
                     ui.getSettings().getResourceBundle().getString("exitConfirmation"),
                     JOptionPane.YES_NO_OPTION);

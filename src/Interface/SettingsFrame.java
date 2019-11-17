@@ -139,7 +139,7 @@ public class SettingsFrame extends JFrame {
           }
 
           ui.setSettings(ui.getSettings());
-          JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("restartToApply"));
+          JOptionPane.showMessageDialog(ui.getFrame(), ui.getSettings().getResourceBundle().getString("restartToApply"));
        });
 
         autoSave = new Timer(ui.getSettings().getRefreshSaveRate(), actionEvent -> {
@@ -147,7 +147,7 @@ public class SettingsFrame extends JFrame {
              if ((new File(ui.getSettings().getOpenedFile())).exists()) {
                new AutoSaveFile(ui);
              } else {
-               int choice = JOptionPane.showConfirmDialog(ui,
+               int choice = JOptionPane.showConfirmDialog(ui.getFrame(),
                        ui.getSettings().getResourceBundle().getString("askSaveChanges"),
                        ui.getSettings().getResourceBundle().getString("askSave"),
                        JOptionPane.YES_NO_OPTION);
@@ -164,7 +164,7 @@ public class SettingsFrame extends JFrame {
               System.out.println("SettingsFrame160");
            } catch (ClassNotFoundException e) {
              e.printStackTrace();
-             JOptionPane.showMessageDialog(ui,
+             JOptionPane.showMessageDialog(ui.getFrame(),
                  ui.getSettings().getResourceBundle().getString("errorReadingFile"),
                  "Error Settings 00_AutoSaveFile" + e.getStackTrace()[0].getLineNumber(),
                  JOptionPane.ERROR_MESSAGE);
@@ -208,7 +208,7 @@ public class SettingsFrame extends JFrame {
 
         setMinimumSize(new Dimension(300, 100));
         pack();
-        setLocationRelativeTo(ui);
+        setLocationRelativeTo(ui.getFrame());
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setVisible(false);
     }

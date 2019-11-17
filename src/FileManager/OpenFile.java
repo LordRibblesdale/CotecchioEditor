@@ -36,7 +36,7 @@ public class OpenFile extends AbstractAction implements Path {
       if (ui.hasBeenSaved()) {
          doAction(e);
       } else {
-         int selection = JOptionPane.showOptionDialog(ui, ui.getSettings().getResourceBundle().getString("askSaveChanges"),
+         int selection = JOptionPane.showOptionDialog(ui.getFrame(), ui.getSettings().getResourceBundle().getString("askSaveChanges"),
              ui.getSettings().getResourceBundle().getString("saveFile"),
              JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
              choice, choice[0]);
@@ -55,7 +55,7 @@ public class OpenFile extends AbstractAction implements Path {
             this.path = getFile();
          } else {
             if (e.getID() != 0) {
-               int choice = JOptionPane.showConfirmDialog(ui, ui.getSettings().getResourceBundle().getString("openLastFile"),
+               int choice = JOptionPane.showConfirmDialog(ui.getFrame(), ui.getSettings().getResourceBundle().getString("openLastFile"),
                    ui.getSettings().getResourceBundle().getString("openRecent"), JOptionPane.YES_NO_CANCEL_OPTION,
                    JOptionPane.INFORMATION_MESSAGE);
 
@@ -92,7 +92,7 @@ public class OpenFile extends AbstractAction implements Path {
          }
       } catch (FileNotFoundException e3) {
          JOptionPane.showMessageDialog(
-             ui,
+             ui.getFrame(),
              ui.getSettings().getResourceBundle().getString("errorInsertingNameFile"),
              "Error I/O",
              JOptionPane.ERROR_MESSAGE);
@@ -111,12 +111,12 @@ public class OpenFile extends AbstractAction implements Path {
 
                   ui.saveRecentFile(this.path);
                   ui.prepareForInitialisation(data, true);
-                  JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("conversionMessage"),
+                  JOptionPane.showMessageDialog(ui.getFrame(), ui.getSettings().getResourceBundle().getString("conversionMessage"),
                       ui.getSettings().getResourceBundle().getString("conversionCompleted"), JOptionPane.WARNING_MESSAGE);
                   new SaveFile(ui).actionPerformed(e);
                }
             } catch (StreamCorruptedException sce) {
-               JOptionPane.showMessageDialog(ui,
+               JOptionPane.showMessageDialog(ui.getFrame(),
                    ui.getSettings().getResourceBundle().getString("errorReadingFile"),
                    "Error I/O 03_IncompatibleFile" + sce.getStackTrace()[0].getLineNumber(),
                    JOptionPane.ERROR_MESSAGE);
@@ -124,14 +124,14 @@ public class OpenFile extends AbstractAction implements Path {
 
          } catch (IOException | ClassNotFoundException e2) {
             e2.printStackTrace();
-            JOptionPane.showMessageDialog(ui,
+            JOptionPane.showMessageDialog(ui.getFrame(),
                 ui.getSettings().getResourceBundle().getString("errorReadingFile"),
                 "Error I/O 01_OpenFile" + e2.getStackTrace()[0].getLineNumber(),
                 JOptionPane.ERROR_MESSAGE);
          }
       } catch (Exception e2) {
          JOptionPane.showMessageDialog(
-             ui,
+             ui.getFrame(),
              ui.getSettings().getResourceBundle().getString("errorReadingFile"),
              "Error I/O 02_OpenFile" + e2.getStackTrace()[0].getLineNumber(),
              JOptionPane.ERROR_MESSAGE);
@@ -145,12 +145,12 @@ public class OpenFile extends AbstractAction implements Path {
       fileChooser.setAcceptAllFileFilterUsed(false);
       fileChooser.addChoosableFileFilter(new BinFilter());
 
-      int res = fileChooser.showOpenDialog(ui);
+      int res = fileChooser.showOpenDialog(ui.getFrame());
 
       if (res == JFileChooser.APPROVE_OPTION) {
          return fileChooser.getSelectedFile().getPath();
       } else if (res != JFileChooser.CANCEL_OPTION) {
-         JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorLoadingFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(ui.getFrame(), ui.getSettings().getResourceBundle().getString("errorLoadingFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
       }
 
       return null;

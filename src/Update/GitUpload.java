@@ -28,7 +28,7 @@ public class GitUpload implements Runnable {
     worker = new SwingWorker<Void, Void>() {
       @Override
       protected Void doInBackground() throws Exception {
-         progressRenderer = new ProgressRenderer(ui,
+         progressRenderer = new ProgressRenderer(ui.getFrame(),
             ui.getSettings().getResourceBundle().getString("uploadingStatus"),
             ui.getSettings().getResourceBundle().getString("initialisation"));
 
@@ -45,7 +45,7 @@ public class GitUpload implements Runnable {
     worker.run();
     progressRenderer.setNote(ui.getSettings().getResourceBundle().getString("askingData"));
 
-    String input = JOptionPane.showInputDialog(ui,
+    String input = JOptionPane.showInputDialog(ui.getFrame(),
         ui.getSettings().getResourceBundle().getString("uploadText"),
         ui.getSettings().getResourceBundle().getString("uploadTitle"),
         JOptionPane.INFORMATION_MESSAGE);

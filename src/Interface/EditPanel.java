@@ -63,7 +63,7 @@ class EditPanel extends JPanel {
           Object[] choice = {ui.getSettings().getResourceBundle().getString("yes"),
               ui.getSettings().getResourceBundle().getString("no"),
               ui.getSettings().getResourceBundle().getString("goBack")};
-          int sel = JOptionPane.showOptionDialog(ui,
+          int sel = JOptionPane.showOptionDialog(ui.getFrame(),
               ui.getSettings().getResourceBundle().getString("notSavedTab"),
               ui.getSettings().getResourceBundle().getString("saveFile"),
               JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
@@ -106,7 +106,7 @@ class EditPanel extends JPanel {
             ui.getSettings().getResourceBundle().getString("allTabsButton")
         };
 
-        Object choice = JOptionPane.showInputDialog(ui,
+        Object choice = JOptionPane.showInputDialog(ui.getFrame(),
             ui.getSettings().getResourceBundle().getString("resetConfirm"),
             ui.getSettings().getResourceBundle().getString("resetTitle"),
             JOptionPane.INFORMATION_MESSAGE, null, sel, sel[0]);

@@ -23,7 +23,7 @@ public class AutoSaveFile {
         if (tmp.getSaveNumber() == data.getSaveNumber()) {
             saveMethod(ui, data, ui.getSettings().getOpenedFile());
         } else {
-            int sel = JOptionPane.showConfirmDialog(ui, ui.getSettings().getResourceBundle().getString("askOverwriteAuto"),
+            int sel = JOptionPane.showConfirmDialog(ui.getFrame(), ui.getSettings().getResourceBundle().getString("askOverwriteAuto"),
                 ui.getSettings().getResourceBundle().getString("overwrite"), JOptionPane.YES_NO_OPTION);
 
             if (sel == JOptionPane.YES_OPTION) {
@@ -44,7 +44,7 @@ public class AutoSaveFile {
             output.writeObject(data);
             output.close();
         } catch (IOException e1) {
-            JOptionPane.showMessageDialog(ui, e1.getMessage(), "Exception in AutoSave Class", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(ui.getFrame(), e1.getMessage(), "Exception in AutoSave Class", JOptionPane.ERROR_MESSAGE);
             e1.printStackTrace();
         }
 
@@ -60,7 +60,7 @@ public class AutoSaveFile {
         fileChooser.setAcceptAllFileFilterUsed(false);
         fileChooser.addChoosableFileFilter(new BinFilter());
 
-        int res = fileChooser.showSaveDialog(ui);
+        int res = fileChooser.showSaveDialog(ui.getFrame());
 
         if (res == JFileChooser.APPROVE_OPTION) {
             dir = fileChooser.getSelectedFile().getPath();

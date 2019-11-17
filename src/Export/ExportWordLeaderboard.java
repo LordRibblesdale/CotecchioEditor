@@ -31,7 +31,7 @@ public class ExportWordLeaderboard extends AbstractAction {
    @Override
    public void actionPerformed(ActionEvent e) {
       if (!ui.hasBeenSaved()) {
-         int result = JOptionPane.showConfirmDialog(ui,
+         int result = JOptionPane.showConfirmDialog(ui.getFrame(),
                  ui.getSettings().getResourceBundle().getString("saveBeforeClosing"),
                  ui.getSettings().getResourceBundle().getString("exitConfirmation"),
                  JOptionPane.YES_NO_OPTION);
@@ -78,7 +78,7 @@ public class ExportWordLeaderboard extends AbstractAction {
 
             write(word, out, topPlayers);
          } catch (FileNotFoundException e1) {
-            JOptionPane.showMessageDialog(ui, e1.getMessage(), "Exception in ExportWord", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(ui.getFrame(), e1.getMessage(), "Exception in ExportWord", JOptionPane.ERROR_MESSAGE);
             e1.printStackTrace();
          } catch (IOException e) {
             e.printStackTrace();
@@ -91,7 +91,7 @@ public class ExportWordLeaderboard extends AbstractAction {
       fileChooser.setAcceptAllFileFilterUsed(false);
       fileChooser.addChoosableFileFilter(new DocFilter());
 
-      int res = fileChooser.showSaveDialog(ui);
+      int res = fileChooser.showSaveDialog(ui.getFrame());
 
       if (res == JFileChooser.APPROVE_OPTION) {
          if (fileChooser.getSelectedFile().getName().lastIndexOf(".") != -1) {
@@ -100,7 +100,7 @@ public class ExportWordLeaderboard extends AbstractAction {
             return fileChooser.getSelectedFile().getPath() + ".docx";
          }
       } else {
-         JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("errorLoadingFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(ui.getFrame(), ui.getSettings().getResourceBundle().getString("errorLoadingFile"), "Error I/O", JOptionPane.ERROR_MESSAGE);
       }
 
       return null;

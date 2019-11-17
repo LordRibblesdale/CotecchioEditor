@@ -89,7 +89,7 @@ class CalendarPanel extends JPanel {
       @Override
       public void actionPerformed(ActionEvent e) {
         if (ui.getPlayers().size() < 3) {
-          JOptionPane.showMessageDialog(ui,
+          JOptionPane.showMessageDialog(ui.getFrame(),
               ui.getSettings().getResourceBundle().getString("notEnoughPlayersText"),
               ui.getSettings().getResourceBundle().getString("notEnoughPlayersTitle"),
               JOptionPane.ERROR_MESSAGE);
@@ -102,7 +102,7 @@ class CalendarPanel extends JPanel {
     removeGame.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        int result = JOptionPane.showConfirmDialog(ui,
+        int result = JOptionPane.showConfirmDialog(ui.getFrame(),
             ui.getSettings().getResourceBundle().getString("askDeletingGame"),
             ui.getSettings().getResourceBundle().getString("warning"),
             JOptionPane.YES_NO_OPTION);

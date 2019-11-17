@@ -40,8 +40,8 @@ public class PanelList extends JFrame {
          }
       });
 
-      setSize(new Dimension(ui.getWidth()/2, ui.getHeight()));
-      setLocation(ui.getX() - ui.getWidth()/2, ui.getY());
+      setSize(new Dimension(ui.getFrame().getWidth()/2, ui.getFrame().getHeight()));
+      setLocation(ui.getFrame().getX() - ui.getFrame().getWidth()/2, ui.getFrame().getY());
       setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
       setAlwaysOnTop(true);
       setVisible(false);

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 class MatchInfoPanel extends JDialog {
   MatchInfoPanel(UserController ui, Game game) {
-    super(ui);
+    super(ui.getFrame());
     String date = game.getDate() != null ? game.getDate().toString() : "?";
     setTitle(ui.getSettings().getResourceBundle().getString("match") + date + " - " + game.toStringTime());
     setLayout(new BorderLayout());
@@ -58,7 +58,7 @@ class MatchInfoPanel extends JDialog {
     */
     setResizable(false);
     pack();
-    setLocationRelativeTo(ui);
+    setLocationRelativeTo(ui.getFrame());
     setVisible(true);
   }
 }

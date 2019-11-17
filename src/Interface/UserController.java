@@ -17,7 +17,7 @@ import java.util.Date;
 
 import static FileManager.Path.setPath;
 
-public class UserController extends JFrame {
+public class UserController {
   /* TODO:
   * Il problema principale del presente UserController è di gestire contemporaneamente sia JFrame sia richieste da
   *   altre classi.
@@ -30,78 +30,33 @@ public class UserController extends JFrame {
   *   l'azione che deve eseguire.
   */
 
-  private static final int BASE_RELEASE = 800;
-  private static final String PROGRAM_NAME = "Cotecchio Editor - ";
-  private static final String VERSION = "Release Candidate 1";
-  private static final int RELEASE = BASE_RELEASE + 1;
-  private ManagementPanel mainPanel;
-  private PersonalMenu menu;
-  private JLabel saveStatus;
+  private MainFrame frame;
   private String page;
 
   private CotecchioDataArray data;
   private boolean hasBeenSaved = true;
 
-  private PersonalToolBar toolBar;
   private PanelList listPlayers = null;
 
   private Settings settings;
   private SettingsFrame settingsFrame;
 
-  public UserController() {
-    super(PROGRAM_NAME + VERSION);
-    setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("Data/cotecchio.png"))).getImage());
-    setMinimumSize(new Dimension(800, 600));
-    setLayout(new BorderLayout());
+  private static final String PROGRAM_NAME = "Cotecchio Editor - ";
+  private static final String VERSION = "Release Candidate 1";
+  private static final int BASE_RELEASE = 800;
+  private static final int RELEASE = BASE_RELEASE + 1;
 
+  public UserController() {
     settings = new Settings();
 
-    if (settings.isUsingLookAndFeel()) {
-      try {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-      } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-        JOptionPane.showMessageDialog(
-                UserController.this,
-                e.getMessage(),
-                "LookAndFeel UserController00 V:" + RELEASE + " " + e.getStackTrace()[0].getLineNumber(),
-                JOptionPane.ERROR_MESSAGE);
-      }
-    }
-
+    frame = new MainFrame(UserController.this, PROGRAM_NAME + VERSION, BASE_RELEASE, RELEASE);
     settingsFrame = new SettingsFrame(UserController.this);
 
-    menu = new PersonalMenu(this);
-    setJMenuBar(menu);
-
-    toolBar = new PersonalToolBar(SwingConstants.VERTICAL, this, menu);
-    add(toolBar, BorderLayout.LINE_END);
-
-    add(saveStatus = new JLabel(), BorderLayout.PAGE_END);
-
-    addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent e) {
-        if (!hasBeenSaved()) {
-          int result = JOptionPane.showConfirmDialog(UserController.this,
-                  getSettings().getResourceBundle().getString("saveBeforeClosing"),
-                  getSettings().getResourceBundle().getString("exitConfirmation"),
-                  JOptionPane.YES_NO_CANCEL_OPTION);
-          if (result == JOptionPane.YES_OPTION) {
-            new SaveFile(UserController.this).actionPerformed(null);
-          } else if (result == JOptionPane.CANCEL_OPTION) {
-            UserController.this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-          } else {
-            UserController.this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-          }
-        }
-      }
-    });
-
-    setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-    setLocationRelativeTo(null);
-    setVisible(true);
-
     new UpdateRepo(UserController.this, RELEASE);
+  }
+
+  public MainFrame getFrame() {
+    return frame;
   }
 
   public boolean hasBeenSaved() {
@@ -112,19 +67,19 @@ public class UserController extends JFrame {
     this.hasBeenSaved = hasBeenSaved;
 
     if (hasBeenSaved) {
-      menu.getSaveButton().setEnabled(false);
+      frame.getMenu().getSaveButton().setEnabled(false);
       getListPlayers().updateList();
-      setTitle(PROGRAM_NAME + VERSION);
+      frame.setTitle(PROGRAM_NAME + VERSION);
       settingsFrame.stopTimer();
-      saveStatus.setText("Saved @ " + new SimpleDateFormat("HH.mm.ss").format(new Date()));
+      frame.getSaveStatus().setText("Saved @ " + new SimpleDateFormat("HH.mm.ss").format(new Date()));
     } else {
-      menu.getSaveButton().setEnabled(true);
-      setTitle(PROGRAM_NAME + VERSION + " - *" + getSettings().getResourceBundle().getString("changesNotSaved"));
+      frame.getMenu().getSaveButton().setEnabled(true);
+      frame.setTitle(PROGRAM_NAME + VERSION + " - *" + getSettings().getResourceBundle().getString("changesNotSaved"));
       settingsFrame.startTimer();
     }
 
-    revalidate();
-    repaint();
+    frame.revalidate();
+    frame.repaint();
   }
 
   public void prepareForInitialisation(CotecchioDataArray data, boolean isFirstCreation) {
@@ -138,29 +93,29 @@ public class UserController extends JFrame {
 
     int mpIndex = 0;
 
-    if (mainPanel != null) {
-      mpIndex = mainPanel.getEditPanel().getTabs().getSelectedIndex();
+    if (frame.getMainPanel() != null) {
+      mpIndex = frame.getMainPanel().getEditPanel().getTabs().getSelectedIndex();
 
-      for (Component c : getContentPane().getComponents()) {
-        if (c == mainPanel) {
-          getContentPane().remove(c);
-        } else if (c == mainPanel.getBottomPanel()) {
-          getContentPane().remove(c);
+      for (Component c : frame.getContentPane().getComponents()) {
+        if (c == frame.getMainPanel()) {
+          frame.getContentPane().remove(c);
+        } else if (c == frame.getMainPanel().getBottomPanel()) {
+          frame.getContentPane().remove(c);
         }
       }
 
-      getContentPane().revalidate();
-      getContentPane().repaint();
+      frame.getContentPane().revalidate();
+      frame.getContentPane().repaint();
     }
 
     if (isFirstCreation) {
       page = PageList.SELECTION;
     }
 
-    mainPanel = new ManagementPanel(this);
-    add(mainPanel);
+    frame.setMainPanel(new ManagementPanel(this));
+    frame.add(frame.getMainPanel());
 
-    mainPanel.getEditPanel().askForInitialisation();
+    frame.getMainPanel().getEditPanel().askForInitialisation();
 
     if (listPlayers == null) {
       listPlayers = new PanelList(UserController.this);
@@ -170,11 +125,11 @@ public class UserController extends JFrame {
     setHasBeenSaved(true);
 
     if (!isFirstCreation) {
-      mainPanel.setNextPage(page);
-      mainPanel.getEditPanel().getTabs().setSelectedIndex(mpIndex);
+      frame.getMainPanel().setNextPage(page);
+      frame.getMainPanel().getEditPanel().getTabs().setSelectedIndex(mpIndex);
     }
 
-    validate();
+    frame.validate();
   }
 
   void checkDifferentUsernames() {
@@ -222,7 +177,7 @@ public class UserController extends JFrame {
               .append(getSettings().getResourceBundle().getString("fixNeededUsernameText2"));
 
           Object o = JOptionPane.showInputDialog(
-              UserController.this,
+              frame,
               string.toString(),
               getSettings().getResourceBundle().getString("fixUsernameTitle") + s,
               JOptionPane.INFORMATION_MESSAGE,
@@ -250,9 +205,9 @@ public class UserController extends JFrame {
           }
         }
 
-        if (mainPanel != null) {
-          mainPanel.getCalendarPanel().setModelTable(new ProgramTable(UserController.this, UserController.this.getData().getGame().toArray(new Game[0])));
-          mainPanel.getCalendarPanel().getModelTable().fireChanges();
+        if (frame.getMainPanel() != null) {
+          frame.getMainPanel().getCalendarPanel().setModelTable(new ProgramTable(UserController.this, UserController.this.getData().getGame().toArray(new Game[0])));
+          frame.getMainPanel().getCalendarPanel().getModelTable().fireChanges();
         }
 
         setHasBeenSaved(false);
@@ -265,42 +220,42 @@ public class UserController extends JFrame {
   }
 
   void askForNextPage(String next) {
-    mainPanel.setNextPage(next);
+    frame.getMainPanel().setNextPage(next);
   }
 
   void makeVisibleButtons() {
-    menu.getSearch().setEnabled(true);
-    menu.getExport().setEnabled(true);
-    menu.getSaveAsButton().setEnabled(true);
-    menu.getExportWord().setEnabled(true);
-    menu.getResetButton().setEnabled(true);
-    menu.getShowList().setEnabled(true);
+    frame.getMenu().getSearch().setEnabled(true);
+    frame.getMenu().getExport().setEnabled(true);
+    frame.getMenu().getSaveAsButton().setEnabled(true);
+    frame.getMenu().getExportWord().setEnabled(true);
+    frame.getMenu().getResetButton().setEnabled(true);
+    frame.getMenu().getShowList().setEnabled(true);
 
-    validate();
+    frame.validate();
   }
 
   JTable getTable() {
-    return mainPanel.getCalendarPanel().getTable();
+    return frame.getMainPanel().getCalendarPanel().getTable();
   }
 
   EditPanel getEditPanel() {
-    return mainPanel.getEditPanel();
+    return frame.getMainPanel().getEditPanel();
   }
 
   CalendarPanel getCalendarPanel() {
-    return mainPanel.getCalendarPanel();
+    return frame.getMainPanel().getCalendarPanel();
   }
 
   ProgramTable getAbstractTable() {
-    return mainPanel.getCalendarPanel().getModelTable();
+    return frame.getMainPanel().getCalendarPanel().getModelTable();
   }
 
   public JTabbedPane getTabs() {
-    return mainPanel.getEditPanel().getTabs();
+    return frame.getMainPanel().getEditPanel().getTabs();
   }
 
   ArrayList<PlayerUI> getPUI() {
-    return mainPanel.getEditPanel().getpUI();
+    return frame.getMainPanel().getEditPanel().getpUI();
   }
 
   public CotecchioDataArray getData() {
@@ -322,7 +277,7 @@ public class UserController extends JFrame {
   }
 
   public void setUpData(boolean isFirstCreation) {
-    mainPanel.getEditPanel().setUpData(isFirstCreation);
+    frame.getMainPanel().getEditPanel().setUpData(isFirstCreation);
   }
 
   public void setData(CotecchioDataArray data) {
@@ -334,19 +289,19 @@ public class UserController extends JFrame {
   }
 
   public void setPlayers(ArrayList<Player> players) {
-    mainPanel.getEditPanel().setPlayers(players);
+    frame.getMainPanel().getEditPanel().setPlayers(players);
   }
 
   public ArrayList<String> getUsernames() {
-    return mainPanel.getEditPanel().getUsernames();
+    return frame.getMainPanel().getEditPanel().getUsernames();
   }
 
   ArrayList<String> getNames() {
-    return mainPanel.getEditPanel().getNames();
+    return frame.getMainPanel().getEditPanel().getNames();
   }
 
   JCheckBoxMenuItem getShowList() {
-    return menu.getShowList();
+    return frame.getMenu().getShowList();
   }
 
   PanelList getListPlayers() {
@@ -354,7 +309,7 @@ public class UserController extends JFrame {
   }
 
   public JLabel getStatus() {
-    return saveStatus;
+    return frame.getSaveStatus();
   }
 
   public SettingsFrame getSettingsFrame() {
@@ -367,8 +322,8 @@ public class UserController extends JFrame {
 
   void setSettings(Settings settings) {
     this.settings = settings;
-    saveStatus.setText("Saved @ " + new SimpleDateFormat("HH.mm.ss").format(new Date()));
-    validate();
+    frame.getSaveStatus().setText("Saved @ " + new SimpleDateFormat("HH.mm.ss").format(new Date()));
+    frame.validate();
 
     try {
       ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(setPath)));
@@ -377,7 +332,7 @@ public class UserController extends JFrame {
     } catch (IOException e) {
       e.printStackTrace();
       JOptionPane.showMessageDialog(
-              UserController.this,
+              frame,
               e.getMessage(),
               "SaveSettings UserController01 V:" + RELEASE + " " + e.getStackTrace()[0].getLineNumber(),
               JOptionPane.ERROR_MESSAGE);

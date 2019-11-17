@@ -40,7 +40,7 @@ public class DownloadData {
    }
 
    private void downloadUpdate(String json, String jsonVersion) throws MalformedURLException {
-      ProgressRenderer bar = new ProgressRenderer(ui,
+      ProgressRenderer bar = new ProgressRenderer(ui.getFrame(),
           json,
           ui.getSettings().getResourceBundle().getString("downloadStatus"));
 
@@ -97,7 +97,7 @@ public class DownloadData {
                      }
                   }
 
-                  int c = JOptionPane.showConfirmDialog(ui, ui.getSettings().getResourceBundle().getString("updateRestart"),
+                  int c = JOptionPane.showConfirmDialog(ui.getFrame(), ui.getSettings().getResourceBundle().getString("updateRestart"),
                       ui.getSettings().getResourceBundle().getString("updateDownloaded"),
                       JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
@@ -111,7 +111,7 @@ public class DownloadData {
                   }
                } else {
                   if ((update.getName().substring(update.getName().lastIndexOf("."))).equals(".cda")) {
-                     int c = JOptionPane.showConfirmDialog(ui, ui.getSettings().getResourceBundle().getString("openDownloadedFile"),
+                     int c = JOptionPane.showConfirmDialog(ui.getFrame(), ui.getSettings().getResourceBundle().getString("openDownloadedFile"),
                          ui.getSettings().getResourceBundle().getString("downloadCompleted"),
                          JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
@@ -120,7 +120,7 @@ public class DownloadData {
                            ui.getSettings().setOpenedFile((new File(update.getName())).getPath());
                            (new OpenFile(ui)).actionPerformed(new ActionEvent(ui, 0, ""));   //TODO Fix all actionPerformed
                         } else {
-                           JOptionPane.showMessageDialog(ui, ui.getSettings().getResourceBundle().getString("playerListSaved")
+                           JOptionPane.showMessageDialog(ui.getFrame(), ui.getSettings().getResourceBundle().getString("playerListSaved")
                                + " "
                                + ui.getSettings().getOpenedFile()
                                + ui.getSettings().getResourceBundle().getString("playerListSaved_uiNotSaved"));

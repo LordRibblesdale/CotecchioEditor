@@ -4,8 +4,6 @@ import Data.Game;
 import Edit.Search;
 import Export.ExportWordLeaderboard;
 import FileManager.*;
-import Game.GameStarter;
-import Game.OpenGameFile;
 import Update.DownloadDataButton;
 import Update.UpdateButton;
 import Update.UploadButton;
@@ -23,8 +21,6 @@ public class PersonalMenu extends JMenuBar {
   private SaveFile saveButton;
   private SaveAsFile saveAsButton;
   private Search search;
-  private GameStarter start;
-  private OpenGameFile openGame;
   private NewFile newFile;
   private OpenFile openFile;
   private ExportWordLeaderboard exportWord;
@@ -66,7 +62,7 @@ public class PersonalMenu extends JMenuBar {
       public void actionPerformed(ActionEvent e) {
         for (Game g : ui.getData().getGame()) {
           g.setEditable(true);
-          ui.revalidate();
+          ui.getFrame().revalidate();
           ui.setHasBeenSaved(false);
         }
       }
@@ -101,10 +97,6 @@ public class PersonalMenu extends JMenuBar {
     showList.setEnabled(false);
 
     add(game = new JMenu(this.ui.getSettings().getResourceBundle().getString("game")));
-    game.add(start = new GameStarter(this.ui));
-    game.add(openGame = new OpenGameFile(this.ui));
-    openGame.setEnabled(false);
-    start.setEnabled(false);
 
     add(about = new JMenu(this.ui.getSettings().getResourceBundle().getString("about")));
     about.add(new UpdateButton(this.ui, this.ui.getRelease()));

@@ -170,7 +170,7 @@ class MatchDialog extends JDialog {
       dialog.add(add);
       dialog.setMinimumSize(new Dimension(160, 100));
       dialog.pack();
-      dialog.setLocationRelativeTo(ui);
+      dialog.setLocationRelativeTo(ui.getFrame());
       dialog.requestFocus();
       dialog.setVisible(true);
     }
@@ -189,7 +189,7 @@ class MatchDialog extends JDialog {
       }
 
       if (count > 1) {
-        JOptionPane.showMessageDialog(ui,
+        JOptionPane.showMessageDialog(ui.getFrame(),
             ui.getSettings().getResourceBundle().getString("errorSelectingPlayerText"),
             ui.getSettings().getResourceBundle().getString("errorSelectingPlayer"),
             JOptionPane.ERROR_MESSAGE,
@@ -208,7 +208,7 @@ class MatchDialog extends JDialog {
   };
 
   MatchDialog(UserController ui, Game game) {
-    super(ui, ui.getSettings().getResourceBundle().getString("addGame"), true);
+    super(ui.getFrame(), ui.getSettings().getResourceBundle().getString("addGame"), true);
     this.ui = ui;
     setLayout(new BorderLayout());
 
@@ -284,7 +284,7 @@ class MatchDialog extends JDialog {
     setMinimumSize(new Dimension(WIDTH, 200));
     setResizable(false);
     pack();
-    setLocationRelativeTo(ui);
+    setLocationRelativeTo(ui.getFrame());
     setVisible(true);
   }
 

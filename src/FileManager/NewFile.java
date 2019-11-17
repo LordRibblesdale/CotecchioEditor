@@ -28,7 +28,7 @@ public class NewFile extends AbstractAction {
       if (ui.hasBeenSaved()) {
          ui.prepareForInitialisation(null, true);
       } else {
-         int selection = JOptionPane.showOptionDialog(ui, ui.getSettings().getResourceBundle().getString("askSaveChanges"),
+         int selection = JOptionPane.showOptionDialog(ui.getFrame(), ui.getSettings().getResourceBundle().getString("askSaveChanges"),
                  ui.getSettings().getResourceBundle().getString("saveFile"),
                  JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
                  choice, choice[0]);

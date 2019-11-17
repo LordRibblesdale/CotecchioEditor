@@ -87,7 +87,7 @@ public class UpdateRepo {
                        ui.getSettings().getResourceBundle().getString("doNothing")
                };
 
-               int option = JOptionPane.showOptionDialog(ui, update.toString(),
+               int option = JOptionPane.showOptionDialog(ui.getFrame(), update.toString(),
                        ui.getSettings().getResourceBundle().getString("availableUpdate"),
                        JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, choice, choice[0]);
 
@@ -121,7 +121,7 @@ public class UpdateRepo {
       json = json.substring(json.lastIndexOf("https://github.com/LordRibblesdale/CotecchioEditor/releases/download/"));
       json = json.substring(0, json.indexOf("\""));
 
-      ProgressRenderer bar = new ProgressRenderer(ui,
+      ProgressRenderer bar = new ProgressRenderer(ui.getFrame(),
           ui.getSettings().getResourceBundle().getString("downloadStatus"),
           json);
 
@@ -173,7 +173,7 @@ public class UpdateRepo {
                }
 
 
-               int c = JOptionPane.showConfirmDialog(ui, ui.getSettings().getResourceBundle().getString("updateRestart"),
+               int c = JOptionPane.showConfirmDialog(ui.getFrame(), ui.getSettings().getResourceBundle().getString("updateRestart"),
                        ui.getSettings().getResourceBundle().getString("updateDownloaded"),
                        JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 

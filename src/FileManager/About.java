@@ -20,6 +20,6 @@ public class About extends AbstractAction {
    public void actionPerformed(ActionEvent e) {
       StringBuilder info = new StringBuilder("Creatore di elenco giocatori per Cotecchio");
       info.append("\nCreator: LordRibblesdale");
-      JOptionPane.showMessageDialog(ui, info, ui.getSettings().getResourceBundle().getString("about"), JOptionPane.INFORMATION_MESSAGE);
+      JOptionPane.showMessageDialog(ui.getFrame(), info, ui.getSettings().getResourceBundle().getString("about"), JOptionPane.INFORMATION_MESSAGE);
    }
 }
