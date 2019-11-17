@@ -37,7 +37,6 @@ class SinglePanel extends JPanel {
 
   private GridBagLayout layout;
   private GridBagConstraints constraints;
-  private JSeparator separator;
   private JComboBox<String> players;
   private JLabel[] label = new JLabel[4];
   private ComboBoxToolTipRenderer toolTip;
@@ -78,7 +77,6 @@ class SinglePanel extends JPanel {
 
     players.setSelectedIndex(index);
     this.index = index;
-    //validate();
   }
 
   SinglePanel(UserController ui, PlayerStateGame game, boolean isEditable) {

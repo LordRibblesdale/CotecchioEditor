@@ -27,6 +27,29 @@ public class OpenFile extends AbstractAction implements Path {
 
    @Override
    public void actionPerformed(ActionEvent e) {
+      Object[] choice = {
+          ui.getSettings().getResourceBundle().getString("save"),
+          ui.getSettings().getResourceBundle().getString("discard"),
+          ui.getSettings().getResourceBundle().getString("goBack")
+      };
+
+      if (ui.hasBeenSaved()) {
+         doAction(e);
+      } else {
+         int selection = JOptionPane.showOptionDialog(ui, ui.getSettings().getResourceBundle().getString("askSaveChanges"),
+             ui.getSettings().getResourceBundle().getString("saveFile"),
+             JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
+             choice, choice[0]);
+
+         if (choice[selection] == choice[0]) {
+            ui.askForSaving(e);
+         } else if (choice[selection] == choice[1]) {
+            ui.prepareForInitialisation(null, true);
+         }
+      }
+   }
+
+   private void doAction(ActionEvent e) {
       try {
          if (ui.getSettings().getOpenedFile().equals("") || !(new File(ui.getSettings().getOpenedFile()).exists())) {
             this.path = getFile();
@@ -69,10 +92,10 @@ public class OpenFile extends AbstractAction implements Path {
          }
       } catch (FileNotFoundException e3) {
          JOptionPane.showMessageDialog(
-                 ui,
-                 ui.getSettings().getResourceBundle().getString("errorInsertingNameFile"),
-                 "Error I/O",
-                 JOptionPane.ERROR_MESSAGE);
+             ui,
+             ui.getSettings().getResourceBundle().getString("errorInsertingNameFile"),
+             "Error I/O",
+             JOptionPane.ERROR_MESSAGE);
       } catch (IOException | ClassNotFoundException e1) {
          try {
             input.close();
@@ -102,16 +125,16 @@ public class OpenFile extends AbstractAction implements Path {
          } catch (IOException | ClassNotFoundException e2) {
             e2.printStackTrace();
             JOptionPane.showMessageDialog(ui,
-                    ui.getSettings().getResourceBundle().getString("errorReadingFile"),
-                    "Error I/O 01_OpenFile" + e2.getStackTrace()[0].getLineNumber(),
-                    JOptionPane.ERROR_MESSAGE);
+                ui.getSettings().getResourceBundle().getString("errorReadingFile"),
+                "Error I/O 01_OpenFile" + e2.getStackTrace()[0].getLineNumber(),
+                JOptionPane.ERROR_MESSAGE);
          }
       } catch (Exception e2) {
          JOptionPane.showMessageDialog(
-                 ui,
-                 ui.getSettings().getResourceBundle().getString("errorReadingFile"),
-                 "Error I/O 02_OpenFile" + e2.getStackTrace()[0].getLineNumber(),
-                 JOptionPane.ERROR_MESSAGE);
+             ui,
+             ui.getSettings().getResourceBundle().getString("errorReadingFile"),
+             "Error I/O 02_OpenFile" + e2.getStackTrace()[0].getLineNumber(),
+             JOptionPane.ERROR_MESSAGE);
 
          e2.printStackTrace();
       }

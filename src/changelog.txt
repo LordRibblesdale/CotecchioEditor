@@ -89,11 +89,14 @@ Build 7:
  RC 1:  Increase method calling security
         Add "Delete all matches" button
         Fix uploading data
+        Fix Remove Game button
+        Fix NewFile and OpenFile method calling
         Fix JComboBox duplicate players selections
         Fix PlayerList listener while changing name/tab index
         Fix non-existent player output in MatchInfoPanel
         Fix setEditable matches if there's a non-existent player
         Fix Update/DownloadData progression bar UI
+        Fix Autosave data location
         Clean code in MatchDialog
         Clean project
 

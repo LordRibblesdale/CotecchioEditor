@@ -51,7 +51,7 @@ class MatchDialog extends JDialog {
       JSpinner minutes;
       JSpinner hours;
 
-      if (game != null) {
+      if (game != null && game.getDate() != null) {
         calendar.setDate(game.getDate());
         calendar.setText(game.getDate().toString());
 

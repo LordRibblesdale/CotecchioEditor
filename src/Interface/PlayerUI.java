@@ -8,6 +8,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.math.RoundingMode;
@@ -56,6 +58,19 @@ class PlayerUI extends JPanel {
          validate();
       }
    };
+
+   private FocusAdapter focusAdapter = new FocusAdapter() {
+      @Override
+      public void focusGained(FocusEvent e) {
+         super.focusGained(e);
+
+         if (((JTextField) e.getSource()).hasFocus()) {
+
+            SwingUtilities.invokeLater(() -> ((JTextField) e.getSource()).selectAll());
+         }
+      }
+   };
+
 
    private DecimalFormat df = new DecimalFormat("##.##");
 
@@ -225,6 +240,9 @@ class PlayerUI extends JPanel {
             }
          });
       }
+
+      name.addFocusListener(focusAdapter);
+      username.addFocusListener(focusAdapter);
    }
 
    /*

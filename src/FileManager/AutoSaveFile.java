@@ -50,7 +50,7 @@ public class AutoSaveFile {
 
         data.setSaveNumber(data.getSaveNumber() +1);
 
-        ui.saveRecentFile(ui.getSettings().getOpenedFile());
+        ui.saveRecentFile(location);
         ui.setHasBeenSaved(true);
     }
 

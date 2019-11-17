@@ -35,6 +35,7 @@ public class NewFile extends AbstractAction {
 
          if (choice[selection] == choice[0]) {
             ui.askForSaving(e);
+            ui.prepareForInitialisation(null, true);
          } else if (choice[selection] == choice[1]) {
             ui.prepareForInitialisation(null, true);
          }

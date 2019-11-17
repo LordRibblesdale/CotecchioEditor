@@ -53,4 +53,8 @@ public class PlayerStateGame implements Serializable, Comparable<PlayerStateGame
     public int compareTo(PlayerStateGame o) {
         return Integer.compare(this.pointsEndGame, o.getPointsEndGame());
     }
+
+    public String toString() {
+        return "String: " + username + " - Points: " + pointsEndGame + " - Pelliccions: " + pelliccionsTaken + " - Cappottens: " + cappottensTaken + "\n";
+    }
 }

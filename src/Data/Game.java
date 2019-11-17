@@ -91,4 +91,14 @@ public class Game implements Serializable {
 
         return w.toString();
     }
+
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+
+        for (PlayerStateGame p : results) {
+            s.append(p.toString());
+        }
+
+        return s.toString();
+    }
 }

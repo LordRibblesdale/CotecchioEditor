@@ -109,7 +109,7 @@ class CalendarPanel extends JPanel {
 
         if (result == JOptionPane.YES_OPTION) {
           for (PlayerStateGame p : ui.getData().getGame().get(ui.getGameIndex()).getResults()) {
-            for (Player p1 : ui.getData().getPlayers()) {
+            for (Player p1 : ui.getPlayers()) {
               if (p.getUsername().equals(p1.getUsername())) {
                 p1.setScore(p1.getScore() - p.getPointsEndGame());
                 p1.setCappottens(p1.getCappottens() - p.getCappottensTaken());
@@ -125,8 +125,10 @@ class CalendarPanel extends JPanel {
             }
           }
 
+          ui.getEditPanel().initialise();
+
           ui.getData().getGame().remove(ui.getGameIndex());
-          modelTable.removeProgram(ui.getGameIndex());
+          ui.getAbstractTable().removeProgram(ui.getGameIndex());
 
           table.clearSelection();
           ui.setUpData(false);
