@@ -10,12 +10,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Objects;
 
 public class SettingsFrame extends JFrame {
     private final String text;
     private final String text2;
-    private final String[] locale = {"English", "Italiano"};
+    private final Locale[] locale = {
+        Locale.UK,
+        Locale.ITALY};
     private Timer autoSave;
     private JLabel timerInfo;
     private JLabel percentageInfo;
@@ -27,7 +30,7 @@ public class SettingsFrame extends JFrame {
 
     private static Insets insets = new Insets(5, 5, 5, 5);
 
-    public SettingsFrame(UserController ui) {
+    public SettingsFrame(UserController ui, String language) {
         super(ui.getSettings().getResourceBundle().getString("settings"));
         text = ui.getSettings().getResourceBundle().getString("autoSaveText");
         text2 = ui.getSettings().getResourceBundle().getString("percentagePlays");
@@ -82,7 +85,7 @@ public class SettingsFrame extends JFrame {
         constraints.gridwidth = 2;
         add(percentage = new JSlider(JSlider.HORIZONTAL), constraints);
         percentage.setMinimum(0);
-        percentage.setMaximum(100);
+        percentage.setMaximum(30);
         percentage.setPaintTicks(true);
         percentage.setSnapToTicks(true);
         percentage.setValue(ui.getSettings().getPercentage());
@@ -111,6 +114,8 @@ public class SettingsFrame extends JFrame {
         constraints.gridy = 4;
         add(languages = new JComboBox(locale), constraints);
 
+        languages.setSelectedItem(ui.getSettings().getResourceBundle().getLocale());
+
         constraints = new GridBagConstraints();
         constraints.insets = insets;
         constraints.gridx = 0;
@@ -125,17 +130,12 @@ public class SettingsFrame extends JFrame {
         useLookAndFeel.setSelected(ui.getSettings().isUsingLookAndFeel());
 
        languages.addActionListener(e -> {
-          JComboBox tmp = (JComboBox) e.getSource();
+          Locale tmp = ((Locale) ((JComboBox) e.getSource()).getSelectedItem());
 
-          switch ((String) Objects.requireNonNull(tmp.getSelectedItem())) {
-             case "English":
-                ui.getSettings().setLanguage("en");
-                ui.getSettings().setCountry("UK");
-                break;
-             case "Italiano":
-                ui.getSettings().setLanguage("it");
-                ui.getSettings().setCountry("IT");
-                break;
+          if (Objects.requireNonNull(tmp).equals(Locale.UK)) {
+            ui.getSettings().setLanguage(Locale.UK);
+          } else if (Objects.requireNonNull(tmp).equals(Locale.ITALY)) {
+            ui.getSettings().setLanguage(Locale.ITALY);
           }
 
           ui.setSettings(ui.getSettings());

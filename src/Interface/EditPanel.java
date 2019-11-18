@@ -70,15 +70,28 @@ class EditPanel extends JPanel {
               choice, choice[0]);
 
           if (choice[sel] == choice[0]) {
-            new SaveFile(ui).actionPerformed(null);
-          } else if (choice[sel] == choice[1]) {
             tabs.remove(tabs.getSelectedIndex());
-            ui.getPlayers().remove(tabs.getSelectedIndex());
-            pUI.remove(tabs.getSelectedIndex());
+            ui.getPlayers().remove(tabs.getSelectedIndex()+1);
+            pUI.remove(tabs.getSelectedIndex()+1);
+
+            new SaveFile(ui).actionPerformed(null);
 
             if (tabs.getTabCount() == 1) {
               removeTab.setEnabled(false);
             }
+
+            ui.getListPlayers().updateList();
+            ui.setHasBeenSaved(false);
+          } else if (choice[sel] == choice[1]) {
+            tabs.remove(tabs.getSelectedIndex());
+            ui.getPlayers().remove(tabs.getSelectedIndex()+1);
+            pUI.remove(tabs.getSelectedIndex()+1);
+
+            if (tabs.getTabCount() == 1) {
+              removeTab.setEnabled(false);
+            }
+
+            ui.getListPlayers().updateList();
           }
         } else {
           tabs.remove(tabs.getSelectedIndex());

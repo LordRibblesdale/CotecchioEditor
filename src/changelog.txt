@@ -86,17 +86,27 @@ Build 7:
               Fix SetPage while saving & autosaving
               Fix AutoSaveFile saving (negative case of overwrite)
               Fix UpdateRepo text from Release body
- RC 1:  Increase method calling security
-        Add "Delete all matches" button
-        Fix uploading data
-        Fix Remove Game button
-        Fix NewFile and OpenFile method calling
-        Fix JComboBox duplicate players selections
-        Fix PlayerList listener while changing name/tab index
-        Fix non-existent player output in MatchInfoPanel
-        Fix setEditable matches if there's a non-existent player
-        Fix Update/DownloadData progression bar UI
-        Fix Autosave data location
-        Clean code in MatchDialog
-        Clean project
+RC 1: Increase method calling security
+      Add "Delete all matches" button
+      Fix uploading data
+      Fix Remove Game button
+      Fix NewFile and OpenFile method calling
+      Fix JComboBox duplicate players selections
+      Fix PlayerList listener while changing name/tab index
+      Fix non-existent player output in MatchInfoPanel
+      Fix setEditable matches if there's a non-existent player
+      Fix Autosave data location
+      Clean code in MatchDialog
+      Clean project
+RC2:  Set window size based on screen resolution
+      Fix Remove player while file is unsaved
+      Fix Update/DownloadData progression bar UI
+      Fix Language choice in SettingsFrame
+      Fix max players selectable in MatchDialog
+      Fix duplicate username if selected in MatchDialog
+      Fix default data location for UNIX-like OS
+      Change Average Matches percentage setting (from 100% to 30%)
+      Remove Game Simulation feature
+
+
 

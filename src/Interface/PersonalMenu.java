@@ -16,7 +16,7 @@ import java.awt.event.ItemListener;
 public class PersonalMenu extends JMenuBar {
   private UserController ui;
 
-  private JMenu file, edit, about, export, game;
+  private JMenu file, edit, about, export;
 
   private SaveFile saveButton;
   private SaveAsFile saveAsButton;
@@ -96,8 +96,6 @@ public class PersonalMenu extends JMenuBar {
 
     showList.setEnabled(false);
 
-    add(game = new JMenu(this.ui.getSettings().getResourceBundle().getString("game")));
-
     add(about = new JMenu(this.ui.getSettings().getResourceBundle().getString("about")));
     about.add(new UpdateButton(this.ui, this.ui.getRelease()));
     about.add(new About(this.ui));
@@ -117,10 +115,6 @@ public class PersonalMenu extends JMenuBar {
 
   SaveFile getSaveAsButton() {
     return saveAsButton;
-  }
-
-  public JMenu getGame() {
-    return game;
   }
 
   SaveFile getSaveButton() {

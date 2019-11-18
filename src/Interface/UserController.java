@@ -41,16 +41,16 @@ public class UserController {
   private Settings settings;
   private SettingsFrame settingsFrame;
 
-  private static final String PROGRAM_NAME = "Cotecchio Editor - ";
-  private static final String VERSION = "Release Candidate 1";
   private static final int BASE_RELEASE = 800;
-  private static final int RELEASE = BASE_RELEASE + 1;
+  private static final int RELEASE = BASE_RELEASE + 2;
+  private static final String PROGRAM_NAME = "Cotecchio Editor - ";
+  private static final String VERSION = "Release Candidate " + RELEASE;
 
   public UserController() {
     settings = new Settings();
 
     frame = new MainFrame(UserController.this, PROGRAM_NAME + VERSION, BASE_RELEASE, RELEASE);
-    settingsFrame = new SettingsFrame(UserController.this);
+    settingsFrame = new SettingsFrame(UserController.this, settings.getResourceBundle().getLocale().getLanguage());
 
     new UpdateRepo(UserController.this, RELEASE);
   }

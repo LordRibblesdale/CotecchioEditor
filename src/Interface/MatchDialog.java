@@ -195,6 +195,8 @@ class MatchDialog extends JDialog {
             JOptionPane.ERROR_MESSAGE,
             null);
 
+        setUpIndex();
+
         for (int i = 0; i < selectedItems.size(); i++) {
           if (!selectedItems.get(i)) {
             ((JComboBox<String>) e.getSource()).setSelectedIndex(i);
@@ -229,7 +231,7 @@ class MatchDialog extends JDialog {
     JPanel p = new JPanel();
     p.add(new JLabel(ui.getSettings().getResourceBundle().getString("playersNumber")));
     p.add(playersInGame = new JSpinner(new SpinnerNumberModel(
-        game != null? game.getResults().size() : MINIMUM, MINIMUM, MAXIMUM, 1)));
+        game != null? game.getResults().size() : MINIMUM, MINIMUM, ui.getPlayers().size() < 8 ? ui.getPlayers().size() : MAXIMUM, 1)));
     master.add(p);
 
     for (int i = 0; i < currentIndex; i++) {
@@ -257,7 +259,6 @@ class MatchDialog extends JDialog {
       @Override
       public void stateChanged(ChangeEvent e) {
         int num = (Integer) ((JSpinner)(e.getSource())).getValue();
-        System.out.println(players.size());
 
         if (currentIndex > num) {
           master.remove(players.get(num-1));

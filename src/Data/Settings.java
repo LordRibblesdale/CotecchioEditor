@@ -10,14 +10,13 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class Settings implements Serializable, Path {
-    private static long serialVersionUID = 710L;
+    private static long serialVersionUID = 801L;
 
     private int refreshSaveRate;
     private String openedFile;
-    private String language;
-    private String country;
     private int percentage;
     private boolean useLookAndFeel;
+    private Locale language;
     private transient ResourceBundle resourceBundle;
 
     public Settings() {
@@ -33,22 +32,18 @@ public class Settings implements Serializable, Path {
              openedFile = tmp.getOpenedFile();
              useLookAndFeel = tmp.isUsingLookAndFeel();
              language = tmp.getLanguage();
-             country = tmp.getCountry();
              percentage = tmp.getPercentage();
-             Locale locale = new Locale(language, country);
-             resourceBundle = ResourceBundle.getBundle("MessagesBundle", locale);
+             resourceBundle = ResourceBundle.getBundle("MessagesBundle", language);
           }
        } catch (ClassNotFoundException e) {
           e.printStackTrace();
        } catch (IOException e) {
           refreshSaveRate = 30000;
           openedFile = "";
-          language = "it";
-          country = "IT";
+          language = Locale.ITALY;
           percentage = 20;
           useLookAndFeel = true;
-          Locale locale = new Locale(language, country);
-          resourceBundle = ResourceBundle.getBundle("MessagesBundle", locale);
+          resourceBundle = ResourceBundle.getBundle("MessagesBundle", language);
           try {
              ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(setPath)));
              out.writeObject(Settings.this);
@@ -58,7 +53,7 @@ public class Settings implements Serializable, Path {
           }
        }
 
-       System.out.println(language + country);
+       System.out.println(language);
    }
 
    public int getRefreshSaveRate() {
@@ -77,19 +72,11 @@ public class Settings implements Serializable, Path {
        this.openedFile = openedFile;
    }
 
-   private String getCountry() {
-       return country;
-   }
-
-   private String getLanguage() {
+   private Locale getLanguage() {
        return language;
    }
 
-   public void setCountry(String country) {
-       this.country = country;
-   }
-
-   public void setLanguage(String language) {
+   public void setLanguage(Locale language) {
       this.language = language;
    }
 

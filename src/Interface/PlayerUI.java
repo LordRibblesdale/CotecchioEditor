@@ -245,56 +245,7 @@ class PlayerUI extends JPanel {
       username.addFocusListener(focusAdapter);
    }
 
-   /*
-   JPanel generatePanel() {
-      JPanel ui = new JPanel(new GridLayout(1, 3));
-      JPanel tmp;
-      JPanel labelList = new JPanel(new GridLayout(0, 1));
-      JPanel editList = new JPanel(new GridLayout(0, 1));
-
-      JScrollPane scrollPane = new JScrollPane(table);
-      scrollPane.setBorder(BorderFactory.createTitledBorder(PlayerUI.this.ui.getSettings().getResourceBundle().getString("matchList")));
-
-      for (JLabel data : labels) {
-         labelList.add(data);
-      }
-
-      for (int i = 0; i < 2; i++) {
-         tmp = new JPanel();
-         tmp.add(new JLabel(EDITABLE[i]));
-
-         switch (i) {
-            case 0:
-               tmp.add(name);
-               break;
-            case 1:
-               tmp.add(username);
-               break;
-         }
-
-         editList.add(tmp);
-      }
-
-      for (int i = 0; i < EDITABLE.length-2; i++) {
-         tmp = new JPanel(new GridLayout(1, 2));
-         tmp.add(new JLabel(EDITABLE[i+2]));
-         tmp.add(insert.get(i));
-
-         editList.add(tmp);
-      }
-
-      ui.add(labelList);
-      ui.add(editList);
-      ui.add(scrollPane);
-
-      repaintTable();
-
-      return ui;
-   }
-    */
-
    JSplitPane generatePanel() {
-      //JPanel ui = new JPanel(new GridLayout(1, 3));
       JPanel tmp;
       JPanel labelList = new JPanel(new GridLayout(0, 1));
       JPanel editList = new JPanel(new GridLayout(0, 1));
@@ -332,12 +283,6 @@ class PlayerUI extends JPanel {
 
       JSplitPane data = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, labelList, editList);
       JSplitPane pane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, data, scrollPane);
-
-      /*
-      ui.add(labelList);
-      ui.add(editList);
-      ui.add(scrollPane);
-       */
 
       repaintTable();
 
