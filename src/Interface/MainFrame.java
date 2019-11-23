@@ -30,7 +30,7 @@ public class MainFrame extends JFrame {
     setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("Data/cotecchio.png"))).getImage());
     setMinimumSize(new Dimension(
         (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth()*0.4),
-        (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight()*0.5)));
+        (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight()*0.55)));
     setLayout(new BorderLayout());
 
     if (ui.getSettings().isUsingLookAndFeel()) {
