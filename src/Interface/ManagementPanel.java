@@ -12,7 +12,7 @@ public class ManagementPanel extends JPanel implements PageList {
   private CalendarPanel calendarPanel;
 
   private JPanel bottomPanel;
-  private JButton /*backButton, */calendarButton, editButton;
+  private JButton calendarButton, editButton;
 
   private CardLayout primaryLayout;
 
@@ -31,23 +31,10 @@ public class ManagementPanel extends JPanel implements PageList {
     panel.add(main, "BACK");
 
     bottomPanel = new JPanel();
-    //backButton = new JButton(ui.getSettings().getResourceBundle().getString("goBack"));
-    //backButton.setEnabled(false);
     calendarButton = new JButton(new CalendarButton(ui));
     editButton = new JButton(new TabbedListButton(ui));
-    //bottomPanel.add(backButton);
     bottomPanel.add(calendarButton);
     bottomPanel.add(editButton);
-
-    /*
-    backButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        ui.askForNextPage("BACK");
-      }
-    });
-
-     */
 
     add(bottomPanel, BorderLayout.PAGE_END);
 
@@ -62,14 +49,9 @@ public class ManagementPanel extends JPanel implements PageList {
         panel.add(calendarPanel, "CALENDAR");
         ui.checkDifferentUsernames();
         calendarPanel.getModelTable().fireChanges();
-        //backButton.setEnabled(true);
         break;
       case "EDIT":
         panel.add(editPanel, "EDIT");
-        //backButton.setEnabled(true);
-        break;
-      case "BACK":
-        //backButton.setEnabled(false);
         break;
     }
 
