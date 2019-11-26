@@ -107,6 +107,8 @@ RC2:  Set window size based on screen resolution
       Fix default data location for UNIX-like OS
       Change Average Matches percentage setting (from 100% to 30%)
       Remove Game Simulation feature
-
+RC3:  Add History dialog (for this game and each player)
+      Add KeyStroke CTRL+S for saving
+      Fix JFrame title
 
 

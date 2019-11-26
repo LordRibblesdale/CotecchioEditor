@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 class EditPanel extends JPanel {
-  private JButton addTab, removeTab, resetValues;
+  private JButton addTab, removeTab, resetValues, history;
 
   private JTabbedPane tabs = null;
   private ArrayList<PlayerUI> pUI;
@@ -27,6 +27,8 @@ class EditPanel extends JPanel {
     this.ui = ui;
 
     bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    bottomPanel.add(history = new JButton(ui.getSettings().getResourceBundle().getString("history")));
+    bottomPanel.add(new JSeparator(SwingConstants.VERTICAL));
     bottomPanel.add(addTab = new JButton(ui.getSettings().getResourceBundle().getString("addTab")));
     bottomPanel.add(removeTab = new JButton(ui.getSettings().getResourceBundle().getString("removeTab")));
     bottomPanel.add(resetValues = new JButton(ui.getSettings().getResourceBundle().getString("resetValues")));

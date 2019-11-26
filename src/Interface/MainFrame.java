@@ -4,16 +4,13 @@ import FileManager.SaveFile;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Objects;
 
 public class MainFrame extends JFrame {
-  private UserController ui;
-
-  private int BASE_RELEASE;
-  private int RELEASE;
-
   private ManagementPanel mainPanel;
 
   private PersonalMenu menu;
@@ -21,11 +18,8 @@ public class MainFrame extends JFrame {
 
   private JLabel saveStatus;
 
-  public MainFrame(UserController ui, String title, int BASE_RELEASE, int RELEASE) {
+  public MainFrame(UserController ui, String title, int RELEASE) {
     super(title);
-    this.ui = ui;
-    this.BASE_RELEASE = BASE_RELEASE;
-    this.RELEASE = RELEASE;
 
     setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("Data/cotecchio.png"))).getImage());
     setMinimumSize(new Dimension(
@@ -72,10 +66,12 @@ public class MainFrame extends JFrame {
       }
     });
 
-
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     setLocationRelativeTo(null);
     setVisible(true);
+
+    getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK), "save");
+    getRootPane().getActionMap().put("save", menu.getSaveButton());
   }
 
   public PersonalMenu getMenu() {

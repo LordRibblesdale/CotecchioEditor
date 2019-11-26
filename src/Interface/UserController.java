@@ -41,16 +41,22 @@ public class UserController {
   private Settings settings;
   private SettingsFrame settingsFrame;
 
+  private Stack<Vector<Object>> restore;
+
   private static final int BASE_RELEASE = 800;
-  private static final int RELEASE = BASE_RELEASE + 2;
-  private static final String PROGRAM_NAME = "Cotecchio Editor - ";
-  private static final String VERSION = "Release Candidate " + RELEASE;
+  private static final int INCREMENTAL_RELEASE = 3;
+  private static final int RELEASE = BASE_RELEASE + INCREMENTAL_RELEASE;
+
+  private String baseTitle;
 
   public UserController() {
     settings = new Settings();
 
-    frame = new MainFrame(UserController.this, PROGRAM_NAME + VERSION, BASE_RELEASE, RELEASE);
+    baseTitle = settings.getResourceBundle().getString("programName") + " - " + settings.getResourceBundle().getString("releaseType") + " " + INCREMENTAL_RELEASE;
+    frame = new MainFrame(UserController.this, baseTitle, RELEASE);
     settingsFrame = new SettingsFrame(UserController.this, settings.getResourceBundle().getLocale().getLanguage());
+
+    restore = new Stack<>();
 
     new UpdateRepo(UserController.this, RELEASE);
   }
@@ -69,12 +75,12 @@ public class UserController {
     if (hasBeenSaved) {
       frame.getMenu().getSaveButton().setEnabled(false);
       getListPlayers().updateList();
-      frame.setTitle(PROGRAM_NAME + VERSION);
+      frame.setTitle(baseTitle);
       settingsFrame.stopTimer();
       frame.getSaveStatus().setText("Saved @ " + new SimpleDateFormat("HH.mm.ss").format(new Date()));
     } else {
       frame.getMenu().getSaveButton().setEnabled(true);
-      frame.setTitle(PROGRAM_NAME + VERSION + " - *" + getSettings().getResourceBundle().getString("changesNotSaved"));
+      frame.setTitle(baseTitle + " - *" + getSettings().getResourceBundle().getString("changesNotSaved"));
       settingsFrame.startTimer();
     }
 

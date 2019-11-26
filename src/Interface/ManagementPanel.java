@@ -2,6 +2,8 @@ package Interface;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ManagementPanel extends JPanel implements PageList {
   private UserController ui;
@@ -12,7 +14,7 @@ public class ManagementPanel extends JPanel implements PageList {
   private CalendarPanel calendarPanel;
 
   private JPanel bottomPanel;
-  private JButton /*backButton, */calendarButton, editButton;
+  private JButton historyButton, calendarButton, editButton;
 
   private CardLayout primaryLayout;
 
@@ -31,23 +33,20 @@ public class ManagementPanel extends JPanel implements PageList {
     panel.add(main, "BACK");
 
     bottomPanel = new JPanel();
-    //backButton = new JButton(ui.getSettings().getResourceBundle().getString("goBack"));
-    //backButton.setEnabled(false);
+    historyButton = new JButton(ui.getSettings().getResourceBundle().getString("historyCotecchio"));
+    historyButton.setEnabled(false);
     calendarButton = new JButton(new CalendarButton(ui));
     editButton = new JButton(new TabbedListButton(ui));
-    //bottomPanel.add(backButton);
+    bottomPanel.add(historyButton);
     bottomPanel.add(calendarButton);
     bottomPanel.add(editButton);
 
-    /*
-    backButton.addActionListener(new ActionListener() {
+    historyButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        ui.askForNextPage("BACK");
+
       }
     });
-
-     */
 
     add(bottomPanel, BorderLayout.PAGE_END);
 
@@ -68,9 +67,6 @@ public class ManagementPanel extends JPanel implements PageList {
         panel.add(editPanel, "EDIT");
         //backButton.setEnabled(true);
         break;
-      case "BACK":
-        //backButton.setEnabled(false);
-        break;
     }
 
     primaryLayout.show(ManagementPanel.this.panel, next);
@@ -86,9 +82,5 @@ public class ManagementPanel extends JPanel implements PageList {
 
   JPanel getBottomPanel() {
     return bottomPanel;
-  }
-
-  JPanel getPanel() {
-    return panel;
   }
 }
