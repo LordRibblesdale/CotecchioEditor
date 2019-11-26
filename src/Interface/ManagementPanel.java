@@ -61,11 +61,9 @@ public class ManagementPanel extends JPanel implements PageList {
         panel.add(calendarPanel, "CALENDAR");
         ui.checkDifferentUsernames();
         calendarPanel.getModelTable().fireChanges();
-        //backButton.setEnabled(true);
         break;
       case "EDIT":
         panel.add(editPanel, "EDIT");
-        //backButton.setEnabled(true);
         break;
     }
 

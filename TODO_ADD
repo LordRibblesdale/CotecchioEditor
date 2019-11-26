@@ -1,5 +1,7 @@
 Add new push/pull for Player.bin using auth token or login -> new upload player system
 Add Update window to download jar updates
-Update UI for Game Simulation
+
+!! Add Hands played !!
+!! Errore aggiunta partite nei giocatori !!
 
  Toolkit.getDefaultToolkit().sync();
