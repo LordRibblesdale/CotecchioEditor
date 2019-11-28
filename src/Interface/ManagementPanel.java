@@ -38,38 +38,12 @@ public class ManagementPanel extends JPanel implements PageList {
     panel.add(main, "BACK");
 
     bottomPanel = new JPanel();
-    historyButton = new JButton(ui.getSettings().getResourceBundle().getString("historyCotecchio"));
+    historyButton = new JButton(new HistoryButton(ui));
     calendarButton = new JButton(new CalendarButton(ui));
     editButton = new JButton(new TabbedListButton(ui));
     bottomPanel.add(historyButton);
     bottomPanel.add(calendarButton);
     bottomPanel.add(editButton);
-
-    historyButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        String fileName = "history.sdc";
-        File f = new File(Path.history + fileName);
-
-        if (f.exists()) {
-          ObjectInputStream ois = null;
-
-          try {
-            ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(f)));
-            Object obj = ois.readObject();
-            ois.close();
-
-            if (obj instanceof ArrayList<?>) {
-              new HistoryDialog(ui, ui.getSettings().getResourceBundle().getString("generalHistory"), fileName, (ArrayList<HistoryData>) obj);
-            }
-          } catch (IOException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-          }
-        } else {
-          new HistoryDialog(ui, ui.getSettings().getResourceBundle().getString("generalHistory"), fileName, null);
-        }
-      }
-    });
 
     add(bottomPanel, BorderLayout.PAGE_END);
 

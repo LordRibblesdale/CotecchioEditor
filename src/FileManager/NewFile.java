@@ -3,10 +3,7 @@ package FileManager;
 import Interface.UserController;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.net.URISyntaxException;
 
 public class NewFile extends AbstractAction {
    private UserController ui;
@@ -15,12 +12,8 @@ public class NewFile extends AbstractAction {
       this.ui = ui;
 
       putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("new"));
-      try {
-         putValue(Action.LARGE_ICON_KEY, FileSystemView.getFileSystemView().getSystemIcon(new File(NewFile.class.getResource("New.png").toURI())));
-         putValue(Action.SMALL_ICON, FileSystemView.getFileSystemView().getSystemIcon(new File(NewFile.class.getResource("New.png").toURI())));
-      } catch (URISyntaxException e) {
-         e.printStackTrace();
-      }
+      putValue(Action.LARGE_ICON_KEY, new ImageIcon(NewFile.class.getResource("New.png")));
+      putValue(Action.SMALL_ICON, new ImageIcon(NewFile.class.getResource("New.png")));
       putValue(Action.SHORT_DESCRIPTION, ui.getSettings().getResourceBundle().getString("new"));
    }
 
