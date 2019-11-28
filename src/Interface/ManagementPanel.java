@@ -1,9 +1,14 @@
 package Interface;
 
+import Data.HistoryData;
+import FileManager.Path;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.util.ArrayList;
 
 public class ManagementPanel extends JPanel implements PageList {
   private UserController ui;
@@ -34,7 +39,6 @@ public class ManagementPanel extends JPanel implements PageList {
 
     bottomPanel = new JPanel();
     historyButton = new JButton(ui.getSettings().getResourceBundle().getString("historyCotecchio"));
-    historyButton.setEnabled(false);
     calendarButton = new JButton(new CalendarButton(ui));
     editButton = new JButton(new TabbedListButton(ui));
     bottomPanel.add(historyButton);
@@ -44,7 +48,26 @@ public class ManagementPanel extends JPanel implements PageList {
     historyButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
+        String fileName = "history.sdc";
+        File f = new File(Path.history + fileName);
 
+        if (f.exists()) {
+          ObjectInputStream ois = null;
+
+          try {
+            ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(f)));
+            Object obj = ois.readObject();
+            ois.close();
+
+            if (obj instanceof ArrayList<?>) {
+              new HistoryDialog(ui, ui.getSettings().getResourceBundle().getString("generalHistory"), fileName, (ArrayList<HistoryData>) obj);
+            }
+          } catch (IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+          }
+        } else {
+          new HistoryDialog(ui, ui.getSettings().getResourceBundle().getString("generalHistory"), fileName, null);
+        }
       }
     });
 

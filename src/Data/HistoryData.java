@@ -4,20 +4,37 @@ import javax.swing.*;
 import java.io.Serializable;
 
 public class HistoryData implements Serializable {
-  private JComponent component;
+  private Icon image;
+  private String text;
   private String label;
+  private boolean isText = true;
 
-  public HistoryData(JComponent component, String label) {
-    this.component = component;
+  public HistoryData(Object component, String label) {
+    if (component instanceof Icon) {
+      this.image = (Icon) component;
+    } else if (component instanceof String) {
+      this.text = (String) component;
+    }
+
     this.label = label;
   }
 
-  public JComponent getComponent() {
-    return component;
+  public Object getComponent() {
+    if (isText) {
+      return text;
+    } else {
+      return image;
+    }
   }
 
-  public void setComponent(JComponent component) {
-    this.component = component;
+  public void setComponent(Object component) {
+    if (component instanceof Icon) {
+      this.image = (Icon) component;
+      isText = false;
+    } else if (component instanceof String) {
+      this.text = (String) component;
+      isText = true;
+    }
   }
 
   public String getLabel() {

@@ -13,8 +13,8 @@ public class TabbedListButton extends AbstractAction {
 
         putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("editButton"));
         putValue(Action.SHORT_DESCRIPTION, ui.getSettings().getResourceBundle().getString("editDescription"));
-        putValue(Action.LARGE_ICON_KEY, new ImageIcon(TabbedListButton.class.getResource("ComposeMail24.gif")));
-        putValue(Action.SMALL_ICON, new ImageIcon(TabbedListButton.class.getResource("ComposeMail16.gif")));
+        putValue(Action.LARGE_ICON_KEY, new ImageIcon(TabbedListButton.class.getResource("Table.png")));
+        putValue(Action.SMALL_ICON, new ImageIcon(TabbedListButton.class.getResource("Table.png")));
     }
 
     @Override

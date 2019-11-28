@@ -14,8 +14,8 @@ public class UpdateButton extends AbstractAction {
         this.version = version;
 
         putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("checkForUpdates"));
-        putValue(Action.LARGE_ICON_KEY, new ImageIcon(UpdateButton.class.getResource("WebComponent24.gif")));
-        putValue(Action.SMALL_ICON, new ImageIcon(UpdateButton.class.getResource("WebComponent16.gif")));
+        putValue(Action.LARGE_ICON_KEY, new ImageIcon(UpdateButton.class.getResource("Update.png")));
+        putValue(Action.SMALL_ICON, new ImageIcon(UpdateButton.class.getResource("Update.png")));
     }
 
     @Override

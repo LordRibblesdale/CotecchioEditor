@@ -13,8 +13,8 @@ public class CalendarButton extends AbstractAction {
 
         putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("calendarButton"));
         putValue(Action.SHORT_DESCRIPTION, ui.getSettings().getResourceBundle().getString("calendarDescription"));
-        putValue(Action.LARGE_ICON_KEY, new ImageIcon(CalendarButton.class.getResource("History24.gif")));
-        putValue(Action.SMALL_ICON, new ImageIcon(CalendarButton.class.getResource("History16.gif")));
+        putValue(Action.LARGE_ICON_KEY, new ImageIcon(CalendarButton.class.getResource("Calendar.png")));
+        putValue(Action.SMALL_ICON, new ImageIcon(CalendarButton.class.getResource("Calendar.png")));
     }
 
     @Override

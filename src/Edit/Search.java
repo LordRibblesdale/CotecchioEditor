@@ -16,8 +16,8 @@ public class Search extends AbstractAction {
 
       putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("search"));
       putValue(Action.SHORT_DESCRIPTION, ui.getSettings().getResourceBundle().getString("search"));
-      putValue(Action.LARGE_ICON_KEY, new ImageIcon(Search.class.getResource("Find24.gif")));
-      putValue(Action.SMALL_ICON, new ImageIcon(Search.class.getResource("Find16.gif")));
+      putValue(Action.LARGE_ICON_KEY, new ImageIcon(Search.class.getResource("Find.png")));
+      putValue(Action.SMALL_ICON, new ImageIcon(Search.class.getResource("Find.png")));
 
    }
 

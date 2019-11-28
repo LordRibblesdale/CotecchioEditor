@@ -7,6 +7,7 @@ Le principali funzioni del programma sono:
 - Salvataggio dati per modifiche o condivisioni
 - Gestione di una partita virtuale con inserimento dei risultati nella lista dei giocatori
 - Conversione lista in un file esportabile o stampabile
+- Aggiunta di informazioni e dettagli dei singoli giocatori
 
 Altre funzioni verranno aggiunte col tempo. Il programma è momentaneamente in via di sviluppo e potrebbero non essere disponibili le funzioni predefinite.
 
@@ -18,9 +19,14 @@ Il programma è compatibile con la maggior parte delle piattaforme che permetton
 
 I requisiti di sistema sono:
 - Windows XP Service Pack 3 o superiore
-- 256MB di memoria RAM aggiuntiva (768MB di memoria RAM o superiore)
-- 150MB di spazio minimo aggiuntivo su disco
+- 768MB di memoria RAM o superiore
+- 200MB di spazio minimo aggiuntivo su disco
 
 # Release
 
 Gli aggiornamenti saranno disponibili sotto forma di JAR, automaticamente riconosciuti dal programma, per permetterne l'esecuzione come eseguibile. Saranno disponibili nella sezione https://github.com/LordRibblesdale/CotecchioEditor/releases
+
+# Licenze
+
+Le icone disponibili (Silk Icons) nel programma sono usate sotto licenza Creative Commons Attribution 2.5 License.
+Si ringrazia il creatore FamFamFam (http://www.famfamfam.com/lab/icons/silk/)

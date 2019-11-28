@@ -20,8 +20,8 @@ public class OpenFile extends AbstractAction implements Path {
       this.ui = ui;
 
       putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("load"));
-      putValue(Action.LARGE_ICON_KEY, new ImageIcon(OpenFile.class.getResource("Open24.gif")));
-      putValue(Action.SMALL_ICON, new ImageIcon(OpenFile.class.getResource("Open16.gif")));
+      putValue(Action.LARGE_ICON_KEY, new ImageIcon(OpenFile.class.getResource("Open.png")));
+      putValue(Action.SMALL_ICON, new ImageIcon(OpenFile.class.getResource("Open.png")));
       putValue(Action.SHORT_DESCRIPTION, ui.getSettings().getResourceBundle().getString("load"));
    }
 

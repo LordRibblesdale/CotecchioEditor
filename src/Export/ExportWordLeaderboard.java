@@ -24,8 +24,8 @@ public class ExportWordLeaderboard extends AbstractAction {
 
       putValue(Action.NAME, ui.getSettings().getResourceBundle().getString("exportWord"));
       putValue(Action.SHORT_DESCRIPTION, ui.getSettings().getResourceBundle().getString("exportWord"));
-      putValue(Action.LARGE_ICON_KEY, new ImageIcon(ExportWordLeaderboard.class.getResource("AlignLeft24.gif")));
-      putValue(Action.SMALL_ICON, new ImageIcon(ExportWordLeaderboard.class.getResource("AlignLeft16.gif")));
+      putValue(Action.LARGE_ICON_KEY, new ImageIcon(ExportWordLeaderboard.class.getResource("Word.png")));
+      putValue(Action.SMALL_ICON, new ImageIcon(ExportWordLeaderboard.class.getResource("Word.png")));
    }
 
    @Override
