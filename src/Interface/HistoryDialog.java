@@ -6,7 +6,6 @@ import FileManager.ImgFilter;
 import FileManager.Path;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +19,7 @@ public class HistoryDialog extends JDialog implements Path {
 
     private JTextArea txt = null;
     private JLabel img = null;
+    private ImageIcon imageIcon = null;
 
     /*
     private JButton addImg = null;
@@ -32,7 +32,7 @@ public class HistoryDialog extends JDialog implements Path {
     };
      */
 
-    InsertionDialog(UserController ui, JDialog dialog, int type) {
+    InsertionDialog(UserController ui, HistoryDialog dialog, int type) {
       super(dialog, true);
       setLayout(new BorderLayout());
 
@@ -59,17 +59,42 @@ public class HistoryDialog extends JDialog implements Path {
           File location = getFile();
 
           if (location != null) {
-            img = new JLabel(FileSystemView.getFileSystemView().getSystemIcon(location));
-
+            img = new JLabel(imageIcon = new ImageIcon(location.getPath()));
             add(img);
           }
 
           break;
       }
 
+      buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+      buttons.add(abort = new JButton(ui.getSettings().getResourceBundle().getString("goBack")));
+      buttons.add(add = new JButton(ui.getSettings().getResourceBundle().getString(
+          txt != null ? "addTextButton" : "addImageButton")));
+
+      abort.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          InsertionDialog.this.dispose();
+        }
+      });
+
+      add.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          dialog.getArrayComponents().add(new HistoryData(
+              txt != null ? txt.getText() : imageIcon,
+              ui.getSettings().getResourceBundle().getString(txt != null ? "text" : "image")));
+
+          dialog.askRepaint();
+          InsertionDialog.this.dispose();
+        }
+      });
+
+      add(buttons, BorderLayout.PAGE_END);
+
       setMinimumSize(new Dimension(
           (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth()*0.4),
-          (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight()*0.50)));
+          (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight()*0.5)));
       setLocationRelativeTo(ui.getFrame());
       setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
       setVisible(true);
@@ -79,6 +104,7 @@ public class HistoryDialog extends JDialog implements Path {
   private ArrayList<HistoryData> components;
   private UserController ui;
   private JPanel buttons;
+  private JScrollPane scrollPane;
   private JSplitPane splitPane;
   private JButton addText, addImage, remove, removeAll, close;
   private JList<String> list;
@@ -86,12 +112,13 @@ public class HistoryDialog extends JDialog implements Path {
 
   private static final String EXT = ".sdc";
   private String file;
+  private boolean hasBeenModified = false;
 
   HistoryDialog(UserController ui, String title, String file, ArrayList<HistoryData> components) {
     super(ui.getFrame(), title, true);
     this.file = file;
     this.ui = ui;
-    this.components = components;
+    this.components = components != null ? components : new ArrayList<>();
 
     setLayout(new BorderLayout());
     buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -106,54 +133,56 @@ public class HistoryDialog extends JDialog implements Path {
     close.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        int choice = JOptionPane.showConfirmDialog(
-            HistoryDialog.this,
-            ui.getSettings().getResourceBundle().getString("askSaveChanges"),
-            ui.getSettings().getResourceBundle().getString("askSave"),
-            JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE
-        );
+        if (hasBeenModified) {
+          int choice = JOptionPane.showConfirmDialog(
+              HistoryDialog.this,
+              ui.getSettings().getResourceBundle().getString("askSaveChanges"),
+              ui.getSettings().getResourceBundle().getString("askSave"),
+              JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE
+          );
 
-        switch (choice) {
-          case JOptionPane.YES_OPTION:
-            File folder = new File(Path.history);
-            File file1 = new File(folder.getPath() + file + EXT);
+          switch (choice) {
+            case JOptionPane.YES_OPTION:
+              File folder = new File(Path.history);
+              File file1 = new File(folder.getPath() + file + EXT);
 
-            if(folder.exists()) {
-              if (folder.isDirectory()) {
-                ObjectOutputStream ois;
+              if(folder.exists()) {
+                if (folder.isDirectory()) {
+                  ObjectOutputStream ois;
 
-                try {
-                  ois = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file1)));
+                  try {
+                    ois = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file1)));
 
-                  ois.writeObject(components);
-                  ois.close();
-                } catch (IOException ex) {
-                  ex.printStackTrace();
+                    ois.writeObject(components);
+                    ois.close();
+                  } catch (IOException ex) {
+                    ex.printStackTrace();
+                  }
                 }
-              }
-            } else {
-              if (folder.mkdir()) {
-                ObjectOutputStream ois;
-
-                try {
-                  ois = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file1)));
-
-                  ois.writeObject(components);
-                  ois.close();
-                } catch (IOException ex) {
-                  ex.printStackTrace();
-                }
-
               } else {
-                System.out.println("ERROR HistoryData - Close ActionListener");
-              }
-            }
+                if (folder.mkdir()) {
+                  ObjectOutputStream ois;
 
-            HistoryDialog.this.dispose();
-            break;
-          case JOptionPane.NO_OPTION:
-            HistoryDialog.this.dispose();
-            break;
+                  try {
+                    ois = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file1)));
+
+                    ois.writeObject(components);
+                    ois.close();
+                  } catch (IOException ex) {
+                    ex.printStackTrace();
+                  }
+
+                } else {
+                  System.out.println("ERROR HistoryData - Close ActionListener");
+                }
+              }
+
+              HistoryDialog.this.dispose();
+              break;
+            case JOptionPane.NO_OPTION:
+              HistoryDialog.this.dispose();
+              break;
+          }
         }
       }
     });
@@ -179,10 +208,14 @@ public class HistoryDialog extends JDialog implements Path {
     } else {
       list = new JList<>();
     }
-    panel = new JPanel(new GridLayout(0, 1));
 
-    splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panel, list);
-    splitPane.setDividerLocation(HistoryDialog.this.getWidth()*0.75);
+    panel = new JPanel(new GridLayout(0, 1));
+    scrollPane = new JScrollPane(panel);
+    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+    splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane, list);
+    splitPane.setDividerLocation((double) HistoryDialog.this.getWidth()*0.75);
 
     if (components != null) {
       for (HistoryData component : components) {
@@ -198,6 +231,8 @@ public class HistoryDialog extends JDialog implements Path {
       }
     }
 
+    add(splitPane);
+
     setMinimumSize(new Dimension(
         (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth()*0.35),
         (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight()*0.65)));
@@ -206,8 +241,30 @@ public class HistoryDialog extends JDialog implements Path {
     setVisible(true);
   }
 
-  public JPanel getPanel() {
-    return panel;
+  void askRepaint() {
+    for (Component c : splitPane.getComponents()) {
+      if (c == scrollPane) {
+        splitPane.remove(c);
+      }
+    }
+
+    panel = new JPanel(new FlowLayout());
+
+    for (HistoryData hd : components) {
+      if (hd.getComponent() instanceof String) {
+        panel.add(new JLabel((String) hd.getComponent()));
+      } else if (hd.getComponent() instanceof ImageIcon) {
+        panel.add(new JLabel((ImageIcon) hd.getComponent()));
+      }
+    }
+
+    scrollPane = new JScrollPane(panel);
+    splitPane.add(scrollPane, 0);
+
+    list.setModel(new DefaultComboBoxModel<>(createList()));
+    validate();
+
+    hasBeenModified = true;
   }
 
   public String[] createList() {
@@ -234,5 +291,9 @@ public class HistoryDialog extends JDialog implements Path {
     }
 
     return null;
+  }
+
+  public ArrayList<HistoryData> getArrayComponents() {
+    return components;
   }
 }

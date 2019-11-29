@@ -1,17 +1,18 @@
 package Data;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 import java.io.Serializable;
 
 public class HistoryData implements Serializable {
-  private Icon image;
+  private ImageIcon image;
   private String text;
   private String label;
   private boolean isText = true;
 
   public HistoryData(Object component, String label) {
-    if (component instanceof Icon) {
-      this.image = (Icon) component;
+    if (component instanceof ImageIcon) {
+      this.image = (ImageIcon) component;
+      isText = false;
     } else if (component instanceof String) {
       this.text = (String) component;
     }
@@ -28,8 +29,8 @@ public class HistoryData implements Serializable {
   }
 
   public void setComponent(Object component) {
-    if (component instanceof Icon) {
-      this.image = (Icon) component;
+    if (component instanceof ImageIcon) {
+      this.image = (ImageIcon) component;
       isText = false;
     } else if (component instanceof String) {
       this.text = (String) component;
