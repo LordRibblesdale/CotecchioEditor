@@ -3,6 +3,9 @@ package Export;
 import Data.Player;
 import FileManager.SaveFile;
 import Interface.UserController;
+import org.apache.poi.ooxml.POIXMLDocumentPart;
+import org.apache.poi.util.POILogFactory;
+import org.apache.poi.util.POILogger;
 import org.apache.poi.xwpf.usermodel.*;
 
 import javax.swing.*;
@@ -73,15 +76,16 @@ public class ExportWordLeaderboard extends AbstractAction {
 
       if (path != null) {
          try {
+            POILogger logger =   POILogFactory.getLogger(POIXMLDocumentPart.class);
+            logger.log(POILogger.INFO, "Test");
+
             XWPFDocument word = new XWPFDocument();
             FileOutputStream out = new FileOutputStream(new File(path));
 
             write(word, out, topPlayers);
-         } catch (FileNotFoundException e1) {
+         } catch (IOException e1) {
             JOptionPane.showMessageDialog(ui.getFrame(), e1.getMessage(), "Exception in ExportWord", JOptionPane.ERROR_MESSAGE);
             e1.printStackTrace();
-         } catch (IOException e) {
-            e.printStackTrace();
          }
       }
    }

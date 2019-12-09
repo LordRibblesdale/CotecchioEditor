@@ -19,7 +19,9 @@ Il programma è compatibile con la maggior parte delle piattaforme che permetton
 
 I requisiti di sistema sono:
 - Windows XP Service Pack 3 o superiore
-- 768MB di memoria RAM o superiore
+- MacOS 10.7.3 o superiore
+- Distro Linux con supporto a Oracle JRE o OpenJRE
+- 768MB di memoria RAM o superiore consigliati
 - 200MB di spazio minimo aggiuntivo su disco
 
 # Release
