@@ -76,9 +76,6 @@ public class ExportWordLeaderboard extends AbstractAction {
 
       if (path != null) {
          try {
-            POILogger logger =   POILogFactory.getLogger(POIXMLDocumentPart.class);
-            logger.log(POILogger.INFO, "Test");
-
             XWPFDocument word = new XWPFDocument();
             FileOutputStream out = new FileOutputStream(new File(path));
 

@@ -21,6 +21,7 @@ I requisiti di sistema sono:
 - Windows XP Service Pack 3 o superiore
 - MacOS 10.7.3 o superiore
 - Distro Linux con supporto a Oracle JRE o OpenJRE
+- Monitor con risoluzione 1366x768 o superiore (16:9) o 1280x1024 (4:3)
 - 768MB di memoria RAM o superiore consigliati
 - 200MB di spazio minimo aggiuntivo su disco
 
