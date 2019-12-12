@@ -9,6 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -102,7 +104,6 @@ public class HistoryDialog extends JDialog implements Path {
       setVisible(true);
     }
   }
-  //TODO: BoxLayout
 
   private ArrayList<HistoryData> components;
   private UserController ui;
@@ -203,6 +204,26 @@ public class HistoryDialog extends JDialog implements Path {
       }
     });
 
+    remove.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        components.remove(list.getSelectedIndex());
+        list.setModel(new DefaultComboBoxModel<>(createList()));
+
+        askRepaint();
+      }
+    });
+
+    removeAll.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        components.clear();
+        list.setModel(new DefaultComboBoxModel<>());
+
+        askRepaint();
+      }
+    });
+
     add(buttons, BorderLayout.PAGE_END);
 
     if (components != null) {
@@ -236,6 +257,15 @@ public class HistoryDialog extends JDialog implements Path {
 
     add(splitPane);
 
+    addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent e) {
+        super.windowClosing(e);
+
+        close.doClick();
+      }
+    });
+
     setMinimumSize(new Dimension(
         (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth()*0.35),
         (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight()*0.65)));
@@ -244,7 +274,7 @@ public class HistoryDialog extends JDialog implements Path {
     setVisible(true);
   }
 
-  void askRepaint() {
+  private void askRepaint() {
     for (Component c : splitPane.getComponents()) {
       if (c == scrollPane) {
         splitPane.remove(c);
@@ -271,7 +301,7 @@ public class HistoryDialog extends JDialog implements Path {
     hasBeenModified = true;
   }
 
-  public String[] createList() {
+  private String[] createList() {
     ArrayList<String> list = new ArrayList<>();
 
     for (HistoryData component : components) {
@@ -297,7 +327,7 @@ public class HistoryDialog extends JDialog implements Path {
     return null;
   }
 
-  public ArrayList<HistoryData> getArrayComponents() {
+  private ArrayList<HistoryData> getArrayComponents() {
     return components;
   }
 }

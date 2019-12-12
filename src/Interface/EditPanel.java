@@ -136,6 +136,8 @@ class EditPanel extends JPanel {
       }
     });
 
+    history.addActionListener(new HistoryButton(ui, ui.getPlayers().get(tabs.getSelectedIndex()).getUsername() + ".sdc"));
+
     addTab.setEnabled(false);
     removeTab.setEnabled(false);
 

@@ -38,7 +38,7 @@ public class ManagementPanel extends JPanel implements PageList {
     panel.add(main, "BACK");
 
     bottomPanel = new JPanel();
-    historyButton = new JButton(new HistoryButton(ui));
+    historyButton = new JButton(new HistoryButton(ui, "history.sdc"));
     calendarButton = new JButton(new CalendarButton(ui));
     editButton = new JButton(new TabbedListButton(ui));
     bottomPanel.add(historyButton);
