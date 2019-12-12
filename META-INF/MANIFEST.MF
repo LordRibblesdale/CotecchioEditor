@@ -1,3 +1,10 @@
 Manifest-Version: 1.0
+Class-Path: commons-codec-1.10.jar commons-codec-1.12.jar commons-coll
+ ections4-4.3.jar commons-compress-1.18.jar commons-logging-1.2.jar co
+ mmons-math3-3.6.1.jar curvesapi-1.06.jar httpclient-4.5.6.jar httpcor
+ e-4.4.10.jar JavaEWAH-1.1.6.jar jsch-0.1.54.jar jzlib-1.1.1.jar LGood
+ DatePicker-10.3.1.jar org.eclipse.jgit-5.2.1.201812262042-r.jar poi-4
+ .1.0.jar poi-ooxml-4.1.0.jar poi-ooxml-schemas-4.1.0.jar slf4j-api-1.
+ 7.2.jar xmlbeans-3.1.0.jar
 Main-Class: CotecchioEditor
 

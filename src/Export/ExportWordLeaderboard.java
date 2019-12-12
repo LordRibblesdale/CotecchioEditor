@@ -16,6 +16,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.logging.SimpleFormatter;
 
 
@@ -110,7 +111,7 @@ public class ExportWordLeaderboard extends AbstractAction {
    private void write(XWPFDocument paper, FileOutputStream out, Player[] top) throws IOException{
       XWPFParagraph setup = paper.createParagraph();
       XWPFRun title = setup.createRun();
-      title.setText("COTECCHIO 2019");
+      title.setText("COTECCHIO " + Calendar.getInstance().get(Calendar.YEAR));
       title.addBreak();
       title.setColor("ff3232");
       title.setFontSize(30);
@@ -133,7 +134,6 @@ public class ExportWordLeaderboard extends AbstractAction {
          }
 
          player.setText(name);
-
 
          for (int i = 0; i < (32-name.length())/4; i++) {
             player.addTab();
