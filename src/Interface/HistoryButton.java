@@ -26,15 +26,18 @@ public class HistoryButton extends AbstractAction {
         File f = new File(Path.history + fileName);
 
         if (f.exists()) {
-            ObjectInputStream ois = null;
+            ObjectInputStream ois;
 
             try {
                 ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(f)));
+                System.out.println(f.getPath());
                 Object obj = ois.readObject();
                 ois.close();
 
                 if (obj instanceof ArrayList<?>) {
                     new HistoryDialog(ui, ui.getSettings().getResourceBundle().getString("generalHistory"), fileName, (ArrayList<HistoryData>) obj);
+                } else if (obj == null) {
+                    new HistoryDialog(ui, ui.getSettings().getResourceBundle().getString("generalHistory"), fileName, null);
                 }
             } catch (IOException | ClassNotFoundException ex) {
                 ex.printStackTrace();

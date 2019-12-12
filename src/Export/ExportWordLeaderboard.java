@@ -41,11 +41,9 @@ public class ExportWordLeaderboard extends AbstractAction {
                  JOptionPane.YES_NO_OPTION);
          if (result == JOptionPane.YES_OPTION) {
             new SaveFile(ui).actionPerformed(null);
-            //ui.setUpData();
             export(getWorthyPlayers());
          }
       } else {
-         //ui.setUpData();
          export(getWorthyPlayers());
       }
    }

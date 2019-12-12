@@ -48,9 +48,33 @@ class PlayerUI extends JPanel {
 
          if (e.getDocument() == name.getDocument()) {
             labels.get(0).setText(LABEL_STRINGS[0] + name.getText());
+
+            ui.getPlayers().set(ui.getTabs().getSelectedIndex(),
+                new Player(
+                    name.getText(),
+                    ui.getPlayers().get(ui.getTabs().getSelectedIndex()).getUsername(),
+                    ui.getPlayers().get(ui.getTabs().getSelectedIndex()).getScore(),
+                    ui.getPlayers().get(ui.getTabs().getSelectedIndex()).getPelliccions(),
+                    ui.getPlayers().get(ui.getTabs().getSelectedIndex()).getCappottens(),
+                    ui.getPlayers().get(ui.getTabs().getSelectedIndex()).getTotalPlays(),
+                    ui.getPlayers().get(ui.getTabs().getSelectedIndex()).getTotalWins(),
+                    ui.getPlayers().get(ui.getTabs().getSelectedIndex()).getTotalLost()
+                ));
          } else {
             labels.get(1).setText(LABEL_STRINGS[1] + username.getText());
             usernameText = username.getText();
+
+            ui.getPlayers().set(ui.getTabs().getSelectedIndex(),
+                new Player(
+                    ui.getPlayers().get(ui.getTabs().getSelectedIndex()).getName(),
+                    username.getText(),
+                    ui.getPlayers().get(ui.getTabs().getSelectedIndex()).getScore(),
+                    ui.getPlayers().get(ui.getTabs().getSelectedIndex()).getPelliccions(),
+                    ui.getPlayers().get(ui.getTabs().getSelectedIndex()).getCappottens(),
+                    ui.getPlayers().get(ui.getTabs().getSelectedIndex()).getTotalPlays(),
+                    ui.getPlayers().get(ui.getTabs().getSelectedIndex()).getTotalWins(),
+                    ui.getPlayers().get(ui.getTabs().getSelectedIndex()).getTotalLost()
+                ));
          }
 
          ui.setHasBeenSaved(false);

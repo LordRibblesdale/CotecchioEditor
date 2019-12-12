@@ -59,7 +59,9 @@ public class HistoryDialog extends JDialog implements Path {
           File location = getFile();
 
           if (location != null) {
-            img = new JLabel(imageIcon = new ImageIcon(location.getPath()));
+            imageIcon = new ImageIcon(location.getPath());
+            imageIcon = new ImageIcon(imageIcon.getImage().getScaledInstance(imageIcon.getIconWidth()/4, imageIcon.getIconHeight()/4, Image.SCALE_SMOOTH));
+            img = new JLabel(imageIcon);
             add(img);
           }
 
@@ -100,6 +102,7 @@ public class HistoryDialog extends JDialog implements Path {
       setVisible(true);
     }
   }
+  //TODO: BoxLayout
 
   private ArrayList<HistoryData> components;
   private UserController ui;
@@ -110,7 +113,7 @@ public class HistoryDialog extends JDialog implements Path {
   private JList<String> list;
   private JPanel panel;
 
-  private static final String EXT = ".sdc";
+  //private static final String EXT = ".sdc";
   private String file;
   private boolean hasBeenModified = false;
 
@@ -144,7 +147,7 @@ public class HistoryDialog extends JDialog implements Path {
           switch (choice) {
             case JOptionPane.YES_OPTION:
               File folder = new File(Path.history);
-              File file1 = new File(folder.getPath() + file + EXT);
+              File file1 = new File(folder.getPath() + File.separator + file);
 
               if(folder.exists()) {
                 if (folder.isDirectory()) {
@@ -153,7 +156,7 @@ public class HistoryDialog extends JDialog implements Path {
                   try {
                     ois = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file1)));
 
-                    ois.writeObject(components);
+                    ois.writeObject(HistoryDialog.this.components);
                     ois.close();
                   } catch (IOException ex) {
                     ex.printStackTrace();
@@ -166,12 +169,11 @@ public class HistoryDialog extends JDialog implements Path {
                   try {
                     ois = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file1)));
 
-                    ois.writeObject(components);
+                    ois.writeObject(HistoryDialog.this.components);
                     ois.close();
                   } catch (IOException ex) {
                     ex.printStackTrace();
                   }
-
                 } else {
                   System.out.println("ERROR HistoryData - Close ActionListener");
                 }
@@ -209,7 +211,8 @@ public class HistoryDialog extends JDialog implements Path {
       list = new JList<>();
     }
 
-    panel = new JPanel(new GridLayout(0, 1));
+    panel = new JPanel();
+    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
     scrollPane = new JScrollPane(panel);
     scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -248,7 +251,8 @@ public class HistoryDialog extends JDialog implements Path {
       }
     }
 
-    panel = new JPanel(new FlowLayout());
+    panel = new JPanel();
+    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
     for (HistoryData hd : components) {
       if (hd.getComponent() instanceof String) {
