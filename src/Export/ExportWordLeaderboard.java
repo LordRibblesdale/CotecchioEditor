@@ -20,7 +20,7 @@ import java.util.Calendar;
 import java.util.logging.SimpleFormatter;
 
 
-public class ExportWordLeaderboard extends AbstractAction {
+public class  ExportWordLeaderboard extends AbstractAction {
    private UserController ui;
 
    public ExportWordLeaderboard(UserController ui) {
@@ -50,13 +50,7 @@ public class ExportWordLeaderboard extends AbstractAction {
 
    private Player[] getWorthyPlayers() {
       ArrayList<Player> tmp = new ArrayList<>();
-      int max = 0;
-
-      for (Player p : ui.getPlayers()) {
-         if (p.getTotalPlays() > max) {
-            max = p.getTotalPlays();
-         }
-      }
+      int max = returnMaxPlays();
 
       for (Player p : ui.getPlayers()) {
          if (p.getTotalPlays() >= max*(float) ui.getSettings().getPercentage()/100) {
@@ -68,6 +62,18 @@ public class ExportWordLeaderboard extends AbstractAction {
       Arrays.sort(tmp2);
 
       return tmp2;
+   }
+
+   private int returnMaxPlays() {
+      int max = 0;
+
+      for (Player p : ui.getPlayers()) {
+         if (p.getTotalPlays() > max) {
+            max = p.getTotalPlays();
+         }
+      }
+
+      return max;
    }
 
    private void export(Player[] topPlayers) {
@@ -140,6 +146,16 @@ public class ExportWordLeaderboard extends AbstractAction {
          player.setText(new DecimalFormat().format((p.getScore() / (float) p.getTotalPlays())));
          player.addBreak();
       }
+
+      XWPFParagraph setup3 = paper.createParagraph();
+      XWPFRun title2 = setup3.createRun();
+      System.out.println(returnMaxPlays());
+
+      title2.setText("Numero partite classifica: " + (int) ((returnMaxPlays()/ (float) (float)ui.getSettings().getPercentage()) * 100));
+      title2.addBreak();
+      title2.setColor("000000");
+      title2.setFontSize(30);
+      setup3.setAlignment(ParagraphAlignment.CENTER);
 
       paper.write(out);
       out.close();
