@@ -149,9 +149,8 @@ public class  ExportWordLeaderboard extends AbstractAction {
 
       XWPFParagraph setup3 = paper.createParagraph();
       XWPFRun title2 = setup3.createRun();
-      System.out.println(returnMaxPlays());
 
-      title2.setText("Numero partite per la classifica: " + (int) ((returnMaxPlays()/ (float) 100) * ui.getSettings().getPercentage()));
+      title2.setText("Numero partite per la classifica: " + (int) Math.ceil((returnMaxPlays()/ (float) 100) * ui.getSettings().getPercentage()));
       title2.addBreak();
       title2.setColor("000000");
       title2.setFontSize(30);
